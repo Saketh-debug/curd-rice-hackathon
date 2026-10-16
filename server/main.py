@@ -510,6 +510,20 @@ def get_system_health(db: Session = Depends(get_db)):
     }
 
 
+@app.get("/api/logs/stats")
+def get_logs_stats(db: Session = Depends(get_db)):
+    """Summary statistics for compliance and governance reports"""
+    total_scanned = state.stats["scanned"]
+    auto_blocked = state.stats["auto_blocked"]
+    threats_detected = state.stats["threats_detected"]
+    rate = round(100 * (auto_blocked / max(threats_detected, 1)), 1)
+    return {
+        "total_processed": total_scanned,
+        "total_blocked": auto_blocked,
+        "automation_rate": rate
+    }
+
+
 @app.get("/api/traffic/live")
 def get_live_traffic(db: Session = Depends(get_db)):
     """For Page A1: Command Center & A4: Event Stream"""
