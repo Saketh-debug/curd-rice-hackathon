@@ -11,7 +11,6 @@ import {
     ZoomControl,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Satellite, Radio, Shield, Globe } from 'lucide-react';
 
 /* ================= ISRO Ground Stations ================= */
 interface GroundStation {
@@ -215,7 +214,9 @@ export const ThreatMap = () => {
                     zoomControl={false}
                 >
                     <TileLayer
-                        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        className="map-tiles-dark"
                         noWrap={true}
                     />
                     <ZoomControl position="bottomleft" />

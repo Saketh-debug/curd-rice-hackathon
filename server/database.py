@@ -3,12 +3,22 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 
-# --- CONFIGURATION ---
-# Update with your actual PostgreSQL credentials if different
-# Format: postgresql://username:password@localhost:5432/database_name
-DATABASE_URL = "postgresql://postgres:saketh123@localhost:5432/idsdashboard"
+import os
 
-engine = create_engine(DATABASE_URL)
+# --- CONFIGURATION ---
+# Default to environment variable, then PostgreSQL, with fallback to SQLite for local development
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:saketh123@localhost:5432/idsdashboard")
+
+try:
+    engine = create_engine(DATABASE_URL)
+    # Test connection
+    with engine.connect() as conn:
+        pass
+except Exception as e:
+    print(f"[Database] Warning: Could not connect to PostgreSQL ({e}). Falling back to local SQLite database: soar_local.db")
+    DATABASE_URL = "sqlite:///./soar_local.db"
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

@@ -5,12 +5,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round');
 
-/* 3. Link your JS config */
-@config "../tailwind.config.js";
+@theme {
+    --color-primary: #00d4ff;
+    --color-primary-dark: #0284c7;
+    --color-primary-orange: #ff6b1a;
+    --color-isro-orange: #ff9933;
+    --color-accent-red: #ff2244;
+    --color-accent-cyan: #00d4ff;
+    --color-accent-green: #00ff9d;
+    --color-background-light: #070b16;
+    --color-background-dark: #050814;
+    --color-surface-dark: #0a1022;
+    --color-surface-card: #0f172a;
+    --color-surface-border: #1e293b;
+
+    --font-orbitron: 'Orbitron', sans-serif;
+    --font-display: 'Orbitron', 'Space Grotesk', sans-serif;
+    --font-mono: 'Space Mono', 'JetBrains Mono', monospace;
+    --font-sans: 'Inter', sans-serif;
+}
 
 @layer base {
     body {
-        @apply bg-[#050814] text-slate-100 antialiased;
+        background-color: #050814;
+        color: #f1f5f9;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         background-image: 
             radial-gradient(circle at 10% 15%, rgba(0, 212, 255, 0.05) 0%, transparent 40%),
@@ -66,4 +86,9 @@
         radial-gradient(1px 1px at 580px 140px, #ffffff, rgba(0,0,0,0));
     background-repeat: repeat;
     background-size: 650px 350px;
+}
+
+/* Dark mode styling filter for standard OSM tiles */
+.map-tiles-dark {
+    filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
 }
