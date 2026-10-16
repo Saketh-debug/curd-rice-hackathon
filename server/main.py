@@ -902,11 +902,22 @@ def resolve_incident(packet_id: int, req: ActionRequest, db: Session = Depends(g
     incident.status = "RESOLVED"
     incident.action_taken = "MANUAL_BLOCK" if req.action == "BLOCK" else "FALSE_POSITIVE"
     incident.analyst_id = req.analyst_id
-    incident.resolved_at = datetime.utcnow()
+    incident.resolved_at = datetime.now()
     
     # Update Stats
     if req.action == "BLOCK":
         state.stats["manual_blocked"] += 1
+
+    # Also update any pending TrafficLog for this IP so live telemetry stream reflects the decision
+    try:
+        matching_traffic = db.query(TrafficLog).filter(
+            TrafficLog.src_ip == incident.src_ip,
+            TrafficLog.action == "PENDING_REVIEW"
+        ).all()
+        for t in matching_traffic:
+            t.action = incident.action_taken
+    except Exception as t_err:
+        print(f"[TrafficLog Sync Error]: {t_err}")
         
     db.commit()
 
@@ -1010,8 +1021,8 @@ def get_audit_log(db: Session = Depends(get_db)):
         if key not in bc_lookup:
             bc_lookup[key] = r
 
-    manual_logs = db.query(ManualReview).filter(ManualReview.status == "RESOLVED").order_by(ManualReview.timestamp.desc()).limit(25).all()
-    auto_logs = db.query(AutoBlocked).order_by(AutoBlocked.timestamp.desc()).limit(25).all()
+    manual_logs = db.query(ManualReview).filter(ManualReview.status == "RESOLVED").order_by(ManualReview.resolved_at.desc()).limit(50).all()
+    auto_logs = db.query(AutoBlocked).order_by(AutoBlocked.timestamp.desc()).limit(50).all()
     
     combined = []
     for idx, m in enumerate(manual_logs):
@@ -1019,7 +1030,9 @@ def get_audit_log(db: Session = Depends(get_db)):
         bc = bc_lookup.get(key)
         combined.append({
             "id": m.id,
-            "timestamp": m.timestamp,
+            # Use resolved_at as the display timestamp so the timeline shows WHEN the decision was made,
+            # not when the alert was originally detected. Falls back to creation timestamp if null.
+            "timestamp": m.resolved_at or m.timestamp,
             "src_ip": m.src_ip,
             "country": m.country or "External Interface",
             "station": m.station or "ISTRAC-BLR",

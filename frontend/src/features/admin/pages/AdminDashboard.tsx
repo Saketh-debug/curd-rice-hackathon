@@ -167,28 +167,47 @@ export const AdminDashboard = () => {
                     </h2>
                     <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs">
                         <div className="relative pl-6 border-l border-border space-y-6">
-                            {recentActions.length === 0 ? <p className="text-xs text-muted-foreground">No recent actions logged.</p> : recentActions.map((action, idx) => (
-                                <div key={idx} className="relative">
-                                    <span className={clsx(
-                                        "absolute -left-[31px] top-1 h-3 w-3 rounded-full ring-4 ring-card",
-                                        action.action === 'AUTO_BLOCKED' ? "bg-destructive" :
-                                            action.action === 'MANUAL_BLOCK' ? "bg-signal" : "bg-grove"
-                                    )}></span>
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <p className="text-xs font-semibold text-foreground font-sans">
-                                                {action.action.replace('_', ' ')} • Node: {action.src_ip}
-                                            </p>
-                                            <p className="text-[11px] text-muted-foreground mt-0.5 font-mono tabular-nums">
-                                                Flow #{action.id} • Vector: {mapSpaceThreatName(action.type)}
-                                            </p>
+                            {recentActions.length === 0 ? <p className="text-xs text-muted-foreground">No recent actions logged.</p> : recentActions.map((action, idx) => {
+                                const isBlock = typeof action.action === 'string' && action.action.includes('BLOCK');
+                                const isFP = action.action === 'FALSE_POSITIVE' || action.action === 'IGNORE';
+                                const actionLabel = action.action === 'AUTO_BLOCKED' 
+                                    ? 'AUTO BLOCKED' 
+                                    : isBlock 
+                                        ? 'MANUAL BLOCK (ISOLATED)' 
+                                        : isFP 
+                                            ? 'NOT BLOCKED (ALLOWED)' 
+                                            : action.action;
+
+                                return (
+                                    <div key={idx} className="relative">
+                                        <span className={clsx(
+                                            "absolute -left-[31px] top-1 h-3 w-3 rounded-full ring-4 ring-card",
+                                            action.action === 'AUTO_BLOCKED' ? "bg-destructive" :
+                                                isBlock ? "bg-destructive" : "bg-grove"
+                                        )}></span>
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="text-xs font-semibold text-foreground font-sans flex items-center gap-2">
+                                                    <span className={clsx(
+                                                        "px-1.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase",
+                                                        isBlock ? "bg-destructive/15 text-destructive border border-destructive/30" : "bg-grove/15 text-grove border border-grove/30"
+                                                    )}>
+                                                        {isBlock ? "BLOCKED" : "NOT BLOCKED"}
+                                                    </span>
+                                                    <span>{actionLabel}</span>
+                                                    <span className="text-muted-foreground font-normal">• {action.src_ip}</span>
+                                                </p>
+                                                <p className="text-[11px] text-muted-foreground mt-0.5 font-mono tabular-nums">
+                                                    Flow #{action.id} • Vector: <strong className="text-foreground font-medium">{mapSpaceThreatName(action.type)}</strong> • By: <span className="text-signal">{action.handled_by === 'SYSTEM_AUTOMATION' ? 'AEGIS SOAR' : (action.handled_by || 'Mission Controller')}</span>
+                                                </p>
+                                            </div>
+                                            <span className="text-[11px] text-muted-foreground font-mono tabular-nums">
+                                                {action.timestamp ? format(new Date(action.timestamp), 'HH:mm:ss') : 'Recent'}
+                                            </span>
                                         </div>
-                                        <span className="text-[11px] text-muted-foreground font-mono tabular-nums">
-                                            {action.timestamp ? format(new Date(action.timestamp), 'HH:mm:ss') : 'Recent'}
-                                        </span>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
