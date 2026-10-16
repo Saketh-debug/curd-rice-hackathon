@@ -189,16 +189,19 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
     const [inspectedStation, setInspectedStation] = useState<GroundStation | null>(null);
     const [inspectedMissile, setInspectedMissile] = useState<ThreatArcData | null>(null);
 
-    // Texture URLs
+    // Texture URLs (Loaded from local high-resolution assets)
     const TEXTURES = {
-        night: '//unpkg.com/three-globe/example/img/earth-night.jpg',
-        day: '//unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
-        bump: '//unpkg.com/three-globe/example/img/earth-topology.png'
+        night: '/textures/earth-night.jpg',
+        day: '/textures/earth-blue-marble.jpg',
+        bump: '/textures/earth-topology.png',
+        water: '/textures/earth-water.png',
+        nightSky: '/textures/night-sky.png',
+        clouds: '/textures/clouds.png'
     };
 
     // Synthesize & process missile attacks from nations to ISRO ground stations
     const arcDataList = useMemo<ThreatArcData[]>(() => {
-        // If live threats list has items, use them; if fewer than 7, supplement with active nation attacks
+        // If live threats list has items, use them; if fewer than 8, supplement with active nation attacks
         const combinedThreats: Packet[] = [...threats];
         
         // Ensure at least 8-10 active incoming missile trajectories are always animated
@@ -243,13 +246,15 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
 
             // Great-circle distance approximation for parabolic sub-orbital height
             const dist = Math.hypot(originLat - targetStation.coords[0], originLng - targetStation.coords[1]);
-            const altitude = Math.min(0.65, Math.max(0.24, (dist / 110) * 0.45));
+            const altitude = Math.min(0.70, Math.max(0.25, (dist / 110) * 0.46));
 
-            // Ivory-white projectile with soft trail gradient (ghost tail -> warm luminous ivory -> brilliant diamond ivory head)
-            const ivoryGradient: [string, string, string] = [
-                "rgba(255, 255, 248, 0.04)",
-                "rgba(255, 253, 240, 0.72)",
-                "rgba(255, 255, 255, 1.0)"
+            // Color-code arc by threat vector:
+            // Transparent tail -> luminous mid-beam in vector color -> bright blazing projectile head
+            const attackColor = getAttackColor(threat.type);
+            const arcColor: [string, string, string] = [
+                "rgba(0, 0, 0, 0)",
+                attackColor + "bb",
+                "#ffffff"
             ];
 
             return {
@@ -261,41 +266,56 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                 startLng: originLng,
                 endLat: targetStation.coords[0],
                 endLng: targetStation.coords[1],
-                color: ivoryGradient,
+                color: arcColor,
                 packet: threat,
                 targetStation,
                 altitude,
                 initialGap: (index * 0.17) % 1,
-                // Refined cinematic flight duration
-                speed: 3800 + (index % 5) * 350,
-                stroke: 0.85
+                // Sleek flight duration
+                speed: 3400 + (index % 6) * 320,
+                stroke: 0.42
             };
         });
     }, [threats]);
 
-    // Rings data for ISRO Ground Stations (Delicate, small, precise radar shockwaves)
+    // Rings data for ISRO Ground Stations (Dual concentric tactical radar shockwaves)
     const ringsData = useMemo(() => {
-        return ISRO_GROUND_STATIONS.map((station, i) => ({
-            lat: station.coords[0],
-            lng: station.coords[1],
-            station,
-            color: station.code === 'IDSN-32M' ? '#38bdf8' : station.code === 'ISTRAC-BLR' ? '#ff9933' : '#f97316',
-            // Much smaller radius to avoid covering the whole subcontinent
-            maxRadius: station.code === 'ISTRAC-BLR' ? 1.4 : 1.15,
-            speed: 2.4 + (i % 3) * 0.3,
-            repeatPeriod: 800 + (i % 3) * 150
-        }));
+        const list: any[] = [];
+        ISRO_GROUND_STATIONS.forEach((station, i) => {
+            const baseColor = station.code === 'IDSN-32M' ? '#38bdf8' : station.code === 'ISTRAC-BLR' ? '#ff9933' : '#00ff9d';
+            // Primary sweeping radar ring
+            list.push({
+                lat: station.coords[0],
+                lng: station.coords[1],
+                station,
+                color: baseColor,
+                maxRadius: station.code === 'ISTRAC-BLR' ? 2.8 : 2.2,
+                speed: 2.2 + (i % 3) * 0.25,
+                repeatPeriod: 800 + (i % 3) * 120
+            });
+            // Fast inner pulse ring
+            list.push({
+                lat: station.coords[0],
+                lng: station.coords[1],
+                station,
+                color: baseColor + '88',
+                maxRadius: station.code === 'ISTRAC-BLR' ? 1.5 : 1.15,
+                speed: 3.6 + (i % 3) * 0.3,
+                repeatPeriod: 520 + (i % 3) * 80
+            });
+        });
+        return list;
     }, []);
 
     // Points data: Pinpoint Ground Stations + Attacking Country Missile Launchers
     const pointsData = useMemo(() => {
-        // Ground stations: small, sharp, pinpoint dots (0.16 radius)
+        // Ground stations: sharp pinpoint dots with luminous emerald/cyan
         const stationPoints = ISRO_GROUND_STATIONS.map(s => ({
             lat: s.coords[0],
             lng: s.coords[1],
-            color: '#00ff9d',
-            radius: 0.16, // Reduced from 0.65 -> 75% smaller, crisp pin
-            altitude: 0.012,
+            color: s.code === 'ISTRAC-BLR' ? '#ff9933' : s.code === 'IDSN-32M' ? '#38bdf8' : '#00ff9d',
+            radius: 0.22,
+            altitude: 0.014,
             label: `ISRO: ${s.name}`,
             isStation: true,
             station: s
@@ -313,8 +333,8 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             lat: a.startLat,
             lng: a.startLng,
             color: getAttackColor(a.packet.type),
-            radius: 0.22,
-            altitude: 0.01,
+            radius: 0.28,
+            altitude: 0.012,
             label: `${a.originFlag} ${a.originCountry} Launch Site`,
             isStation: false,
             arc: a
@@ -331,15 +351,13 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             lng: s.coords[1],
             text: s.code,
             size: 0.65, // Compact tactical font size
-            color: '#38bdf8',
-            altitude: 0.015,
+            color: s.code === 'ISTRAC-BLR' ? '#ffb74d' : '#38bdf8',
+            altitude: 0.016,
             station: s
         }));
     }, [showGroundLabels]);
 
     // Convert lat/lng to 3D position vector aligned with ThreeGlobe's coordinate system
-    // ThreeGlobe polar2Cartesian: phi = (90 - lat) * PI/180, theta = (90 - lng) * PI/180
-    // x = r * sin(phi) * cos(theta), y = r * cos(phi), z = r * sin(phi) * sin(theta)
     const getCoordsPosition = (lat: number, lng: number, distance: number) => {
         const phi = (90 - lat) * (Math.PI / 180);
         const theta = (90 - lng) * (Math.PI / 180);
@@ -390,7 +408,7 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
         setEarthTextureMode(newMode);
         if (globeInstanceRef.current) {
             globeInstanceRef.current.globeImageUrl(TEXTURES[newMode]);
-            globeInstanceRef.current.atmosphereColor(newMode === 'night' ? '#00d4ff' : '#60a5fa');
+            globeInstanceRef.current.atmosphereColor(newMode === 'night' ? '#3a228a' : '#60a5fa');
         }
     };
 
@@ -407,7 +425,7 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
         sceneRef.current = scene;
 
         // 2. Camera
-        const camera = new THREE.PerspectiveCamera(45, width / height, 1, 2000);
+        const camera = new THREE.PerspectiveCamera(45, width / height, 1, 3000);
         const initialPos = getCoordsPosition(20.5, 78.9, 260);
         camera.position.copy(initialPos);
         cameraRef.current = camera;
@@ -417,7 +435,7 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
         renderer.setSize(width, height);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.25;
+        renderer.toneMappingExposure = 1.35;
         container.appendChild(renderer.domElement);
         rendererRef.current = renderer;
 
@@ -429,69 +447,41 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
         controls.minDistance = 120;
         controls.maxDistance = 550;
         controls.autoRotate = autoRotate;
-        controls.autoRotateSpeed = 0.55;
+        controls.autoRotateSpeed = 0.45;
         controlsRef.current = controls;
 
-        // 5. Lighting
-        const ambientLight = new THREE.AmbientLight(0x334155, 1.4);
+        // 5. Lighting (Warm solar directional light + cool space rim light)
+        const ambientLight = new THREE.AmbientLight(0x1e293b, 1.4);
         scene.add(ambientLight);
 
-        const sunLight = new THREE.DirectionalLight(0xffffff, 2.5);
-        sunLight.position.set(350, 200, 300);
+        const sunLight = new THREE.DirectionalLight(0xfff7ed, 3.2);
+        sunLight.position.set(380, 180, 260);
         scene.add(sunLight);
 
-        const rimLight = new THREE.DirectionalLight(0x0284c7, 1.1);
-        rimLight.position.set(-300, -100, -200);
+        const rimLight = new THREE.DirectionalLight(0x1d4ed8, 1.5);
+        rimLight.position.set(-320, -120, -240);
         scene.add(rimLight);
 
-        // 6. Starfield particle background
-        const starCount = 2000;
-        const starGeometry = new THREE.BufferGeometry();
-        const starPositions = new Float32Array(starCount * 3);
-        const starColors = new Float32Array(starCount * 3);
-
-        for (let i = 0; i < starCount * 3; i += 3) {
-            const rad = 650 + Math.random() * 400;
-            const u = Math.random();
-            const v = Math.random();
-            const theta = u * 2.0 * Math.PI;
-            const phi = Math.acos(2.0 * v - 1.0);
-            const sinPhi = Math.sin(phi);
-
-            starPositions[i] = rad * sinPhi * Math.cos(theta);
-            starPositions[i + 1] = rad * sinPhi * Math.sin(theta);
-            starPositions[i + 2] = rad * Math.cos(phi);
-
-            const tint = Math.random();
-            if (tint > 0.8) {
-                starColors[i] = 1.0; starColors[i + 1] = 0.7; starColors[i + 2] = 0.4;
-            } else if (tint > 0.5) {
-                starColors[i] = 0.5; starColors[i + 1] = 0.8; starColors[i + 2] = 1.0;
-            } else {
-                starColors[i] = 0.9; starColors[i + 1] = 0.95; starColors[i + 2] = 1.0;
-            }
-        }
-
-        starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-        starGeometry.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
-
-        const starMaterial = new THREE.PointsMaterial({
-            size: 1.6,
-            vertexColors: true,
-            transparent: true,
-            opacity: 0.85
+        // 6. Deep Space Sky Dome Background (Milky Way / Deep cosmos panorama)
+        const skyGeo = new THREE.SphereGeometry(950, 48, 48);
+        const skyTex = new THREE.TextureLoader().load(TEXTURES.nightSky);
+        const skyMat = new THREE.MeshBasicMaterial({
+            map: skyTex,
+            side: THREE.BackSide,
+            depthWrite: false
         });
-        const starField = new THREE.Points(starGeometry, starMaterial);
-        scene.add(starField);
+        const skyDome = new THREE.Mesh(skyGeo, skyMat);
+        scene.add(skyDome);
 
-        // 7. Initialize ThreeGlobe
+        // 7. Initialize ThreeGlobe with Tactical Military Styling
         const globe = new ThreeGlobe({ animateIn: true, waitForGlobeReady: true })
-            .globeImageUrl(TEXTURES.night)
+            .globeImageUrl(TEXTURES[earthTextureMode])
             .bumpImageUrl(TEXTURES.bump)
+            .showGraticules(true) // Tactical latitude/longitude coordinates grid
             .showAtmosphere(true)
-            .atmosphereColor('#00d4ff')
-            .atmosphereAltitude(0.24)
-            // MISSILE ARCS LAYER (Polished Ivory Plasma Trajectory):
+            .atmosphereColor(earthTextureMode === 'night' ? '#3a228a' : '#60a5fa') // Realistic violet-blue night atmosphere
+            .atmosphereAltitude(0.18) // Sleek, tight atmospheric corona
+            // MISSILE ARCS LAYER (Hypersonic laser streak trajectory):
             .arcStartLat((d: object) => (d as ThreatArcData).startLat)
             .arcStartLng((d: object) => (d as ThreatArcData).startLng)
             .arcEndLat((d: object) => (d as ThreatArcData).endLat)
@@ -499,8 +489,8 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             .arcColor((d: object) => (d as ThreatArcData).color)
             .arcAltitude((d: object) => (d as ThreatArcData).altitude)
             .arcStroke((d: object) => (d as ThreatArcData).stroke)
-            .arcDashLength(0.08) // Compact hypersonic projectile head
-            .arcDashGap(3.2)     // Wide gap for distinct flying streaks
+            .arcDashLength(0.06) // Sharp hypersonic laser bolt
+            .arcDashGap(2.6)     // Clean spacing between bursts
             .arcDashInitialGap((d: object) => (d as ThreatArcData).initialGap)
             .arcDashAnimateTime((d: object) => (d as ThreatArcData).speed)
             .arcsTransitionDuration(0)
@@ -511,7 +501,7 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             .ringMaxRadius((d: any) => d.maxRadius)
             .ringPropagationSpeed((d: any) => d.speed)
             .ringRepeatPeriod((d: any) => d.repeatPeriod)
-            .ringAltitude(0.005)
+            .ringAltitude(0.006)
             // GROUND STATIONS & LAUNCH PADS POINTS:
             .pointLat((d: any) => d.lat)
             .pointLng((d: any) => d.lng)
@@ -525,15 +515,48 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             .labelText((d: any) => d.text)
             .labelSize((d: any) => d.size)
             .labelColor((d: any) => d.color)
-            .labelDotRadius(0.08)
-            .labelAltitude(0.015)
+            .labelDotRadius(0.1)
+            .labelAltitude(0.016)
             .labelResolution(2);
 
         scene.add(globe);
         globeInstanceRef.current = globe;
 
-        // 8. Dynamic Glowing Projectile Comet Heads & Hypersonic Flight Particle Trail
-        // Soft radial glow canvas texture
+        // Custom globe material enhancement: Specular ocean map & bump scale
+        globe.onGlobeReady(() => {
+            try {
+                const globeMat = globe.globeMaterial() as THREE.MeshPhongMaterial;
+                if (globeMat) {
+                    globeMat.bumpScale = 8;
+                    new THREE.TextureLoader().load(TEXTURES.water, (waterTex) => {
+                        globeMat.specularMap = waterTex;
+                        globeMat.specular = new THREE.Color(0x3377aa); // Vibrant specular ocean sheen
+                        globeMat.shininess = 22;
+                        globeMat.needsUpdate = true;
+                    });
+                }
+            } catch (err) {
+                console.warn('Failed to configure globe material:', err);
+            }
+        });
+
+        // 8. Rotating Clouds Atmospheric Shell
+        const CLOUDS_ALT = 0.005;
+        const cloudsGeo = new THREE.SphereGeometry(100 * (1 + CLOUDS_ALT), 64, 64);
+        let cloudsMesh: THREE.Mesh | null = null;
+        new THREE.TextureLoader().load(TEXTURES.clouds, (cloudsTex) => {
+            const cloudsMat = new THREE.MeshPhongMaterial({
+                map: cloudsTex,
+                transparent: true,
+                opacity: 0.38,
+                depthWrite: false,
+                blending: THREE.NormalBlending
+            });
+            cloudsMesh = new THREE.Mesh(cloudsGeo, cloudsMat);
+            scene.add(cloudsMesh);
+        });
+
+        // 9. Dynamic Glowing Projectile Comet Heads & Hypersonic Flight Particle Trail
         const createGlowTexture = () => {
             const canvas = document.createElement('canvas');
             canvas.width = 64;
@@ -542,9 +565,9 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             if (ctx) {
                 const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
                 gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
-                gradient.addColorStop(0.2, 'rgba(255, 253, 235, 0.9)');
-                gradient.addColorStop(0.5, 'rgba(255, 240, 200, 0.45)');
-                gradient.addColorStop(0.8, 'rgba(200, 235, 255, 0.15)');
+                gradient.addColorStop(0.25, 'rgba(255, 255, 255, 0.9)');
+                gradient.addColorStop(0.55, 'rgba(200, 240, 255, 0.5)');
+                gradient.addColorStop(0.85, 'rgba(100, 200, 255, 0.15)');
                 gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, 64, 64);
@@ -557,7 +580,6 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
         const glowTexture = createGlowTexture();
 
         // Particle group for dynamic flight projectile heads and ion tail trails
-        // Maximum 32 active missile trajectories, each with 1 head + 4 trailing ion sparks = 160 particles
         const MAX_ARCS = 32;
         const TRAIL_COUNT = 5; // 1 head + 4 trail nodes
         const totalParticles = MAX_ARCS * TRAIL_COUNT;
@@ -570,7 +592,7 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
         cometGeo.setAttribute('color', new THREE.BufferAttribute(cometColors, 3));
 
         const cometMat = new THREE.PointsMaterial({
-            size: 4.8,
+            size: 4.5,
             map: glowTexture,
             vertexColors: true,
             transparent: true,
@@ -615,56 +637,84 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             return pt.multiplyScalar(currentR);
         };
 
-        // 9. 3D Satellites & Orbital Trajectory Rings
+        // 10. 3D Satellites & Orbital Trajectory Rings
         const satGroup = new THREE.Group();
         globe.add(satGroup);
         satGroupRef.current = satGroup;
 
         // Polar LEO Orbit Ring (EOS-09 Earth Observation)
         const leoRadius = 126;
-        const leoRingGeo = new THREE.RingGeometry(leoRadius - 0.4, leoRadius + 0.4, 96);
+        const leoRingGeo = new THREE.RingGeometry(leoRadius - 0.35, leoRadius + 0.35, 128);
         const leoRingMat = new THREE.MeshBasicMaterial({
             color: 0x00ff9d,
             side: THREE.DoubleSide,
             transparent: true,
-            opacity: 0.35
+            opacity: 0.38,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
         });
         const leoRing = new THREE.Mesh(leoRingGeo, leoRingMat);
         leoRing.rotation.x = Math.PI / 2.7;
         leoRing.rotation.y = Math.PI / 5;
         satGroup.add(leoRing);
 
-        // LEO Satellite Probe
-        const sat1Geo = new THREE.BoxGeometry(2.4, 1.2, 1.4);
-        const sat1Mat = new THREE.MeshStandardMaterial({ color: 0x00ff9d, emissive: 0x00ff9d, emissiveIntensity: 0.4 });
-        const sat1Mesh = new THREE.Mesh(sat1Geo, sat1Mat);
-        const panelGeo = new THREE.BoxGeometry(5.0, 0.1, 1.2);
-        const panelMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.3 });
-        const panels1 = new THREE.Mesh(panelGeo, panelMat);
-        sat1Mesh.add(panels1);
-        satGroup.add(sat1Mesh);
+        // LEO Satellite Spacecraft (Detailed bus + gold MLI + photovoltaic arrays + sensor)
+        const sat1Group = new THREE.Group();
+        const sat1Bus = new THREE.Mesh(
+            new THREE.BoxGeometry(2.4, 1.4, 1.4),
+            new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.85, roughness: 0.25 })
+        );
+        const sat1Foil = new THREE.Mesh(
+            new THREE.BoxGeometry(2.45, 1.2, 0.2),
+            new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9, roughness: 0.2 })
+        );
+        const sat1Solar = new THREE.Mesh(
+            new THREE.BoxGeometry(5.6, 0.08, 1.3),
+            new THREE.MeshStandardMaterial({ color: 0x0284c7, emissive: 0x0369a1, emissiveIntensity: 0.6, metalness: 0.5 })
+        );
+        const sat1Sensor = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.4, 0.4, 0.8, 16),
+            new THREE.MeshStandardMaterial({ color: 0x00ff9d, emissive: 0x00ff9d, emissiveIntensity: 0.4 })
+        );
+        sat1Sensor.rotation.x = Math.PI / 2;
+        sat1Sensor.position.z = 0.8;
+        sat1Group.add(sat1Bus, sat1Foil, sat1Solar, sat1Sensor);
+        satGroup.add(sat1Group);
 
         // GTO / Deep Space Orbit Ring (Aditya-L1 / IDSN Link)
         const geoRadius = 152;
-        const geoRingGeo = new THREE.RingGeometry(geoRadius - 0.4, geoRadius + 0.4, 96);
+        const geoRingGeo = new THREE.RingGeometry(geoRadius - 0.35, geoRadius + 0.35, 128);
         const geoRingMat = new THREE.MeshBasicMaterial({
             color: 0xff9933,
             side: THREE.DoubleSide,
             transparent: true,
-            opacity: 0.3
+            opacity: 0.32,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
         });
         const geoRing = new THREE.Mesh(geoRingGeo, geoRingMat);
         geoRing.rotation.x = Math.PI / 1.9;
         geoRing.rotation.z = Math.PI / 3.5;
         satGroup.add(geoRing);
 
-        // GSO Satellite Probe
-        const sat2Geo = new THREE.BoxGeometry(2.8, 1.6, 1.6);
-        const sat2Mat = new THREE.MeshStandardMaterial({ color: 0xff9933, emissive: 0xff9933, emissiveIntensity: 0.3 });
-        const sat2Mesh = new THREE.Mesh(sat2Geo, sat2Mat);
-        const panels2 = new THREE.Mesh(new THREE.BoxGeometry(6.5, 0.1, 1.4), panelMat);
-        sat2Mesh.add(panels2);
-        satGroup.add(sat2Mesh);
+        // GSO Satellite Spacecraft (GSAT-30 / Deep Space Comms Dish)
+        const sat2Group = new THREE.Group();
+        const sat2Bus = new THREE.Mesh(
+            new THREE.BoxGeometry(2.8, 1.8, 1.8),
+            new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.85, roughness: 0.2 })
+        );
+        const sat2Solar = new THREE.Mesh(
+            new THREE.BoxGeometry(7.0, 0.08, 1.5),
+            new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.5, metalness: 0.6 })
+        );
+        const sat2Dish = new THREE.Mesh(
+            new THREE.CylinderGeometry(1.3, 0.2, 0.5, 24),
+            new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.8, roughness: 0.2 })
+        );
+        sat2Dish.rotation.x = Math.PI / 2;
+        sat2Dish.position.z = 1.1;
+        sat2Group.add(sat2Bus, sat2Solar, sat2Dish);
+        satGroup.add(sat2Group);
 
         // Downlink beam from LEO satellite to Bengaluru MOX
         const beamMat = new THREE.LineDashedMaterial({
@@ -672,7 +722,7 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             dashSize: 3,
             gapSize: 2,
             transparent: true,
-            opacity: 0.6
+            opacity: 0.75
         });
         const beamGeo = new THREE.BufferGeometry().setFromPoints([
             new THREE.Vector3(0, 0, 0),
@@ -682,7 +732,7 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
         downlinkBeam.computeLineDistances();
         satGroup.add(downlinkBeam);
 
-        // 10. Animation Loop
+        // 11. Animation Loop
         let animationFrameId: number;
         const clock = new THREE.Clock();
 
@@ -692,6 +742,14 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             const nowMs = performance.now();
 
             controls.update();
+
+            // Rotate Clouds Sphere slowly
+            if (cloudsMesh) {
+                cloudsMesh.rotation.y = -elapsedTime * 0.012;
+            }
+
+            // Slowly drift Sky Dome
+            skyDome.rotation.y = elapsedTime * 0.0006;
 
             // Update Dynamic Flying Projectile Comets & Flight Opacity/Color Shift
             const posAttr = cometGeo.attributes.position.array as Float32Array;
@@ -712,33 +770,32 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                 const v1 = toUnitVec(arc.endLat, arc.endLng);
 
                 // Calculate current travel progress t (0 -> 1) aligned with arcDash animation
-                // speed is duration in ms, initialGap accounts for staggered launches
                 const cycle = (nowMs / arc.speed + arc.initialGap) % 1.0;
                 const tHead = cycle;
 
-                // Color and flight opacity dynamics:
-                // Mid-flight (peak speed/altitude): high velocity -> lower opacity (0.45), ghostly ivory
-                // Re-entry deceleration (t > 0.75): speed slows down -> shifts color to terminal plasma cyan/amber and brightens
-                let r = 1.0, g = 1.0, b = 0.96; // Pure ivory white
+                // Color dynamics based on actual threat vector
+                const attackColorHex = getAttackColor(arc.packet.type);
+                const threatCol = new THREE.Color(attackColorHex);
+
+                let r = threatCol.r;
+                let g = threatCol.g;
+                let b = threatCol.b;
                 let alpha = 0.95;
 
                 if (tHead < 0.65) {
-                    // Flying high through upper space atmosphere: reduced opacity for genuine high-speed flight feel
-                    // Dims down to ~0.38 at mid-flight apex
-                    const midFactor = Math.sin(tHead * Math.PI / 0.65);
-                    alpha = 0.88 - midFactor * 0.48; // Opacity reduces from 0.88 -> 0.40 -> 0.88
-                    // High-speed ivory white
-                    r = 1.0;
-                    g = 0.98 + (1 - midFactor) * 0.02;
-                    b = 0.92;
+                    const midFactor = Math.sin((tHead * Math.PI) / 0.65);
+                    alpha = 0.88 - midFactor * 0.42;
+                    // White-hot plasma core blend for head
+                    r = THREE.MathUtils.lerp(threatCol.r, 1.0, 0.45);
+                    g = THREE.MathUtils.lerp(threatCol.g, 1.0, 0.45);
+                    b = THREE.MathUtils.lerp(threatCol.b, 1.0, 0.45);
                 } else {
-                    // Terminal deceleration phase as projectile homes in on Ground Station:
-                    // Color shifts from ivory white into terminal hyper-ionized ice cyan (#67e8f9) / gold
-                    const decel = (tHead - 0.65) / 0.35; // 0 to 1
-                    r = 1.0 - decel * 0.55;  // 1.0 -> 0.45
-                    g = 0.98 - decel * 0.15; // 0.98 -> 0.83
-                    b = 0.92 + decel * 0.08; // 0.92 -> 1.00
-                    alpha = 0.55 + decel * 0.45; // Flares bright at impact
+                    // Terminal deceleration & impact flare
+                    const decel = (tHead - 0.65) / 0.35;
+                    r = THREE.MathUtils.lerp(threatCol.r, 1.0, decel * 0.7);
+                    g = THREE.MathUtils.lerp(threatCol.g, 1.0, decel * 0.7);
+                    b = THREE.MathUtils.lerp(threatCol.b, 1.0, decel * 0.7);
+                    alpha = 0.65 + decel * 0.35;
                 }
 
                 // Render Head + 4 trailing ion sparks
@@ -752,11 +809,15 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                     posAttr[pIndex + 1] = pt.y;
                     posAttr[pIndex + 2] = pt.z;
 
-                    // Trail nodes attenuate in brightness and opacity
-                    const trailFalloff = Math.pow(1 - k / TRAIL_COUNT, 1.8);
-                    colAttr[pIndex] = r * alpha * trailFalloff;
-                    colAttr[pIndex + 1] = g * alpha * trailFalloff;
-                    colAttr[pIndex + 2] = b * alpha * trailFalloff;
+                    // Trail sparks fall off in brightness and inherit rich threat color
+                    const trailFalloff = Math.pow(1 - k / TRAIL_COUNT, 1.6);
+                    const sparkR = k === 0 ? r : threatCol.r;
+                    const sparkG = k === 0 ? g : threatCol.g;
+                    const sparkB = k === 0 ? b : threatCol.b;
+
+                    colAttr[pIndex] = sparkR * alpha * trailFalloff;
+                    colAttr[pIndex + 1] = sparkG * alpha * trailFalloff;
+                    colAttr[pIndex + 2] = sparkB * alpha * trailFalloff;
                 }
             }
 
@@ -770,8 +831,8 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                     Math.sin(angle1) * leoRadius * Math.sin(Math.PI / 2.7),
                     Math.sin(angle1) * leoRadius * Math.cos(Math.PI / 2.7)
                 );
-                sat1Mesh.position.copy(sat1Pos);
-                sat1Mesh.lookAt(0, 0, 0);
+                sat1Group.position.copy(sat1Pos);
+                sat1Group.lookAt(0, 0, 0);
 
                 const angle2 = -elapsedTime * 0.28;
                 const sat2Pos = new THREE.Vector3(
@@ -779,8 +840,8 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                     Math.sin(angle2) * geoRadius * 0.25,
                     Math.sin(angle2) * geoRadius * Math.sin(Math.PI / 1.9)
                 );
-                sat2Mesh.position.copy(sat2Pos);
-                sat2Mesh.lookAt(0, 0, 0);
+                sat2Group.position.copy(sat2Pos);
+                sat2Group.lookAt(0, 0, 0);
 
                 const blrPos = getCoordsPosition(12.9716, 77.5946, 100);
                 const positions = downlinkBeam.geometry.attributes.position.array as Float32Array;
@@ -794,14 +855,12 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                 downlinkBeam.computeLineDistances();
             }
 
-            starField.rotation.y = elapsedTime * 0.005;
-
             renderer.render(scene, camera);
         };
 
         animate();
 
-        // 10. Window resize handling
+        // 12. Window resize handling
         const handleResize = () => {
             if (!containerRef.current || !rendererRef.current || !cameraRef.current) return;
             const newW = containerRef.current.clientWidth;
@@ -813,7 +872,7 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
 
         window.addEventListener('resize', handleResize);
 
-        // 11. Cleanup
+        // 13. Cleanup
         return () => {
             cancelAnimationFrame(animationFrameId);
             window.removeEventListener('resize', handleResize);
@@ -823,18 +882,36 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                 container.removeChild(renderer.domElement);
             }
 
-            starGeometry.dispose();
-            starMaterial.dispose();
+            skyGeo.dispose();
+            skyMat.dispose();
+            skyTex.dispose();
+
+            cloudsGeo.dispose();
+            if (cloudsMesh) {
+                (cloudsMesh.material as THREE.Material).dispose();
+            }
+
             leoRingGeo.dispose();
             leoRingMat.dispose();
             geoRingGeo.dispose();
             geoRingMat.dispose();
-            sat1Geo.dispose();
-            sat1Mat.dispose();
-            sat2Geo.dispose();
-            sat2Mat.dispose();
-            panelGeo.dispose();
-            panelMat.dispose();
+
+            sat1Bus.geometry.dispose();
+            (sat1Bus.material as THREE.Material).dispose();
+            sat1Foil.geometry.dispose();
+            (sat1Foil.material as THREE.Material).dispose();
+            sat1Solar.geometry.dispose();
+            (sat1Solar.material as THREE.Material).dispose();
+            sat1Sensor.geometry.dispose();
+            (sat1Sensor.material as THREE.Material).dispose();
+
+            sat2Bus.geometry.dispose();
+            (sat2Bus.material as THREE.Material).dispose();
+            sat2Solar.geometry.dispose();
+            (sat2Solar.material as THREE.Material).dispose();
+            sat2Dish.geometry.dispose();
+            (sat2Dish.material as THREE.Material).dispose();
+
             beamGeo.dispose();
             beamMat.dispose();
 
