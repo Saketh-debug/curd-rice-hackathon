@@ -63,7 +63,7 @@ export const IncidentReview = () => {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center min-h-[60vh] font-mono text-slate-400 text-sm">
+            <div className="flex items-center justify-center min-h-[60vh] font-mono text-muted-foreground text-sm">
                 Loading incident details...
             </div>
         );
@@ -71,15 +71,15 @@ export const IncidentReview = () => {
 
     if (!incident) {
         return (
-            <div className="max-w-xl mx-auto my-16 p-8 text-center bg-[#0a1022] rounded-2xl border border-slate-800">
-                <AlertTriangle className="w-12 h-12 mx-auto text-amber-400 mb-4" />
-                <h2 className="text-xl font-semibold font-display text-white mb-2">Incident Not Found</h2>
-                <p className="text-sm text-slate-300 leading-relaxed mb-6 font-sans">
+            <div className="max-w-xl mx-auto my-16 p-8 text-center bg-card rounded-2xl border border-border">
+                <AlertTriangle className="w-12 h-12 mx-auto text-signal mb-4" />
+                <h2 className="text-xl font-semibold font-display text-foreground mb-2">Incident Not Found</h2>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-6 font-sans">
                     This incident may have already been resolved or does not exist.
                 </p>
                 <StarBorder
-                    color="#ff7a1a"
-                    trailColor="#ff7a1a"
+                    color="#ff9933"
+                    trailColor="#ff9933"
                     duration={4}
                     direction="clockwise"
                     stars={1}
@@ -92,8 +92,8 @@ export const IncidentReview = () => {
                     clickPulse
                     theme="dark"
                     onClick={() => navigate('/admin/dashboard')}
-                    backgroundColor="#ea580c"
-                    textColor="#000000"
+                    backgroundColor="#ff9933"
+                    textColor="#161513"
                     className="px-5 py-2.5 font-display font-semibold text-xs uppercase tracking-wide cursor-pointer"
                 >
                     Back to Mission Dashboard

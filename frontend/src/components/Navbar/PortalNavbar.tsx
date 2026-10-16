@@ -68,8 +68,8 @@ export const PortalNavbar: React.FC<PortalNavbarProps> = ({ portalType, navItems
                         'rounded-full',
                         'border transition-all duration-300',
                         scrolled
-                            ? 'bg-[#161513]/92 backdrop-blur-3xl border-[rgba(245,179,37,0.22)] shadow-[0_12px_40px_rgba(0,0,0,0.7),0_0_0_1px_rgba(255,255,255,0.05)]'
-                            : 'bg-[#161513]/80 backdrop-blur-2xl border-[rgba(245,179,37,0.15)] shadow-[0_8px_32px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,255,255,0.04)]'
+                            ? 'bg-[#161513]/72 backdrop-blur-3xl border-[rgba(255,153,51,0.32)] shadow-[0_16px_50px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.07),0_0_26px_rgba(255,153,51,0.12)]'
+                            : 'bg-[#161513]/60 backdrop-blur-2xl border-[rgba(255,153,51,0.22)] shadow-[0_10px_38px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)]'
                     )}
                     role="navigation"
                     aria-label={`${isAdmin ? 'Admin' : 'Client'} portal navigation`}
@@ -79,8 +79,8 @@ export const PortalNavbar: React.FC<PortalNavbarProps> = ({ portalType, navItems
                         to="/"
                         className={clsx(
                             'flex items-center gap-2 px-3 py-1.5 rounded-full shrink-0',
-                            'border border-[rgba(245,179,37,0.20)] bg-[rgba(245,179,37,0.06)]',
-                            'hover:bg-[rgba(245,179,37,0.12)] hover:border-[rgba(245,179,37,0.35)]',
+                            'border border-[rgba(255,153,51,0.24)] bg-[rgba(255,153,51,0.07)]',
+                            'hover:bg-[rgba(255,153,51,0.14)] hover:border-[rgba(255,153,51,0.42)]',
                             'transition-all duration-200 group'
                         )}
                         title="SOAR Home"
@@ -114,7 +114,7 @@ export const PortalNavbar: React.FC<PortalNavbarProps> = ({ portalType, navItems
                                         'text-[11px] font-medium font-sans whitespace-nowrap',
                                         'transition-all duration-200',
                                         active
-                                            ? 'bg-[rgba(245,179,37,0.13)] border border-[rgba(245,179,37,0.40)] text-signal shadow-[0_0_12px_rgba(245,179,37,0.15)]'
+                                            ? 'bg-[rgba(255,153,51,0.15)] border border-[rgba(255,153,51,0.45)] text-signal shadow-[0_0_14px_rgba(255,153,51,0.18)]'
                                             : 'border border-transparent text-muted-foreground hover:text-foreground hover:bg-[rgba(255,255,255,0.05)]'
                                     )}
                                 >
@@ -191,7 +191,7 @@ export const PortalNavbar: React.FC<PortalNavbarProps> = ({ portalType, navItems
                         'md:hidden mt-2 overflow-hidden',
                         'rounded-2xl border',
                         'bg-[#161513]/94 backdrop-blur-3xl',
-                        'border-[rgba(245,179,37,0.18)] shadow-[0_12px_40px_rgba(0,0,0,0.65)]',
+                        'border-[rgba(255,153,51,0.20)] shadow-[0_12px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.05)]',
                         'transition-all duration-300 ease-out',
                         mobileOpen
                             ? 'max-h-[480px] opacity-100 translate-y-0'
@@ -221,7 +221,7 @@ export const PortalNavbar: React.FC<PortalNavbarProps> = ({ portalType, navItems
                                         'text-xs font-medium font-sans',
                                         'transition-all duration-200',
                                         active
-                                            ? 'bg-[rgba(245,179,37,0.12)] border border-[rgba(245,179,37,0.35)] text-signal'
+                                            ? 'bg-[rgba(255,153,51,0.14)] border border-[rgba(255,153,51,0.40)] text-signal'
                                             : 'border border-transparent text-muted-foreground hover:text-foreground hover:bg-[rgba(255,255,255,0.04)]'
                                     )}
                                 >

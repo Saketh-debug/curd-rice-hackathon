@@ -19,7 +19,7 @@ export default {
         border: "#34322d",
         input: "#34322d",
         ring: "#66625a",
-        signal: "#f5b325",
+        signal: "#ff9933",
         "signal-foreground": "#161513",
         grove: "#8abf84",
         "grove-foreground": "#161513",
@@ -30,8 +30,8 @@ export default {
         // Palette aliases for backward compatibility mapped to FieldRank palette
         primary: "#f1efea",
         "primary-dark": "#e0ddd5",
-        "primary-orange": "#f5b325",
-        "isro-orange": "#f5b325",
+        "primary-orange": "#ff9933",
+        "isro-orange": "#ff9933",
         "accent-red": "#ff6568",
         "accent-cyan": "#7c9bda",
         "accent-green": "#8abf84",
@@ -55,7 +55,7 @@ export default {
       },
       boxShadow: {
         'neon': '0 0 15px rgba(0, 212, 255, 0.35), 0 0 30px rgba(0, 212, 255, 0.15)',
-        'neon-orange': '0 0 15px rgba(255, 107, 26, 0.4), 0 0 30px rgba(255, 107, 26, 0.15)',
+        'neon-orange': '0 0 15px rgba(255, 153, 51, 0.4), 0 0 30px rgba(255, 153, 51, 0.15)',
         'neon-red': '0 0 15px rgba(255, 34, 68, 0.45), 0 0 30px rgba(255, 34, 68, 0.2)',
         'neon-green': '0 0 15px rgba(0, 255, 157, 0.45), 0 0 30px rgba(0, 255, 157, 0.2)',
       },

@@ -799,14 +799,14 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             />
 
             {/* Quick HUD Camera & Layer Controls Toolbar (Top Right, below floating navbar) */}
-            <div className="absolute top-24 right-6 z-20 flex items-center gap-2 bg-[#080d1e]/85 backdrop-blur-xl border border-orange-500/30 p-1.5 rounded-xl shadow-2xl">
+            <div className="absolute top-24 right-6 z-20 flex items-center gap-2 bg-card/80 backdrop-blur-xl border border-signal/30 p-1.5 rounded-xl shadow-2xl">
                 {/* Reset to India */}
                 <button
                     onClick={handleResetToIndia}
                     title="Focus Mission Operations (India)"
-                    className="p-2 rounded-lg bg-orange-500/15 border border-orange-500/30 text-orange-300 hover:bg-orange-500/30 transition-colors flex items-center gap-1.5 text-xs font-mono"
+                    className="p-2 rounded-lg bg-signal/15 border border-signal/30 text-signal hover:bg-signal/25 transition-colors flex items-center gap-1.5 text-xs font-mono"
                 >
-                    <Compass className="w-4 h-4 text-orange-400" />
+                    <Compass className="w-4 h-4 text-signal" />
                     <span className="hidden sm:inline">Focus ISTRAC</span>
                 </button>
 
@@ -816,8 +816,8 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                     title="Toggle Globe Rotation"
                     className={`p-2 rounded-lg border transition-colors flex items-center gap-1.5 text-xs font-mono ${
                         autoRotate
-                            ? 'bg-cyan-500/20 border-cyan-500/40 text-cyan-300'
-                            : 'bg-slate-800/60 border-slate-700/60 text-slate-400 hover:text-slate-200'
+                            ? 'bg-signal/20 border-signal/40 text-signal'
+                            : 'bg-muted/50 border-border text-muted-foreground hover:text-foreground'
                     }`}
                 >
                     <RotateCw className={`w-4 h-4 ${autoRotate ? 'animate-spin' : ''}`} />
@@ -830,8 +830,8 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                     title="Toggle LEO / GEO Satellite Tracks"
                     className={`p-2 rounded-lg border transition-colors flex items-center gap-1.5 text-xs font-mono ${
                         showSatellites
-                            ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
-                            : 'bg-slate-800/60 border-slate-700/60 text-slate-400 hover:text-slate-200'
+                            ? 'bg-grove/20 border-grove/40 text-grove'
+                            : 'bg-muted/50 border-border text-muted-foreground hover:text-foreground'
                     }`}
                 >
                     <SatelliteIcon className="w-4 h-4" />
@@ -844,8 +844,8 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                     title="Toggle Cyber Night / Blue Marble"
                     className={`p-2 rounded-lg border transition-colors flex items-center gap-1.5 text-xs font-mono ${
                         earthTextureMode === 'night'
-                            ? 'bg-indigo-500/20 border-indigo-500/40 text-indigo-300'
-                            : 'bg-blue-500/20 border-blue-500/40 text-blue-300'
+                            ? 'bg-signal/20 border-signal/40 text-signal'
+                            : 'bg-signal/10 border-signal/30 text-signal'
                     }`}
                 >
                     <Layers className="w-4 h-4" />
@@ -858,8 +858,8 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                     title="Toggle Station Labels"
                     className={`p-2 rounded-lg border transition-colors flex items-center gap-1.5 text-xs font-mono ${
                         showGroundLabels
-                            ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
-                            : 'bg-slate-800/60 border-slate-700/60 text-slate-400 hover:text-slate-200'
+                            ? 'bg-signal/20 border-signal/40 text-signal'
+                            : 'bg-muted/50 border-border text-muted-foreground hover:text-foreground'
                     }`}
                 >
                     <Eye className="w-4 h-4" />
@@ -869,15 +869,15 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
 
             {/* Left-side Incoming Ballistic Attack Missile Ticker */}
             <div className="absolute top-24 left-6 z-20 hidden md:flex flex-col gap-2 max-w-sm pointer-events-none">
-                <div className="pointer-events-auto bg-[#080d1e]/85 backdrop-blur-xl border border-orange-500/30 p-3 rounded-2xl shadow-2xl">
-                    <div className="flex items-center justify-between border-b border-orange-500/20 pb-2 mb-2">
+                <div className="pointer-events-auto bg-card/80 backdrop-blur-xl border border-signal/30 p-3 rounded-2xl shadow-2xl">
+                    <div className="flex items-center justify-between border-b border-signal/20 pb-2 mb-2">
                         <div className="flex items-center gap-2">
-                            <Flame className="w-4 h-4 text-red-500 animate-pulse" />
-                            <span className="text-[11px] font-mono font-bold text-white uppercase tracking-wider">
+                            <Flame className="w-4 h-4 text-destructive animate-pulse" />
+                            <span className="text-[11px] font-mono font-bold text-foreground uppercase tracking-wider">
                                 Live Missile Attack Streams
                             </span>
                         </div>
-                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/30 animate-pulse">
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-destructive/20 text-destructive border border-destructive/30 animate-pulse">
                             ACTIVE INGRESS
                         </span>
                     </div>
@@ -897,13 +897,13 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                                         controlsRef.current.update();
                                     }
                                 }}
-                                className="w-full text-left p-1.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-orange-500/40 transition-colors flex items-center justify-between group"
+                                className="w-full text-left p-1.5 rounded-lg bg-muted/40 border border-border hover:border-signal/40 transition-colors flex items-center justify-between group"
                             >
                                 <div className="flex items-center gap-1.5 truncate">
                                     <span>{arc.originFlag}</span>
-                                    <span className="text-slate-300 truncate font-semibold">{arc.originCountry}</span>
-                                    <span className="text-orange-400 font-bold">➔</span>
-                                    <span className="text-cyan-300">{arc.targetStation.code}</span>
+                                    <span className="text-foreground truncate font-semibold">{arc.originCountry}</span>
+                                    <span className="text-signal font-bold">➔</span>
+                                    <span className="text-signal">{arc.targetStation.code}</span>
                                 </div>
                                 <span
                                     className="px-1 rounded text-[9px] font-bold shrink-0 ml-1"
@@ -920,26 +920,26 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             {/* Bottom Status Ticker Overlay */}
             <div className="absolute bottom-4 left-6 right-6 z-10 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
                 {/* 3D Telemetry Indicator */}
-                <div className="pointer-events-auto bg-[#080d1e]/85 backdrop-blur-xl border border-slate-700/60 px-3.5 py-1.5 rounded-xl shadow-lg flex items-center gap-2.5">
-                    <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                    <span className="text-[11px] font-mono text-cyan-300 font-semibold tracking-wider uppercase">
+                <div className="pointer-events-auto bg-card/80 backdrop-blur-xl border border-border px-3.5 py-1.5 rounded-xl shadow-lg flex items-center gap-2.5">
+                    <div className="w-2 h-2 rounded-full bg-signal animate-pulse" />
+                    <span className="text-[11px] font-mono text-signal font-semibold tracking-wider uppercase">
                         3D Space Defense Sphere
                     </span>
-                    <span className="text-slate-600 text-xs">|</span>
-                    <span className="text-[11px] font-mono text-slate-300 flex items-center gap-1">
-                        <Flame className="w-3 h-3 text-red-400" />
+                    <span className="text-border text-xs">|</span>
+                    <span className="text-[11px] font-mono text-foreground flex items-center gap-1">
+                        <Flame className="w-3 h-3 text-destructive" />
                         {arcDataList.length} Active Missile Trajectories
                     </span>
-                    <span className="text-slate-600 text-xs">|</span>
-                    <span className="text-[11px] font-mono text-orange-400 flex items-center gap-1">
-                        <Crosshair className="w-3 h-3 text-orange-400" />
+                    <span className="text-border text-xs">|</span>
+                    <span className="text-[11px] font-mono text-signal flex items-center gap-1">
+                        <Crosshair className="w-3 h-3 text-signal" />
                         7 Protected Ground Antennas
                     </span>
                 </div>
 
                 {/* Ground Station Quick Telemetry Pills */}
-                <div className="pointer-events-auto hidden xl:flex items-center gap-1.5 bg-[#080d1e]/85 backdrop-blur-xl border border-slate-700/60 px-3 py-1.5 rounded-xl shadow-lg">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mr-1">
+                <div className="pointer-events-auto hidden xl:flex items-center gap-1.5 bg-card/80 backdrop-blur-xl border border-border px-3 py-1.5 rounded-xl shadow-lg">
+                    <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mr-1">
                         Ground Centers:
                     </span>
                     {ISRO_GROUND_STATIONS.map((st) => (
@@ -956,8 +956,8 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                             }}
                             className={`px-2 py-0.5 rounded text-[10px] font-mono border transition-all ${
                                 inspectedStation?.code === st.code
-                                    ? 'bg-orange-500/25 border-orange-400 text-orange-200'
-                                    : 'bg-slate-800/40 border-slate-700/50 text-slate-300 hover:border-slate-500'
+                                    ? 'bg-signal/25 border-signal text-signal'
+                                    : 'bg-muted/40 border-border text-foreground hover:border-signal/50'
                             }`}
                         >
                             🛰️ {st.code}
@@ -968,17 +968,17 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
 
             {/* Inspected Ground Station Drawer / Card */}
             {inspectedStation && (
-                <div className="absolute top-24 left-6 z-30 w-80 bg-[#080d1e]/95 backdrop-blur-xl border border-orange-500/40 rounded-2xl p-4 shadow-[0_12px_45px_rgba(0,0,0,0.85)] font-mono animate-in fade-in slide-in-from-left duration-200">
-                    <div className="flex items-center justify-between border-b border-orange-500/30 pb-2 mb-3">
+                <div className="absolute top-24 left-6 z-30 w-80 bg-card/90 backdrop-blur-xl border border-signal/40 rounded-2xl p-4 shadow-[0_12px_45px_rgba(0,0,0,0.85)] font-mono animate-in fade-in slide-in-from-left duration-200">
+                    <div className="flex items-center justify-between border-b border-signal/30 pb-2 mb-3">
                         <div className="flex items-center gap-2">
-                            <Radio className="w-4 h-4 text-orange-400 animate-pulse" />
-                            <span className="text-sm font-bold font-orbitron text-white">
+                            <Radio className="w-4 h-4 text-signal animate-pulse" />
+                            <span className="text-sm font-bold font-orbitron text-foreground">
                                 {inspectedStation.code}
                             </span>
                         </div>
                         <button
                             onClick={() => setInspectedStation(null)}
-                            className="text-slate-400 hover:text-white p-1"
+                            className="text-muted-foreground hover:text-foreground p-1"
                         >
                             <XCircle className="w-4 h-4" />
                         </button>
@@ -986,27 +986,27 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
 
                     <div className="space-y-2 text-xs">
                         <div>
-                            <span className="text-slate-400 text-[10px] uppercase block">Facility Name</span>
-                            <span className="text-orange-200 font-semibold">{inspectedStation.name}</span>
+                            <span className="text-muted-foreground text-[10px] uppercase block">Facility Name</span>
+                            <span className="text-signal font-semibold">{inspectedStation.name}</span>
                         </div>
                         <div>
-                            <span className="text-slate-400 text-[10px] uppercase block">Location Coordinates</span>
-                            <span className="text-slate-200">
+                            <span className="text-muted-foreground text-[10px] uppercase block">Location Coordinates</span>
+                            <span className="text-foreground">
                                 {inspectedStation.location} ({inspectedStation.coords[0].toFixed(4)}°N, {inspectedStation.coords[1].toFixed(4)}°E)
                             </span>
                         </div>
                         <div>
-                            <span className="text-slate-400 text-[10px] uppercase block">Mission Role</span>
-                            <span className="text-cyan-300">{inspectedStation.role}</span>
+                            <span className="text-muted-foreground text-[10px] uppercase block">Mission Role</span>
+                            <span className="text-signal">{inspectedStation.role}</span>
                         </div>
                         <div>
-                            <span className="text-slate-400 text-[10px] uppercase block">Telemetry Band</span>
-                            <span className="text-amber-300">{inspectedStation.freqBand}</span>
+                            <span className="text-muted-foreground text-[10px] uppercase block">Telemetry Band</span>
+                            <span className="text-signal">{inspectedStation.freqBand}</span>
                         </div>
-                        <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
-                            <span className="text-slate-400 text-[10px]">Station Link Status</span>
-                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px]">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                        <div className="pt-2 border-t border-border flex items-center justify-between">
+                            <span className="text-muted-foreground text-[10px]">Station Link Status</span>
+                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-grove/20 text-grove border border-grove/30 text-[10px]">
+                                <span className="w-1.5 h-1.5 rounded-full bg-grove animate-ping" />
                                 {inspectedStation.status}
                             </span>
                         </div>
@@ -1016,17 +1016,17 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
 
             {/* Inspected Missile Attack Card */}
             {inspectedMissile && (
-                <div className="absolute top-24 left-6 z-30 w-80 bg-[#080d1e]/95 backdrop-blur-xl border border-red-500/40 rounded-2xl p-4 shadow-[0_12px_45px_rgba(0,0,0,0.85)] font-mono animate-in fade-in slide-in-from-left duration-200">
-                    <div className="flex items-center justify-between border-b border-red-500/30 pb-2 mb-3">
+                <div className="absolute top-24 left-6 z-30 w-80 bg-card/90 backdrop-blur-xl border border-destructive/40 rounded-2xl p-4 shadow-[0_12px_45px_rgba(0,0,0,0.85)] font-mono animate-in fade-in slide-in-from-left duration-200">
+                    <div className="flex items-center justify-between border-b border-destructive/30 pb-2 mb-3">
                         <div className="flex items-center gap-2">
-                            <Flame className="w-4 h-4 text-red-500 animate-pulse" />
-                            <span className="text-sm font-bold font-orbitron text-white">
+                            <Flame className="w-4 h-4 text-destructive animate-pulse" />
+                            <span className="text-sm font-bold font-orbitron text-foreground">
                                 {inspectedMissile.originFlag} {inspectedMissile.originCountry} Strike
                             </span>
                         </div>
                         <button
                             onClick={() => setInspectedMissile(null)}
-                            className="text-slate-400 hover:text-white p-1"
+                            className="text-muted-foreground hover:text-foreground p-1"
                         >
                             <XCircle className="w-4 h-4" />
                         </button>
@@ -1034,28 +1034,28 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
 
                     <div className="space-y-2 text-xs">
                         <div>
-                            <span className="text-slate-400 text-[10px] uppercase block">Attack Vector Type</span>
+                            <span className="text-muted-foreground text-[10px] uppercase block">Attack Vector Type</span>
                             <span className="font-bold" style={{ color: getAttackColor(inspectedMissile.packet.type) }}>
                                 {inspectedMissile.packet.type}
                             </span>
                         </div>
                         <div>
-                            <span className="text-slate-400 text-[10px] uppercase block">Adversary Cluster</span>
-                            <span className="text-red-300 font-semibold">{inspectedMissile.originCluster}</span>
+                            <span className="text-muted-foreground text-[10px] uppercase block">Adversary Cluster</span>
+                            <span className="text-destructive font-semibold">{inspectedMissile.originCluster}</span>
                         </div>
                         <div>
-                            <span className="text-slate-400 text-[10px] uppercase block">Source IP & Location</span>
-                            <span className="text-slate-200">
+                            <span className="text-muted-foreground text-[10px] uppercase block">Source IP & Location</span>
+                            <span className="text-foreground">
                                 {inspectedMissile.packet.src_ip} ({inspectedMissile.startLat.toFixed(2)}°, {inspectedMissile.startLng.toFixed(2)}°)
                             </span>
                         </div>
                         <div>
-                            <span className="text-slate-400 text-[10px] uppercase block">Target Ground Station</span>
-                            <span className="text-cyan-300">{inspectedMissile.targetStation.name} ({inspectedMissile.targetStation.code})</span>
+                            <span className="text-muted-foreground text-[10px] uppercase block">Target Ground Station</span>
+                            <span className="text-signal">{inspectedMissile.targetStation.name} ({inspectedMissile.targetStation.code})</span>
                         </div>
-                        <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
-                            <span className="text-slate-400 text-[10px]">SOAR Defense Action</span>
-                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/30 text-[10px] font-bold">
+                        <div className="pt-2 border-t border-border flex items-center justify-between">
+                            <span className="text-muted-foreground text-[10px]">SOAR Defense Action</span>
+                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-destructive/20 text-destructive border border-destructive/30 text-[10px] font-bold">
                                 🛡️ AUTO-BLOCKED
                             </span>
                         </div>
