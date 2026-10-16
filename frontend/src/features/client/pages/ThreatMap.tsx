@@ -190,8 +190,8 @@ export const ThreatMap = () => {
                                     center={station.coords}
                                     radius={12}
                                     pathOptions={{
-                                        color: "#f5b325",
-                                        fillColor: "#f5b325",
+                                        color: "#ff9933",
+                                        fillColor: "#ff9933",
                                         fillOpacity: 0.12,
                                         weight: 1,
                                         dashArray: "3, 3",
@@ -202,7 +202,7 @@ export const ThreatMap = () => {
                                     radius={4.5}
                                     pathOptions={{
                                         color: "#f1efea",
-                                        fillColor: "#f5b325",
+                                        fillColor: "#ff9933",
                                         fillOpacity: 1,
                                         weight: 1.5,
                                     }}

@@ -197,7 +197,7 @@ export const PolicyConfig = () => {
                                 </div>
                             </li>
                             <li className="p-2.5 rounded-lg bg-background border border-border flex items-start gap-2.5">
-                                <span className="w-2 h-2 rounded-full bg-slate shrink-0 mt-1"></span>
+                                <span className="w-2 h-2 rounded-full bg-signal shrink-0 mt-1"></span>
                                 <div>
                                     <strong className="text-foreground font-mono">SLE Service:</strong> Space Link Extension over TCP/IP ports 5100-5102.
                                 </div>

@@ -29,7 +29,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
             </main>
 
             {/* Subdued Space Ops Footer */}
-            <footer className="border-t border-border bg-card/60 py-6 px-4 sm:px-6 text-center text-xs font-mono text-muted-foreground">
+            <footer className="border-t border-border bg-card/40 backdrop-blur-xl py-6 px-4 sm:px-6 text-center text-xs font-mono text-muted-foreground">
                 <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-signal"></span>
