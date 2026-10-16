@@ -37,6 +37,7 @@ function App() {
               <Route path="passes" element={<PassWindowStatus />} />
               <Route path="automation" element={<AutomationStatus />} />
               <Route path="map" element={<ThreatMap />} />
+              <Route path="threat-map" element={<ThreatMap />} />
               <Route path="events" element={<EventStream />} />
               <Route path="*" element={<Navigate to="/client/dashboard" replace />} />
             </Routes>
