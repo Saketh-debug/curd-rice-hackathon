@@ -200,6 +200,22 @@
     background: #ff9933;
 }
 
+/* Compact Modal Inset Scrollbar */
+.modal-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+.modal-scroll::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 16px 0;
+}
+.modal-scroll::-webkit-scrollbar-thumb {
+    background: #3e3d39;
+    border-radius: 9999px;
+}
+.modal-scroll::-webkit-scrollbar-thumb:hover {
+    background: #5a5750;
+}
+
 .map-background {
     background-color: #060913;
     background-image:

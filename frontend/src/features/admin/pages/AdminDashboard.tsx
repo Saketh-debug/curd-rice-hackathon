@@ -28,7 +28,7 @@ export const AdminDashboard = () => {
             <div className="col-span-12 lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
 
                 {/* Section Header */}
-                <div className="flex items-center justify-between pb-4 border-b border-border">
+                <div className="flex flex-col gap-3 pb-4 border-b border-border sm:flex-row sm:items-end sm:justify-between">
                     <div>
                         <div className="caps-label flex items-center gap-1.5 mb-1.5 text-muted-foreground">
                             <Satellite className="w-3.5 h-3.5 text-signal" />
@@ -37,14 +37,14 @@ export const AdminDashboard = () => {
                         <h2 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-2">
                             <AlertTriangle className="text-signal w-5 h-5" />
                             Pending Telemetry Anomalies Requiring Action
-                            <span className="text-xs px-2.5 py-0.5 rounded-full bg-signal/10 border border-signal/20 text-signal font-mono font-medium">
-                                {pendingIncidents.length} Unresolved
-                            </span>
                         </h2>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <AttackSimulatorTrigger variant="header" onSuccess={refreshData} />
+                    <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                        <span className="inline-flex h-8 items-center whitespace-nowrap rounded-full border border-signal/20 bg-signal/10 px-2.5 font-mono text-xs font-medium text-signal">
+                            {pendingIncidents.length} Unresolved
+                        </span>
+                        <AttackSimulatorTrigger variant="header" onSuccess={refreshData} className="h-8 whitespace-nowrap" />
                         <StarBorder
                             as={Link}
                             to="/admin/benchmark"
@@ -53,7 +53,7 @@ export const AdminDashboard = () => {
                             textColor="#f1efea"
                             hoverBackgroundColor="#292825"
                             activeBackgroundColor="#ff9933"
-                            className="px-3.5 py-1.5 font-sans font-medium text-xs tracking-tight cursor-pointer hover:bg-muted active:bg-signal active:text-[#161513]"
+                            className="h-8 whitespace-nowrap px-3.5 py-1.5 font-sans font-medium text-xs tracking-tight cursor-pointer hover:bg-muted active:bg-signal active:text-[#161513]"
                         >
                             View 7x7 Benchmark
                         </StarBorder>
