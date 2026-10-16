@@ -1,36 +1,16 @@
 import React from 'react';
-import {
-    Shield,
-    LayoutDashboard,
-    Zap,
-    Map as MapIcon,
-    Terminal,
-    Satellite
-} from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import PortalNavbar, { type NavItem } from '../../../components/Navbar/PortalNavbar';
+import ClientTopNav from '../components/ClientTopNav';
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
     const location = useLocation();
     const isMapPage = location.pathname.startsWith('/client/map');
 
-    const navItems: NavItem[] = [
-        { icon: LayoutDashboard, label: 'Mission Overview', path: '/client/dashboard' },
-        { icon: Shield, label: 'Threat Bridge', path: '/client/command-center' },
-        { icon: Satellite, label: 'Pass Windows', path: '/client/passes' },
-        { icon: MapIcon, label: 'Station Map', path: '/client/map' },
-        { icon: Terminal, label: 'Telemetry Stream', path: '/client/events' },
-        { icon: Zap, label: 'Defense Automation', path: '/client/automation' },
-    ];
-
     if (isMapPage) {
         return (
-            <div className="w-screen h-screen overflow-hidden bg-[#030712] text-slate-100 font-sans selection:bg-orange-500 selection:text-black relative flex flex-col">
-                {/* Floating Glassmorphic Navbar */}
-                <PortalNavbar portalType="client" navItems={navItems} isFloating />
-
-                {/* Edge-to-Edge Main Map View */}
-                <main className="w-full h-full flex-1 overflow-hidden relative">
+            <div className="w-screen h-screen overflow-hidden bg-background text-foreground font-sans selection:bg-signal selection:text-signal-foreground relative flex flex-col">
+                <ClientTopNav />
+                <main className="w-full flex-1 overflow-hidden relative">
                     {children}
                 </main>
             </div>
@@ -38,25 +18,25 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <div className="min-h-screen bg-[#050814] text-slate-100 font-sans selection:bg-orange-500 selection:text-black flex flex-col">
-            {/* Centered Glassmorphic Navbar */}
-            <PortalNavbar portalType="client" navItems={navItems} />
+        <div className="min-h-screen bg-background text-foreground font-sans flex flex-col selection:bg-signal selection:text-signal-foreground">
+            {/* Top Navigation Header */}
+            <ClientTopNav />
 
-            {/* Main Content Area - Centered with balanced whitespace */}
-            <main className="flex-1 pt-20 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto">
+            {/* Centered Responsive Content Area */}
+            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative flex flex-col min-h-[calc(100vh-65px)]">
                 {children}
             </main>
 
-            {/* Subdued Footer */}
-            <footer className="border-t border-slate-800/80 bg-[#050814]/90 py-6 px-4 sm:px-6 text-center text-xs font-mono text-slate-500">
+            {/* Subdued Space Ops Footer */}
+            <footer className="border-t border-border bg-card/60 py-6 px-4 sm:px-6 text-center text-xs font-mono text-muted-foreground">
                 <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-orange-400"></span>
-                        <span className="text-slate-300 font-semibold">SOAR Space Flight Operations</span>
-                        <span className="text-slate-600">|</span>
+                        <span className="w-2 h-2 rounded-full bg-signal"></span>
+                        <span className="text-foreground font-medium">SOAR Space Flight Operations</span>
+                        <span className="text-border">|</span>
                         <span>MOC Bengaluru Telemetry Ingest</span>
                     </div>
-                    <div className="text-slate-500">
+                    <div>
                         Autonomous Heuristic TT&C Guard • Live Telemetry Active
                     </div>
                 </div>
@@ -65,4 +45,4 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
-export default Layout;
+export default ClientLayout;

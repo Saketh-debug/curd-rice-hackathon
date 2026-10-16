@@ -1,13 +1,66 @@
-/* 1. In v4, this single line replaces the old @tailwind directives */
 @import "tailwindcss";
 
-/* 2. Keep your font imports (ensure they are at the top) */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round');
 
 @config "../tailwind.config.js";
 
+:root,
+.dark {
+    --background: #161513;
+    --foreground: #f1efea;
+    --card: #1f1e1b;
+    --card-foreground: #f1efea;
+    --popover: #1f1e1b;
+    --popover-foreground: #f1efea;
+    --primary: #f1efea;
+    --primary-foreground: #161513;
+    --secondary: #292825;
+    --secondary-foreground: #f1efea;
+    --muted: #292825;
+    --muted-foreground: #a19c92;
+    --accent: #292825;
+    --accent-foreground: #f1efea;
+    --destructive: #ff6568;
+    --border: #34322d;
+    --input: #34322d;
+    --ring: #66625a;
+    --signal: #f5b325;
+    --signal-foreground: #161513;
+    --grove: #8abf84;
+    --grove-foreground: #161513;
+    --slate: #7c9bda;
+    --slate-soft: #242e48;
+    --radius: 0.625rem;
+    --radius-md: 0.5rem;
+    --radius-xl: 0.875rem;
+
+    --font-sans: 'Geist', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, monospace;
+    --font-heading: 'Geist', system-ui, -apple-system, sans-serif;
+    --font-logo: 'Orbitron', sans-serif;
+}
+
 @theme {
+    --color-background: #161513;
+    --color-foreground: #f1efea;
+    --color-card: #1f1e1b;
+    --color-card-foreground: #f1efea;
+    --color-popover: #1f1e1b;
+    --color-popover-foreground: #f1efea;
+    --color-muted: #292825;
+    --color-muted-foreground: #a19c92;
+    --color-border: #34322d;
+    --color-input: #34322d;
+    --color-ring: #66625a;
+    --color-signal: #f5b325;
+    --color-signal-foreground: #161513;
+    --color-grove: #8abf84;
+    --color-grove-foreground: #161513;
+    --color-destructive: #ff6568;
+    --color-slate: #7c9bda;
+    --color-slate-soft: #242e48;
+
     --color-primary: #f97316;
     --color-primary-light: #fb923c;
     --color-primary-dark: #ea580c;
@@ -16,31 +69,76 @@
     --color-accent-red: #ff2244;
     --color-accent-amber: #f59e0b;
     --color-accent-green: #10b981;
-    --color-background-light: #070b16;
-    --color-background-dark: #050814;
-    --color-surface-dark: #0a1022;
-    --color-surface-card: #0f172a;
-    --color-surface-border: #1e293b;
+    --color-background-light: #1f1e1b;
+    --color-background-dark: #161513;
+    --color-surface-dark: #161513;
+    --color-surface-card: #1f1e1b;
+    --color-surface-border: #34322d;
 
     --font-orbitron: 'Orbitron', sans-serif;
-    --font-display: 'Orbitron', 'Space Grotesk', sans-serif;
-    --font-mono: 'Space Mono', 'JetBrains Mono', monospace;
-    --font-sans: 'Inter', sans-serif;
+    --font-display: 'Geist', 'Orbitron', system-ui, sans-serif;
+    --font-heading: 'Geist', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Geist Mono', 'Space Mono', monospace;
+    --font-sans: 'Geist', 'Inter', system-ui, sans-serif;
+    --font-logo: 'Orbitron', sans-serif;
 }
 
 @layer base {
     body {
-        background-color: #050814;
-        color: #f1f5f9;
+        background-color: #161513;
+        color: #f1efea;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Geist', system-ui, -apple-system, sans-serif;
         background-image: 
-            radial-gradient(circle at 15% 10%, rgba(249, 115, 22, 0.08) 0%, transparent 45%),
-            radial-gradient(circle at 85% 20%, rgba(234, 88, 12, 0.06) 0%, transparent 45%),
-            radial-gradient(circle at 50% 90%, rgba(249, 115, 22, 0.05) 0%, transparent 50%);
+            radial-gradient(circle at 15% 10%, rgba(245, 179, 37, 0.04) 0%, transparent 45%),
+            radial-gradient(circle at 85% 20%, rgba(245, 179, 37, 0.03) 0%, transparent 45%),
+            radial-gradient(circle at 50% 90%, rgba(245, 179, 37, 0.03) 0%, transparent 50%);
         min-height: 100vh;
     }
+
+    .font-mono,
+    code, kbd, samp, pre {
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-feature-settings: "tnum" 1, "zero" 1;
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+/* FieldRank Monospace Caps Label */
+.caps-label {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 11px;
+    line-height: 0.875rem;
+    color: #a19c92;
+}
+
+/* FieldRank Surface Panels */
+.glass-panel {
+    background: rgba(31, 30, 27, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid #34322d;
+}
+
+.glass-panel-elevated {
+    background: rgba(31, 30, 27, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid #45423b;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.glass-panel-hover {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+    background: rgba(41, 40, 37, 0.95);
+    border-color: #555148;
+    transform: translateY(-1px);
 }
 
 /* Custom Telemetry Scrollbar */
@@ -50,16 +148,16 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: #080d1a;
+    background: #161513;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #1e293b;
+    background: #34322d;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #f97316;
+    background: #f5b325;
 }
 
 .map-background {
