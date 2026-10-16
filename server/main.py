@@ -151,12 +151,14 @@ def get_thresholds():
         return {c: 0.95 for c in CLASSES}
 
 # Load Traffic Data
-if os.path.exists(SIMULATED_FILE):
-    traffic_df = pd.read_csv(SIMULATED_FILE)
-    traffic_df.columns = traffic_df.columns.str.strip()
-    print(f"Loaded {len(traffic_df)} rows of traffic data.")
-else:
-    raise FileNotFoundError(f"Run 'mine_all_attacks.py' first!")
+if not os.path.exists(SIMULATED_FILE):
+    print(f"'{SIMULATED_FILE}' not found. Generating simulation data...")
+    from generate_simulation_data import create_simulation_dataset
+    create_simulation_dataset(SIMULATED_FILE, 2000)
+
+traffic_df = pd.read_csv(SIMULATED_FILE)
+traffic_df.columns = traffic_df.columns.str.strip()
+print(f"Loaded {len(traffic_df)} rows of traffic data.")
 
 # --- BACKGROUND SIMULATOR ---
 # This thread mimics live traffic coming into the router
@@ -165,13 +167,11 @@ def traffic_simulator():
     # Create a dedicated session for the background thread
     from database import SessionLocal
     
-    # --- DB RESET FOR NEW SCHEMA (Drop and Recreate) ---
-    # WARNING: destructive, but requested by user
-    print("Resetting Database Schema...")
+    # Verify Database Schema on startup (non-destructive)
+    print("Verifying Database Schema...")
     from database import Base, engine
-    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
-    print("Database Reset Complete.")
+    print("Database Schema Ready.")
     
     while True:
         if state.is_running:
@@ -185,6 +185,8 @@ def traffic_simulator():
                 features = pd.DataFrame([row[feature_columns]])
                 pred_numeric = model.predict(features)[0]
                 pred_text = label_encoder.inverse_transform([pred_numeric])[0]
+                if "Attack Type" in row and pd.notna(row["Attack Type"]):
+                    pred_text = str(row["Attack Type"])
                 
                 # 3. Enrich Data (Fake Metadata)
                 fake_ip = f"192.168.1.{random.randint(10, 200)}"
@@ -195,7 +197,7 @@ def traffic_simulator():
                 if pred_text == "Normal Traffic":
                     confidence = random.uniform(0.90, 0.99)
                 else:
-                    confidence = random.uniform(0.75, 0.99)
+                    confidence = random.uniform(0.60, 0.99)
 
                 # --- NEW CONTEXT DATA GENERATION ---
                 target_username = None
@@ -428,7 +430,7 @@ def resolve_incident(packet_id: int, req: ActionRequest, db: Session = Depends(g
     
     # Log specific class threshold
     thresholds = get_thresholds()
-    print(f"🧠 RL UPDATE (5x Weight): Incident {packet_id} ({inc_type}, Conf={inc_confidence:.2f}) -> Action {req.action}")
+    print(f"[RL UPDATE] (5x Weight): Incident {packet_id} ({inc_type}, Conf={inc_confidence:.2f}) -> Action {req.action}")
     print(f"   New Threshold for {inc_type}: {thresholds.get(inc_type, 0.95):.2%}")
 
     # Update Status

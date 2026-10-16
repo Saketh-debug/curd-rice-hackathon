@@ -9,12 +9,12 @@ def extract_ip(query):
 
 def handle_ip_query(ip):
     incidents = execute_query(
-        "SELECT attack_type, severity, status FROM incidents WHERE source_ip=?",
+        "SELECT type, confidence, action FROM traffic_logs WHERE src_ip=%s ORDER BY timestamp DESC LIMIT 10",
         (ip,)
     )
 
     blocked = execute_query(
-        "SELECT status FROM blocked_ips WHERE ip=?",
+        "SELECT action FROM auto_blocked WHERE src_ip=%s LIMIT 1",
         (ip,)
     )
 
@@ -23,6 +23,7 @@ def handle_ip_query(ip):
 
 def handle_sql_query():
     result = execute_query(
-        "SELECT COUNT(*) FROM incidents WHERE attack_type='DDoS'"
+        "SELECT COUNT(*) FROM traffic_logs WHERE type='DDoS'"
     )
-    return f"Total DDoS incidents: {result[0][0]}"
+    count = result[0][0] if result and len(result) > 0 else 0
+    return f"Total DDoS incidents: {count}"
