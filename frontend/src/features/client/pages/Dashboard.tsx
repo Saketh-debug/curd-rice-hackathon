@@ -11,6 +11,7 @@ import {
     Cpu
 } from 'lucide-react';
 import { useSystemHealth } from '../../../hooks/useSystemHealth';
+import { AttackSimulatorTrigger } from '../../../components/AttackSimulator/AttackSimulatorTrigger';
 
 const Dashboard = () => {
     const { health } = useSystemHealth();
@@ -70,6 +71,11 @@ const Dashboard = () => {
                             <div className="text-orange-300 font-bold">LOS SAFEGUARD</div>
                         </div>
                     </div>
+                </div>
+
+                {/* 1-Click Attack Simulator Trigger for Live Judging */}
+                <div className="pt-2 flex justify-center">
+                    <AttackSimulatorTrigger variant="prominent" />
                 </div>
             </section>
 
