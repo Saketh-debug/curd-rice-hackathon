@@ -72,7 +72,7 @@ const LandingPage = () => {
                             </div>
                             <div className="bg-[#0c142b]/80 border border-orange-500/20 rounded-xl p-3">
                                 <div className="text-orange-400 font-mono text-xl font-bold">7 Classes</div>
-                                <div className="text-[11px] text-slate-400 uppercase tracking-wide">Space Threats</div>
+                                <div className="text-[11px] text-slate-400 uppercase tracking-wide">Attack Classes</div>
                             </div>
                             <div className="bg-[#0c142b]/80 border border-blue-500/20 rounded-xl p-3">
                                 <div className="text-blue-400 font-mono text-xl font-bold">&lt; 12ms</div>
@@ -106,18 +106,18 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* ================= SPACE THREAT TAXONOMY ================= */}
+            {/* ================= NETWORK ATTACK TAXONOMY ================= */}
             <section className="px-6 py-16 bg-[#080d1e]/80 border-y border-slate-800">
                 <div className="max-w-7xl mx-auto space-y-10">
                     <div className="text-center max-w-3xl mx-auto space-y-3">
                         <div className="text-xs font-mono uppercase tracking-[0.25em] text-cyan-400 font-semibold">
-                            Aerospace Cyber Defense Mapping
+                            Network Threat Classification & Defense
                         </div>
                         <h2 className="text-2xl sm:text-3xl font-bold font-orbitron text-white">
-                            Ground Segment Threat Vectors Defended
+                            Standard Attack Classes Defended
                         </h2>
                         <p className="text-slate-400 text-sm">
-                            Real-time multiclass classification addressing vulnerabilities across Space Link Extension (SLE) and TT&C architectures.
+                            High-accuracy multiclass intrusion detection evaluated across 52 standardized network flow features.
                         </p>
                     </div>
 
@@ -125,44 +125,44 @@ const LandingPage = () => {
                         {[
                             {
                                 icon: Radio,
-                                code: "DoS / DDoS",
-                                title: "TT&C Uplink Saturation",
-                                impact: "Floods ground station transceivers during an 8-12 min LEO pass window, causing Loss of Signal (LOS).",
+                                code: "DDoS",
+                                title: "Distributed Denial of Service",
+                                impact: "Floods network links or transceivers with massive packet rates to overwhelm services.",
                                 color: "border-red-500/30 text-red-400 bg-red-950/10",
                             },
                             {
                                 icon: Lock,
                                 code: "Brute Force",
-                                title: "Telecommand (TC) Bypass",
-                                impact: "Attempts to inject unauthorized thruster firings or corrupt CCSDS COP-1 sequence counters.",
+                                title: "Brute Force Authentication",
+                                impact: "Automated credential guessing attempts targeting authentication endpoints and open accounts.",
                                 color: "border-orange-500/30 text-orange-400 bg-orange-950/10",
                             },
                             {
                                 icon: Radar,
                                 code: "Port Scanning",
-                                title: "SLE Service Reconnaissance",
-                                impact: "Probes ground station ports 5100-5102, antenna position encoders, and RF matrix controllers.",
+                                title: "Port Scanning Reconnaissance",
+                                impact: "Rapid probes across listening ports to discover open services and potential entry points.",
                                 color: "border-yellow-500/30 text-yellow-400 bg-yellow-950/10",
                             },
                             {
                                 icon: Cpu,
                                 code: "Bot Traffic",
-                                title: "Ground RTU / Sensor Hijack",
-                                impact: "Compromises remote weather sensors or calibration feeds feeding orbital determination software.",
+                                title: "Botnet Agent Traffic",
+                                impact: "Automated malicious communication patterns and remote beaconing from compromised nodes.",
                                 color: "border-purple-500/30 text-purple-400 bg-purple-950/10",
                             },
                             {
                                 icon: Compass,
                                 code: "Web Attacks",
-                                title: "Mission Data Portal Exploit",
-                                impact: "Attacks Bhuvan / EOS telemetry dissemination servers and public earth observation APIs.",
+                                title: "Web Application Attacks",
+                                impact: "SQL injection, parameter manipulation, and API exploits targeting distribution interfaces.",
                                 color: "border-cyan-500/30 text-cyan-400 bg-cyan-950/10",
                             },
                             {
                                 icon: CheckCircle2,
                                 code: "Normal Flow",
-                                title: "Routine Housekeeping Telemetry",
-                                impact: "Reaction wheel RPM, star tracker quaternion data, solar panel battery bus voltage (Nominal).",
+                                title: "Nominal Baseline Traffic",
+                                impact: "Authorized routine data transfers, legitimate client requests, and housekeeping flows.",
                                 color: "border-emerald-500/30 text-emerald-400 bg-emerald-950/10",
                             },
                         ].map((item, idx) => (

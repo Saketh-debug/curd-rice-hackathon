@@ -181,7 +181,7 @@ const Dashboard = () => {
                                     </span>
                                 </div>
                                 <p className="text-xs text-slate-400 mt-2 max-w-[150px]">
-                                    Percentage of space threats neutralized automatically.
+                                    Percentage of security threats neutralized automatically.
                                 </p>
                             </div>
 

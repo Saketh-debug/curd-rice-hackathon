@@ -3,17 +3,6 @@ import { useSystemHealth } from '../../../hooks/useSystemHealth';
 import { useLiveTraffic } from '../../../hooks/useLiveTraffic';
 import clsx from 'clsx';
 
-const mapSpaceThreatName = (type: string) => {
-    if (type.includes('DDoS')) return 'TT&C Uplink Saturation';
-    if (type.includes('DoS')) return 'TT&C Gateway Flood';
-    if (type.includes('Brute')) return 'TC Authentication Bypass';
-    if (type.includes('Port')) return 'SLE Port Reconnaissance';
-    if (type.includes('Bot')) return 'Ground RTU Sensor Hijack';
-    if (type.includes('Web')) return 'Mission Data Distribution Exploit';
-    if (type.includes('Normal')) return 'Nominal Housekeeping Telemetry';
-    return type;
-};
-
 export const CommandCenter = () => {
     const { health } = useSystemHealth();
     const { traffic } = useLiveTraffic();
@@ -47,7 +36,7 @@ export const CommandCenter = () => {
                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                         <Radar className="w-16 h-16 text-cyan-400" />
                     </div>
-                    <p className="text-xs text-slate-400 font-mono mb-1 uppercase tracking-wider">Active Space Threats</p>
+                    <p className="text-xs text-slate-400 font-mono mb-1 uppercase tracking-wider">Active Network Threats</p>
                     <div className="flex items-baseline gap-2">
                         <h3 className="text-3xl font-bold font-orbitron text-white">1,204</h3>
                         <span className="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800">
@@ -114,7 +103,7 @@ export const CommandCenter = () => {
                 <div className="lg:col-span-2 bg-[#0a1022] rounded-xl border border-slate-800 shadow-sm flex flex-col">
                     <div className="px-6 py-4 border-b border-slate-800 flex justify-between items-center">
                         <h3 className="font-orbitron font-bold text-base text-white tracking-wide">
-                            Space Threat Mission Impact Distribution
+                            Threat Severity Distribution
                         </h3>
                         <span className="text-xs font-mono text-cyan-400">EOS-09 Contact Window</span>
                     </div>
@@ -253,7 +242,7 @@ export const CommandCenter = () => {
                                             {action.action === 'AUTO_BLOCKED' ? 'AUTO_NEUTRALIZE' : action.action}
                                         </td>
                                         <td className="px-6 py-3 text-cyan-300">{action.src_ip}</td>
-                                        <td className="px-6 py-3 text-slate-300">{mapSpaceThreatName(action.type)}</td>
+                                        <td className="px-6 py-3 text-slate-300">{action.type}</td>
                                         <td className="px-6 py-3">
                                             <span className={clsx("inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide",
                                                 action.action.includes('BLOCK') ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"

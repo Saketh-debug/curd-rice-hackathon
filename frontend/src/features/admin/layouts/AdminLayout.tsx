@@ -22,7 +22,6 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     const navItems = [
         { icon: LayoutDashboard, label: 'Analyst Mission Control', path: '/admin/dashboard' },
         { icon: BarChart3, label: 'Model Benchmark (7x7 Matrix)', path: '/admin/benchmark' },
-        { icon: AlertOctagon, label: 'Anomaly Investigation', path: '/admin/incidents' },
         { icon: Gavel, label: 'Adaptive Threshold Policy', path: '/admin/policy' },
         { icon: History, label: 'Mission Decision Timeline', path: '/admin/timeline' },
         { icon: FileText, label: 'Mission Security Reports', path: '/admin/compliance' }

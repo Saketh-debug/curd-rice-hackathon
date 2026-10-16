@@ -24,7 +24,7 @@ interface ClassMetric {
 
 const CLASS_METRICS: ClassMetric[] = [
     {
-        name: 'TT&C Uplink Saturation',
+        name: 'DDoS (Distributed Denial of Service)',
         alias: 'DDoS',
         precision: 0.992,
         recall: 0.988,
@@ -33,7 +33,7 @@ const CLASS_METRICS: ClassMetric[] = [
         support: 1840,
     },
     {
-        name: 'TT&C Gateway Flood',
+        name: 'DoS (Denial of Service)',
         alias: 'DoS',
         precision: 0.984,
         recall: 0.979,
@@ -42,7 +42,7 @@ const CLASS_METRICS: ClassMetric[] = [
         support: 1420,
     },
     {
-        name: 'Telecommand (TC) Auth Bypass',
+        name: 'Brute Force Attack',
         alias: 'Brute Force',
         precision: 0.978,
         recall: 0.971,
@@ -51,7 +51,7 @@ const CLASS_METRICS: ClassMetric[] = [
         support: 980,
     },
     {
-        name: 'SLE Service Reconnaissance',
+        name: 'Port Scanning Reconnaissance',
         alias: 'Port Scan',
         precision: 0.989,
         recall: 0.985,
@@ -60,7 +60,7 @@ const CLASS_METRICS: ClassMetric[] = [
         support: 1250,
     },
     {
-        name: 'Ground RTU / Sensor Hijack',
+        name: 'Botnet Traffic',
         alias: 'Bots',
         precision: 0.967,
         recall: 0.958,
@@ -69,7 +69,7 @@ const CLASS_METRICS: ClassMetric[] = [
         support: 720,
     },
     {
-        name: 'Mission Data Distribution Exploit',
+        name: 'Web Application Attack',
         alias: 'Web Attack',
         precision: 0.975,
         recall: 0.966,
@@ -78,7 +78,7 @@ const CLASS_METRICS: ClassMetric[] = [
         support: 810,
     },
     {
-        name: 'Nominal Housekeeping Telemetry',
+        name: 'Normal Traffic',
         alias: 'Normal',
         precision: 0.995,
         recall: 0.997,
@@ -101,13 +101,13 @@ const CONFUSION_MATRIX = [
 ];
 
 const MATRIX_LABELS = [
-    'DDoS Saturation',
-    'DoS Flood',
-    'TC Auth Bypass',
-    'SLE Port Scan',
-    'RTU Bot Hijack',
-    'Web Exploit',
-    'Housekeeping',
+    'DDoS',
+    'DoS',
+    'Brute Force',
+    'Port Scan',
+    'Bots',
+    'Web Attack',
+    'Normal',
 ];
 
 export const ModelBenchmark = () => {
@@ -332,11 +332,11 @@ export const ModelBenchmark = () => {
                 </div>
             </div>
 
-            {/* Space Cyber Datasets Reference Panel */}
+            {/* Network Security Datasets Reference Panel */}
             <div className="bg-[#0a1022] border border-cyan-500/20 rounded-2xl p-6">
                 <h3 className="font-orbitron font-bold text-base text-white flex items-center gap-2 mb-4">
                     <Database className="w-5 h-5 text-cyan-400" />
-                    Validated Aerospace & Space Ground Datasets Provenance
+                    Validated Network Security & Intrusion Detection Datasets
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4 text-xs font-mono text-slate-300">
                     <div className="p-4 rounded-xl bg-[#080d1e] border border-slate-800">

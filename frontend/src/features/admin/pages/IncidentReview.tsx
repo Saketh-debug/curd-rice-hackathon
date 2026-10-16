@@ -3,33 +3,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { apiClient } from '../../../api/client';
 import type { Packet } from '../../../types';
 import {
-    ShieldAlert,
-    Activity,
-    MapPin,
-    Server,
-    User,
     ArrowLeft,
-    CheckCircle,
+    CheckCircle2,
     XCircle,
     AlertTriangle,
-    Satellite,
-    Radio,
-    Cpu,
-    BarChart2,
-    Lock
+    ShieldAlert,
+    Server,
+    Activity,
+    Info,
+    User
 } from 'lucide-react';
 import clsx from 'clsx';
-
-const mapSpaceThreatName = (type: string) => {
-    if (type.includes('DDoS')) return 'TT&C Uplink Saturation';
-    if (type.includes('DoS')) return 'TT&C Gateway Flood';
-    if (type.includes('Brute')) return 'TC Authentication Bypass';
-    if (type.includes('Port')) return 'SLE Port Reconnaissance';
-    if (type.includes('Bot')) return 'Ground RTU Sensor Hijack';
-    if (type.includes('Web')) return 'Mission Data Distribution Exploit';
-    if (type.includes('Normal')) return 'Nominal Housekeeping Telemetry';
-    return type;
-};
 
 export const IncidentReview = () => {
     const { id } = useParams();
@@ -60,264 +44,359 @@ export const IncidentReview = () => {
             await apiClient.post(`/incidents/${incident.id}/resolve`, { action });
             navigate('/admin/dashboard');
         } catch (error) {
-            console.error("Failed to resolve", error);
+            console.error("Failed to resolve incident", error);
             setIsResolving(false);
         }
     };
 
-    if (isLoading) return <div className="p-8 text-center text-slate-500 font-mono">Loading telemetry anomaly details...</div>;
-    if (!incident) return (
-        <div className="p-8 text-center text-slate-400 font-mono">
-            Incident not found or already resolved.{' '}
-            <button onClick={() => navigate('/admin/dashboard')} className="text-orange-400 underline font-bold">
-                Return to Mission Dashboard
-            </button>
-        </div>
-    );
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh] font-mono text-slate-400 text-sm">
+                Loading incident details...
+            </div>
+        );
+    }
 
-    const spaceThreat = mapSpaceThreatName(incident.type);
+    if (!incident) {
+        return (
+            <div className="max-w-xl mx-auto my-16 p-8 text-center bg-[#0a1022] rounded-2xl border border-slate-800">
+                <AlertTriangle className="w-12 h-12 mx-auto text-amber-400 mb-4" />
+                <h2 className="text-xl font-bold font-orbitron text-white mb-2">Incident Not Found</h2>
+                <p className="text-sm text-slate-400 mb-6">
+                    This incident may have already been resolved or does not exist.
+                </p>
+                <button
+                    onClick={() => navigate('/admin/dashboard')}
+                    className="px-5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-400 text-black font-bold text-xs font-orbitron transition-all cursor-pointer"
+                >
+                    Back to Mission Dashboard
+                </button>
+            </div>
+        );
+    }
+
+    const confidencePct = Math.round(incident.confidence * 100);
+    const isHighRisk = incident.confidence > 0.85;
+
+    // Helper to get simple explainability points based on attack category
+    const getSimpleReasons = (type: string) => {
+        const t = (type || '').toLowerCase();
+        if (t.includes('ddos') || t.includes('dos')) {
+            return [
+                {
+                    title: "Extreme Packet Volume",
+                    description: "The connection sent traffic at an unusually high rate, typical of an automated flood attack.",
+                    detail: "Traffic Volume: High Surge"
+                },
+                {
+                    title: "Abnormally Fast Request Interval",
+                    description: "Packets arrived within fractions of a millisecond, indicating a script rather than a standard user.",
+                    detail: "Packet Inter-Arrival: Near Zero (<1ms)"
+                },
+                {
+                    title: "Incomplete Handshakes (SYN Burst)",
+                    description: "Repeated connection attempts were started without being completed, exhausting server connection slots.",
+                    detail: "Connection Pattern: Unfinished SYN requests"
+                }
+            ];
+        } else if (t.includes('brute')) {
+            return [
+                {
+                    title: "Repeated Failed Logins",
+                    description: `${incident.failed_attempts || 'Multiple'} rapid authentication failures were detected in a short time frame.`,
+                    detail: incident.target_username ? `Targeted Account: '${incident.target_username}'` : "Target: Authentication Service"
+                },
+                {
+                    title: "Automated Credential Guessing",
+                    description: "Pattern matches automated dictionary attacks cycling through passwords.",
+                    detail: `Target Port: ${incident.destination_port}`
+                },
+                {
+                    title: "Burst Activity Spike",
+                    description: "Login attempts occurred significantly faster than typical human interaction.",
+                    detail: `Burst Deviation Score: ${incident.burst_score || 3.4}x normal`
+                }
+            ];
+        } else if (t.includes('port') || t.includes('scan')) {
+            return [
+                {
+                    title: "Port Reconnaissance Activity",
+                    description: "Sequential or rapid probes across network ports attempting to discover open services.",
+                    detail: `Probed Port: ${incident.destination_port}`
+                },
+                {
+                    title: "Zero Data Payload",
+                    description: "Packets contained TCP header probe flags without any application data.",
+                    detail: "Packet Type: Scanner Probe"
+                },
+                {
+                    title: "Short Duration Spikes",
+                    description: "Connection was terminated immediately after port response was evaluated.",
+                    detail: "Duration: Rapid disconnect"
+                }
+            ];
+        } else if (t.includes('bot')) {
+            return [
+                {
+                    title: "Automated Agent Pattern",
+                    description: "Traffic interval and flow characteristics match known automated botnet command-and-control behavior.",
+                    detail: "Behavior: Automated Bot Pattern"
+                },
+                {
+                    title: "Periodic Beaconing Signals",
+                    description: "Packets were transmitted at rigid clock intervals unlike human browsing.",
+                    detail: "Timing: Periodic Intervals"
+                },
+                {
+                    title: "Suspicious Port Target",
+                    description: `Traffic targeted internal service port ${incident.destination_port}.`,
+                    detail: `Port: ${incident.destination_port}`
+                }
+            ];
+        } else {
+            return [
+                {
+                    title: "Anomalous Traffic Payload",
+                    description: "Packet payload structure deviates from standard request formats.",
+                    detail: "Pattern: Exploit Signature Match"
+                },
+                {
+                    title: "Elevated Flow Burst Score",
+                    description: "Connection activity exceeded standard baseline thresholds.",
+                    detail: `Deviation Score: ${incident.burst_score || 2.8}x baseline`
+                },
+                {
+                    title: "Suspicious Web Gateway Target",
+                    description: `Targeting service endpoint on port ${incident.destination_port}.`,
+                    detail: `Destination Port: ${incident.destination_port}`
+                }
+            ];
+        }
+    };
+
+    const reasons = getSimpleReasons(incident.type);
 
     return (
-        <div className="flex h-full flex-col bg-[#050814] text-slate-100 font-sans relative">
-            {/* Header */}
-            <div className="bg-[#080d1e] border-b border-slate-800 px-6 py-4 flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-4">
-                    <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-white">
-                        <ArrowLeft className="w-5 h-5" />
-                    </button>
-                    <div>
-                        <h1 className="text-lg font-bold font-orbitron text-white flex items-center gap-2">
-                            <span>Telemetry Anomaly #{incident.id}</span>
-                            <span className={clsx(
-                                "text-[10px] font-mono px-2 py-0.5 rounded border uppercase tracking-wider",
-                                incident.confidence > 0.9 ? "bg-red-500/20 text-red-400 border-red-500/30" : "bg-orange-500/20 text-orange-400 border-orange-500/30"
-                            )}>
-                                {incident.confidence > 0.9 ? 'PASS WINDOW CRITICAL' : 'ELEVATED RISK'}
-                            </span>
-                        </h1>
-                        <p className="text-xs text-cyan-400 font-mono">{spaceThreat}</p>
-                    </div>
-                </div>
-                <div className="flex items-center gap-3">
-                    <div className="text-right hidden sm:block font-mono">
-                        <p className="text-[10px] text-slate-400 uppercase font-bold">Telemetry Ingestion Time</p>
-                        <p className="text-xs text-slate-300">{new Date(incident.timestamp).toLocaleString()}</p>
-                    </div>
-                </div>
-            </div>
+        <div className="min-h-screen bg-[#050814] text-slate-100 font-sans p-6 md:p-8">
+            <div className="max-w-5xl mx-auto space-y-6">
 
-            <div className="flex-1 overflow-hidden flex flex-col lg:flex-row">
-                {/* Left Sidebar: Context Data */}
-                <aside className="w-full lg:w-80 bg-[#080d1e] border-r border-slate-800 overflow-y-auto p-6 shrink-0 font-mono text-xs">
-                    <div className="flex items-center gap-2 text-slate-400 uppercase text-[10px] font-bold tracking-wider mb-4">
-                        <Radio className="w-3.5 h-3.5 text-cyan-400" /> Ground Station Link Context
-                    </div>
-
-                    <div className="space-y-5">
-                        {/* Traffic Volume */}
+                {/* Top Navigation & Status */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => navigate('/admin/dashboard')}
+                            className="p-2.5 rounded-xl bg-[#0a1022] hover:bg-[#121c3b] border border-slate-800 text-slate-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 text-xs font-mono"
+                        >
+                            <ArrowLeft className="w-4 h-4" />
+                            <span>Back to Dashboard</span>
+                        </button>
                         <div>
-                            <label className="text-[10px] text-slate-400 block mb-1">Uplink Telemetry Volume</label>
-                            <div className="flex items-center gap-2">
-                                <Activity className="w-4 h-4 text-cyan-400" />
-                                <span className={clsx(
-                                    "text-xs font-bold px-2 py-0.5 rounded",
-                                    incident.traffic_volume === 'High' ? "bg-red-500/10 text-red-400 border border-red-500/20" :
-                                        incident.traffic_volume === 'Medium' ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" :
-                                            "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                                )}>
-                                    {incident.traffic_volume || 'Nominal Flow'}
+                            <div className="text-[10px] font-mono uppercase text-slate-400 tracking-wider">
+                                Threat Review Queue
+                            </div>
+                            <h1 className="text-xl sm:text-2xl font-bold font-orbitron text-white">
+                                Incident #{incident.id}
+                            </h1>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 font-mono text-xs">
+                        <span className={clsx(
+                            "px-3 py-1.5 rounded-lg border font-bold text-xs uppercase tracking-wide flex items-center gap-1.5",
+                            isHighRisk
+                                ? "bg-red-500/15 border-red-500/40 text-red-300"
+                                : "bg-orange-500/15 border-orange-500/40 text-orange-300"
+                        )}>
+                            <AlertTriangle className="w-3.5 h-3.5" />
+                            {isHighRisk ? 'High Risk Threat' : 'Suspicious Flow'}
+                        </span>
+                        <span className="px-3 py-1.5 rounded-lg bg-[#0a1022] border border-slate-800 text-slate-400 text-xs">
+                            {new Date(incident.timestamp).toLocaleTimeString()}
+                        </span>
+                    </div>
+                </div>
+
+                {/* 4-Card Overview Row */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {/* Detected Threat */}
+                    <div className="bg-[#0a1022] border border-slate-800 rounded-xl p-4">
+                        <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-1">
+                            Detected Attack Type
+                        </span>
+                        <div className="text-lg font-bold font-orbitron text-orange-400 flex items-center gap-2">
+                            <ShieldAlert className="w-5 h-5 text-orange-400 shrink-0" />
+                            <span className="truncate">{incident.type}</span>
+                        </div>
+                        <span className="text-[11px] text-slate-500 mt-1 block">
+                            Multiclass Model Classification
+                        </span>
+                    </div>
+
+                    {/* Source Origin */}
+                    <div className="bg-[#0a1022] border border-slate-800 rounded-xl p-4">
+                        <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-1">
+                            Source IP Address
+                        </span>
+                        <div className="text-lg font-bold font-mono text-white flex items-center gap-2">
+                            <Server className="w-5 h-5 text-cyan-400 shrink-0" />
+                            <span className="truncate">{incident.src_ip}</span>
+                        </div>
+                        <span className="text-[11px] text-slate-400 mt-1 block truncate">
+                            {incident.country || 'External Network'}
+                        </span>
+                    </div>
+
+                    {/* Target Port */}
+                    <div className="bg-[#0a1022] border border-slate-800 rounded-xl p-4">
+                        <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-1">
+                            Target Port
+                        </span>
+                        <div className="text-lg font-bold font-mono text-white flex items-center gap-2">
+                            <Activity className="w-5 h-5 text-blue-400 shrink-0" />
+                            <span>Port {incident.destination_port}</span>
+                        </div>
+                        <span className="text-[11px] text-slate-500 mt-1 block">
+                            {incident.destination_port === 80 ? 'HTTP Web Service' :
+                             incident.destination_port === 443 ? 'HTTPS Secure Service' :
+                             incident.destination_port === 22 ? 'SSH Remote Access' :
+                             incident.destination_port === 5100 ? 'SLE Data Gateway' : 'Network Port'}
+                        </span>
+                    </div>
+
+                    {/* AI Confidence */}
+                    <div className="bg-[#0a1022] border border-slate-800 rounded-xl p-4">
+                        <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block mb-1">
+                            Detection Confidence
+                        </span>
+                        <div className="text-lg font-bold font-mono text-emerald-400 flex items-center justify-between">
+                            <span>{confidencePct}%</span>
+                            <span className="text-xs text-slate-400 font-sans font-normal">
+                                {confidencePct >= 90 ? 'High' : 'Moderate'}
+                            </span>
+                        </div>
+                        <div className="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div
+                                className={clsx(
+                                    "h-full rounded-full transition-all",
+                                    confidencePct >= 90 ? "bg-red-400" : "bg-orange-400"
+                                )}
+                                style={{ width: `${confidencePct}%` }}
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Additional Context Alert (Targeted Account or High Burst) */}
+                {(incident.target_username || (incident.failed_attempts && incident.failed_attempts > 0)) && (
+                    <div className="p-4 rounded-xl bg-orange-950/20 border border-orange-500/30 flex items-center justify-between text-xs font-mono">
+                        <div className="flex items-center gap-3">
+                            <User className="w-5 h-5 text-orange-400" />
+                            <div>
+                                <span className="text-slate-400">Targeted Account: </span>
+                                <strong className="text-white">{incident.target_username || 'Service Account'}</strong>
+                                <span className="text-slate-500 mx-2">•</span>
+                                <span className="text-slate-400">Failed Attempts: </span>
+                                <strong className="text-orange-400">{incident.failed_attempts || 0}</strong>
+                            </div>
+                        </div>
+                        <span className="text-[10px] uppercase font-bold text-orange-400 bg-orange-950/60 px-2 py-0.5 rounded border border-orange-800">
+                            Authentication Spike
+                        </span>
+                    </div>
+                )}
+
+                {/* Simplified Explainability Section: "Why Was This Flagged?" */}
+                <div className="bg-[#0a1022] border border-cyan-500/30 rounded-2xl p-6 shadow-sm space-y-4">
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                        <div>
+                            <h2 className="text-base font-bold font-orbitron text-white flex items-center gap-2">
+                                <Info className="w-4 h-4 text-cyan-400" />
+                                Why Was This Traffic Flagged?
+                            </h2>
+                            <p className="text-xs text-slate-400 mt-0.5">
+                                Simple explanation of the network metrics that caused the machine learning model to classify this flow as <strong className="text-orange-400">{incident.type}</strong>.
+                            </p>
+                        </div>
+                        <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 text-cyan-300 border border-cyan-800">
+                            Model Explainability
+                        </span>
+                    </div>
+
+                    {/* Easy-to-Understand Reasons Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                        {reasons.map((reason, idx) => (
+                            <div key={idx} className="p-4 rounded-xl bg-[#080d1e] border border-slate-800 space-y-2">
+                                <div className="flex items-center gap-2 text-cyan-300 font-bold text-xs font-mono">
+                                    <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px]">
+                                        {idx + 1}
+                                    </span>
+                                    <span>{reason.title}</span>
+                                </div>
+                                <p className="text-xs text-slate-300 leading-relaxed">
+                                    {reason.description}
+                                </p>
+                                <div className="text-[11px] font-mono text-slate-400 pt-1 border-t border-slate-800/80">
+                                    {reason.detail}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Clean, Simple Action Card */}
+                <div className="bg-[#0a1022] border border-slate-800 rounded-2xl p-6 space-y-4">
+                    <div>
+                        <h3 className="text-base font-bold font-orbitron text-white">
+                            Analyst Action Decision
+                        </h3>
+                        <p className="text-xs text-slate-400 mt-1">
+                            Choose whether to block this IP address or allow it as legitimate traffic. Your decision immediately updates the adaptive AI model for future traffic.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        {/* Block Action */}
+                        <button
+                            onClick={() => handleAction('BLOCK')}
+                            disabled={isResolving}
+                            className="p-5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white text-left transition-all shadow-lg hover:shadow-red-600/20 cursor-pointer disabled:opacity-50 group"
+                        >
+                            <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2 font-bold font-orbitron text-sm">
+                                    <XCircle className="w-5 h-5 text-white" />
+                                    <span>Confirm Threat & Block IP</span>
+                                </div>
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/30 border border-white/20">
+                                    Isolate Node
                                 </span>
                             </div>
-                        </div>
-
-                        {/* Burst Score */}
-                        <div>
-                            <label className="text-[10px] text-slate-400 block mb-1">Carrier Burst Deviation</label>
-                            <div className="flex items-center gap-2">
-                                <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden flex-1">
-                                    <div className={clsx("h-full", (incident.burst_score || 0) > 3 ? "bg-red-500" : (incident.burst_score || 0) > 1.5 ? "bg-orange-500" : "bg-emerald-500")} style={{ width: `${Math.min(((incident.burst_score || 0) / 5) * 100, 100)}%` }}></div>
-                                </div>
-                                <span className="text-xs font-bold text-white">{incident.burst_score || 0}</span>
-                            </div>
-                            <p className="text-[9px] text-slate-400 mt-1">
-                                {(incident.burst_score || 0) < 1.5 ? "Within Pass Limits" : "Anomalous Flood Spike"}
+                            <p className="text-xs text-red-100/90 leading-relaxed">
+                                Instantly blocks <strong>{incident.src_ip}</strong> and trains the AI model to block similar traffic automatically in the future.
                             </p>
-                        </div>
+                        </button>
 
-                        {/* Source IP / Origin */}
-                        <div>
-                            <label className="text-[10px] text-slate-400 block mb-1">Threat Origin Node</label>
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded bg-cyan-500/10 flex items-center justify-center text-cyan-400 border border-cyan-500/20">
-                                    <Server className="w-4 h-4" />
+                        {/* Allow / False Alarm Action */}
+                        <button
+                            onClick={() => handleAction('IGNORE')}
+                            disabled={isResolving}
+                            className="p-5 rounded-xl bg-[#0e1733] hover:bg-[#142247] border border-emerald-500/40 text-left transition-all hover:border-emerald-400 cursor-pointer disabled:opacity-50 group"
+                        >
+                            <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2 font-bold font-orbitron text-sm text-emerald-400">
+                                    <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                                    <span>Mark as False Alarm (Allow)</span>
                                 </div>
-                                <div>
-                                    <div className="text-xs font-bold text-white">{incident.src_ip}</div>
-                                    <div className="text-[10px] text-slate-400">{incident.country || 'External Interface'}</div>
-                                </div>
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-300 border border-emerald-800">
+                                    Safe Traffic
+                                </span>
                             </div>
-                        </div>
-
-                        {/* Target Ground Interface */}
-                        <div>
-                            <label className="text-[10px] text-slate-400 block mb-1">Target Ground Station & Interface</label>
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded bg-orange-500/10 flex items-center justify-center text-orange-400 border border-orange-500/20">
-                                    <Satellite className="w-4 h-4" />
-                                </div>
-                                <div>
-                                    <div className="text-xs font-bold text-white">ISTRAC-BLR Ground Node</div>
-                                    <div className="text-[10px] text-slate-400">Port {incident.destination_port} (SLE Interface)</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {incident.target_username && (
-                            <div className="bg-red-950/20 p-3 rounded-lg border border-red-500/30">
-                                <label className="text-[10px] text-red-400 font-bold block mb-1">Targeted Telecommand Auth User</label>
-                                <div className="flex items-center gap-2 text-white font-bold text-xs">
-                                    <User className="w-3.5 h-3.5 text-red-400" />
-                                    {incident.target_username}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </aside>
-
-                {/* Main Analysis & SHAP Feature Attribution */}
-                <main className="flex-1 overflow-y-auto p-6 lg:p-8 space-y-6">
-                    {/* Confidence & Classification Banner */}
-                    <div className="bg-[#0a1022] rounded-2xl p-6 border border-slate-800 shadow-sm flex flex-col sm:flex-row items-center gap-8">
-                        <div className="relative w-28 h-28 flex items-center justify-center shrink-0">
-                            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                                <path className="text-slate-800" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3"></path>
-                                <path className={clsx(incident.confidence > 0.9 ? "text-red-400" : "text-orange-400")} strokeDasharray={`${incident.confidence * 100}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="3"></path>
-                            </svg>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center font-mono">
-                                <span className="text-2xl font-bold text-white font-orbitron">{Math.round(incident.confidence * 100)}%</span>
-                                <span className="text-[9px] uppercase text-slate-400">Certainty</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1">
-                                Multiclass XGBoost Threat Model Analysis
-                            </div>
-                            <h2 className="text-xl font-bold font-orbitron text-white mb-2">{spaceThreat}</h2>
-                            <p className="text-slate-400 text-xs leading-relaxed max-w-xl">
-                                Evaluated against 52 network-flow parameters matching ground segment Space Link Extension (SLE) gateway traffic profiles. The flow exhibits strong signature deviations from nominal telemetry baselines.
+                            <p className="text-xs text-slate-300 leading-relaxed">
+                                Marks this packet as normal, clears the alert, and adjusts the AI model so legitimate traffic is not accidentally interrupted.
                             </p>
-                        </div>
+                        </button>
                     </div>
+                </div>
 
-                    {/* SHAP Feature-Level Explainability (Why this was flagged) */}
-                    <div className="bg-[#0a1022] rounded-2xl p-6 border border-cyan-500/30">
-                        <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-5">
-                            <div>
-                                <h3 className="font-orbitron font-bold text-base text-white flex items-center gap-2">
-                                    <BarChart2 className="w-5 h-5 text-cyan-400" />
-                                    Feature-Level Explainability (SHAP Value Attribution)
-                                </h3>
-                                <p className="text-xs text-slate-400 font-mono mt-0.5">
-                                    Top 4 contributing flow attributes that triggered the XGBoost classification
-                                </p>
-                            </div>
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
-                                52-Feature Attribution
-                            </span>
-                        </div>
-
-                        <div className="space-y-4 font-mono text-xs">
-                            {/* Feature 1 */}
-                            <div>
-                                <div className="flex justify-between mb-1.5">
-                                    <span className="text-slate-200 font-bold">1. Flow Packets / Second (Uplink Rate)</span>
-                                    <span className="text-red-400 font-bold">+0.48 SHAP (48,321 pkts/s vs 350 baseline)</span>
-                                </div>
-                                <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                                    <div className="bg-red-500 h-full rounded-full" style={{ width: '92%' }}></div>
-                                </div>
-                                <p className="text-[10px] text-slate-400 mt-1 font-sans">
-                                    Severe uplink burst volume consistent with TT&C transceiver carrier saturation attack during pass acquisition.
-                                </p>
-                            </div>
-
-                            {/* Feature 2 */}
-                            <div>
-                                <div className="flex justify-between mb-1.5">
-                                    <span className="text-slate-200 font-bold">2. Fwd Inter-Arrival Time (Fwd IAT Mean)</span>
-                                    <span className="text-orange-400 font-bold">+0.32 SHAP (0.82 ms vs 24.5 ms baseline)</span>
-                                </div>
-                                <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                                    <div className="bg-orange-500 h-full rounded-full" style={{ width: '74%' }}></div>
-                                </div>
-                                <p className="text-[10px] text-slate-400 mt-1 font-sans">
-                                    Abnormally low packet spacing indicating automated packet generator bypassing flow pacing controls.
-                                </p>
-                            </div>
-
-                            {/* Feature 3 */}
-                            <div>
-                                <div className="flex justify-between mb-1.5">
-                                    <span className="text-slate-200 font-bold">3. SYN Flag Count & PSH Flag Burst</span>
-                                    <span className="text-yellow-400 font-bold">+0.22 SHAP (12 unacknowledged SYN frames)</span>
-                                </div>
-                                <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                                    <div className="bg-yellow-500 h-full rounded-full" style={{ width: '56%' }}></div>
-                                </div>
-                                <p className="text-[10px] text-slate-400 mt-1 font-sans">
-                                    Incomplete TCP handshakes attempting to deplete SLE ground station session connection pools.
-                                </p>
-                            </div>
-
-                            {/* Feature 4 */}
-                            <div>
-                                <div className="flex justify-between mb-1.5">
-                                    <span className="text-slate-200 font-bold">4. Flow Duration & Initial Window Bytes</span>
-                                    <span className="text-cyan-400 font-bold">+0.14 SHAP (Trunked connection window)</span>
-                                </div>
-                                <div className="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                                    <div className="bg-cyan-500 h-full rounded-full" style={{ width: '38%' }}></div>
-                                </div>
-                                <p className="text-[10px] text-slate-400 mt-1 font-sans">
-                                    Atypical socket allocation pattern not matching authorized CCSDS telecommand clients.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Mission Controller Decision Panel */}
-                    <div className="p-6 rounded-2xl bg-[#080d1e] border border-orange-500/30 font-sans space-y-4">
-                        <div className="flex items-center justify-between">
-                            <h3 className="font-orbitron font-bold text-base text-white">
-                                Mission Controller Action Required
-                            </h3>
-                            <span className="text-xs font-mono text-orange-400">
-                                Pass Window Impact: LOS Risk Assessed
-                            </span>
-                        </div>
-                        <p className="text-xs text-slate-400 leading-relaxed">
-                            Confirm threat neutralization to isolate the source IP from ground station transceivers, or mark as a False Alarm to protect ongoing spacecraft contact.
-                        </p>
-
-                        <div className="flex flex-wrap gap-4 pt-2 font-mono text-xs">
-                            <button
-                                onClick={() => handleAction('BLOCK')}
-                                disabled={isResolving}
-                                className="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold flex items-center gap-2 shadow-lg transition-all cursor-pointer disabled:opacity-50"
-                            >
-                                <XCircle className="w-4 h-4" /> Confirm Neutralize (Isolate IP)
-                            </button>
-
-                            <button
-                                onClick={() => handleAction('IGNORE')}
-                                disabled={isResolving}
-                                className="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold flex items-center gap-2 border border-slate-700 transition-all cursor-pointer disabled:opacity-50"
-                            >
-                                <CheckCircle className="w-4 h-4 text-emerald-400" /> Flag as False Alarm (LOS Risk Mitigation)
-                            </button>
-                        </div>
-                    </div>
-                </main>
             </div>
         </div>
     );

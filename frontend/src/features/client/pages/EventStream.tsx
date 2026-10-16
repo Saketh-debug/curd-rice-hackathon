@@ -3,17 +3,6 @@ import { useLiveTraffic } from '../../../hooks/useLiveTraffic';
 import clsx from 'clsx';
 import { Satellite, Radio, Terminal, Shield, CheckCircle2 } from 'lucide-react';
 
-const mapSpaceThreatName = (type: string) => {
-    if (type.includes('DDoS')) return 'TT&C Uplink Saturation';
-    if (type.includes('DoS')) return 'TT&C Gateway Flood';
-    if (type.includes('Brute')) return 'TC Authentication Bypass';
-    if (type.includes('Port')) return 'SLE Service Reconnaissance';
-    if (type.includes('Bot')) return 'Ground RTU / Sensor Hijack';
-    if (type.includes('Web')) return 'Mission Data Distribution Exploit';
-    if (type.includes('Normal')) return 'Routine Housekeeping Telemetry';
-    return type;
-};
-
 export const EventStream = () => {
     const { traffic } = useLiveTraffic();
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -55,7 +44,7 @@ export const EventStream = () => {
                     <div className="grid grid-cols-12 gap-4 px-4 py-2.5 bg-[#0d162e] border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider sticky top-0 z-10 shrink-0">
                         <div className="col-span-2">MET / Time (UTC)</div>
                         <div className="col-span-1">Flow ID</div>
-                        <div className="col-span-4">Space Threat Classification</div>
+                        <div className="col-span-4">Threat Classification</div>
                         <div className="col-span-2">ML Confidence</div>
                         <div className="col-span-3 text-right">Mission Response</div>
                     </div>
@@ -65,7 +54,6 @@ export const EventStream = () => {
                         <div className="absolute inset-0 scanlines opacity-10 pointer-events-none z-0"></div>
 
                         {traffic.map((packet, idx) => {
-                            const spaceName = mapSpaceThreatName(packet.type);
                             const isNormal = packet.type === 'Normal Traffic';
 
                             return (
@@ -83,7 +71,7 @@ export const EventStream = () => {
                                     <div className="col-span-4 flex items-center gap-2 truncate">
                                         <span className={clsx("w-2 h-2 rounded-full shrink-0", isNormal ? "bg-emerald-400" : "bg-red-500 animate-pulse")}></span>
                                         <span className={clsx("font-bold truncate", isNormal ? "text-emerald-300" : "text-red-400")}>
-                                            {spaceName}
+                                            {packet.type}
                                         </span>
                                     </div>
                                     <div className="col-span-2 flex items-center gap-2">

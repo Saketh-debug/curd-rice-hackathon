@@ -2,17 +2,6 @@ import { useState, useEffect } from 'react';
 import { apiClient } from '../../../api/client';
 import { Gavel, AlertOctagon, RotateCcw, Satellite, Radio, Shield, Zap } from 'lucide-react';
 
-const mapSpaceThreatName = (type: string) => {
-    if (type.includes('DDoS')) return 'TT&C Uplink Saturation (DDoS)';
-    if (type.includes('DoS')) return 'TT&C Gateway Flood (DoS)';
-    if (type.includes('Brute')) return 'TC Authentication Bypass';
-    if (type.includes('Port')) return 'SLE Port Reconnaissance';
-    if (type.includes('Bot')) return 'Ground RTU Sensor Hijack';
-    if (type.includes('Web')) return 'Mission Data Distribution Exploit';
-    if (type.includes('Normal')) return 'Nominal Housekeeping Telemetry';
-    return type;
-};
-
 export const PolicyConfig = () => {
     const [thresholds, setThresholds] = useState<Record<string, number> | null>(null);
     const [isSaving, setIsSaving] = useState(false);
@@ -114,7 +103,7 @@ export const PolicyConfig = () => {
                         {thresholds ? Object.entries(thresholds).map(([cls, val]) => (
                             <div key={cls} className="relative">
                                 <div className="flex justify-between mb-1.5">
-                                    <label className="font-bold text-slate-200">{mapSpaceThreatName(cls)}</label>
+                                    <label className="font-bold text-slate-200">{cls}</label>
                                     <span className={`font-bold ${val > 0.8 ? 'text-emerald-400' : val < 0.3 ? 'text-red-400' : 'text-cyan-400'}`}>
                                         {Math.round(val * 100)}%
                                     </span>
@@ -127,8 +116,8 @@ export const PolicyConfig = () => {
                                     />
                                 </div>
                                 <div className="flex justify-between text-[10px] text-slate-500 mt-1">
-                                    <span>Auto-Block Aggressive</span>
-                                    <span>Require Certainty (LOS Safe)</span>
+                                    <span>Aggressive Auto-Block</span>
+                                    <span>High Confidence Threshold</span>
                                 </div>
                             </div>
                         )) : (

@@ -192,11 +192,11 @@ export const ThreatMap = () => {
     }, [allThreats, selectedFilter]);
 
     const filters = [
-        { id: 'all', label: 'All Space Vectors', color: '#94a3b8' },
-        { id: 'ddos', label: 'TT&C Uplink Saturation', color: attackColors.ddos },
-        { id: 'dos', label: 'Gateway Flow Flood', color: attackColors.dos },
-        { id: 'brute', label: 'TC Authentication Bypass', color: attackColors.brute },
-        { id: 'bot', label: 'Sensor/RTU Hijack', color: attackColors.bot },
+        { id: 'all', label: 'All Attack Vectors', color: '#94a3b8' },
+        { id: 'ddos', label: 'DDoS Attacks', color: attackColors.ddos },
+        { id: 'dos', label: 'DoS Floods', color: attackColors.dos },
+        { id: 'brute', label: 'Brute Force Attempts', color: attackColors.brute },
+        { id: 'bot', label: 'Botnet Traffic', color: attackColors.bot },
     ];
 
     return (
@@ -342,7 +342,7 @@ export const ThreatMap = () => {
             {/* ================= ATTACK FILTER ================= */}
             <div className="absolute bottom-6 right-6 w-72 bg-[#080d1e]/90 backdrop-blur-xl border border-cyan-500/30 rounded-2xl p-4 z-[500] shadow-2xl">
                 <h3 className="text-xs font-orbitron font-semibold text-white mb-3 flex items-center justify-between">
-                    <span>Space Threat Vector Filter</span>
+                    <span>Attack Vector Filter</span>
                     <span className="text-[10px] font-mono bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded border border-cyan-500/30">
                         {threats.length} ACTIVE
                     </span>

@@ -4,17 +4,6 @@ import { History, CheckCircle, XCircle, Shield, ArrowRight, Satellite } from 'lu
 import { format } from 'date-fns';
 import clsx from 'clsx';
 
-const mapSpaceThreatName = (type: string) => {
-    if (type.includes('DDoS')) return 'TT&C Uplink Saturation';
-    if (type.includes('DoS')) return 'TT&C Gateway Flood';
-    if (type.includes('Brute')) return 'TC Authentication Bypass';
-    if (type.includes('Port')) return 'SLE Port Reconnaissance';
-    if (type.includes('Bot')) return 'Ground RTU Sensor Hijack';
-    if (type.includes('Web')) return 'Mission Data Distribution Exploit';
-    if (type.includes('Normal')) return 'Nominal Housekeeping Telemetry';
-    return type;
-};
-
 const STATIONS = ['ISTRAC-BLR', 'IDSN-32M', 'SDSC-SHAR', 'ISTRAC-MAU', 'ISTRAC-PBL'];
 
 export const DecisionTimeline = () => {
@@ -78,7 +67,7 @@ export const DecisionTimeline = () => {
                                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 gap-2">
                                     <div className="flex items-center gap-2">
                                         <h3 className="font-orbitron font-bold text-white text-sm">
-                                            {mapSpaceThreatName(log.type)}
+                                            {log.type}
                                         </h3>
                                         <span className="text-[10px] text-cyan-300 bg-cyan-950/60 border border-cyan-800 px-2 py-0.5 rounded">
                                             {assignedStation}
@@ -103,10 +92,10 @@ export const DecisionTimeline = () => {
 
                                     <div className="flex-1">
                                         <p className="text-xs font-bold text-white">
-                                            Action: {isBlock ? 'TT&C LINK ISOLATION (BLOCKED)' : isFP ? 'FLAGGED AS FALSE ALARM (LOS MITIGATION)' : log.action}
+                                            Action: {isBlock ? 'NODE ISOLATED (BLOCKED)' : isFP ? 'FLAGGED AS FALSE ALARM (ALLOWED)' : log.action}
                                         </p>
                                         <p className="text-[10px] text-slate-400">
-                                            Executed by: <span className="text-cyan-400 font-bold">{log.handled_by === 'SYSTEM_AUTOMATION' ? 'AEGIS AI SOAR' : 'Mission Controller'}</span>
+                                            Executed by: <span className="text-cyan-400 font-bold">{log.handled_by === 'SYSTEM_AUTOMATION' ? 'Automated SOAR' : 'Security Analyst'}</span>
                                         </p>
                                     </div>
                                 </div>
