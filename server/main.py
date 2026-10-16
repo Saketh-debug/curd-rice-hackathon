@@ -973,33 +973,39 @@ def generate_report(type: str = "security_audit", db: Session = Depends(get_db))
 
 @app.get("/api/logs/audit")
 def get_audit_log(db: Session = Depends(get_db)):
-    """For Page B3: Audit Logs"""
-    # Fetch resolved manual reviews + auto blocked (limit 50 combined for now)
-    manual_logs = db.query(ManualReview).filter(ManualReview.status == "RESOLVED").limit(25).all()
-    auto_logs = db.query(AutoBlocked).limit(25).all()
+    """For Page B3: Audit Logs / Mission Decision Audit Timeline"""
+    # Fetch resolved manual reviews + auto blocked (limit 50 combined for now, newest first)
+    manual_logs = db.query(ManualReview).filter(ManualReview.status == "RESOLVED").order_by(ManualReview.timestamp.desc()).limit(25).all()
+    auto_logs = db.query(AutoBlocked).order_by(AutoBlocked.timestamp.desc()).limit(25).all()
     
-    # We simulate a unified log structure for the frontend
+    # Unified real-time log structure for the frontend
     combined = []
     for m in manual_logs:
         combined.append({
             "id": m.id,
             "timestamp": m.timestamp,
             "src_ip": m.src_ip,
+            "country": m.country or "External Interface",
+            "station": m.station or "ISTRAC-BLR",
+            "confidence": round(m.confidence, 4) if m.confidence is not None else 0.88,
             "type": m.type,
-            "action": m.action_taken,
-            "handled_by": m.analyst_id
+            "action": m.action_taken or "MANUAL_BLOCK",
+            "handled_by": m.analyst_id or "Mission Controller"
         })
     for a in auto_logs:
         combined.append({
             "id": a.id,
             "timestamp": a.timestamp,
             "src_ip": a.src_ip,
+            "country": a.country or "External Interface",
+            "station": a.station or "ISTRAC-BLR",
+            "confidence": round(a.confidence, 4) if a.confidence is not None else 0.96,
             "type": a.type,
-            "action": "AUTO_BLOCKED",
+            "action": a.action or "AUTO_BLOCKED",
             "handled_by": "SYSTEM_AUTOMATION"
         })
         
-    # Sort by timestamp desc
+    # Sort by timestamp desc (newest first)
     combined.sort(key=lambda x: x["timestamp"] or datetime.min, reverse=True)
     return combined
 

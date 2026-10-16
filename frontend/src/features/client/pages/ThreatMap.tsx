@@ -278,9 +278,6 @@ export const ThreatMap = () => {
                                 Ground Station Cyber Attack Vector Map
                             </h2>
                         </div>
-                        <p className="text-[11px] text-muted-foreground font-mono mt-0.5">
-                            Tracking 7 National ISRO Ground & Tracking Centers • Ballistic Hypersonic Ingress Simulation
-                        </p>
                     </div>
 
                     {/* View Switcher 3D vs 2D */}
@@ -342,51 +339,6 @@ export const ThreatMap = () => {
                 </div> */}
             </div>
 
-            {/* ================= ATTACK VECTOR FILTER SIDEBAR ================= */}
-            <div className="absolute bottom-6 right-6 w-72 bg-card/95 backdrop-blur-xl border border-border rounded-xl p-4 z-[500] shadow-2xl">
-                <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center justify-between">
-                    <span className="flex items-center gap-1.5">
-                        <Shield className="w-3.5 h-3.5 text-signal" />
-                        Space Threat Vectors
-                    </span>
-                    <span className="text-[11px] font-mono bg-muted text-muted-foreground px-2 py-0.5 rounded border border-border tabular-nums">
-                        {threats.length} ACTIVE
-                    </span>
-                </h3>
-
-                <div className="space-y-1.5 font-mono text-xs">
-                    {filters.map((f) => (
-                        <button
-                            key={f.id}
-                            onClick={() => setSelectedFilter(f.id)}
-                            className={`w-full flex items-center justify-between p-2 rounded-lg transition-all duration-200 border text-[11px] cursor-pointer ${selectedFilter === f.id
-                                    ? "bg-muted border-border text-foreground font-medium"
-                                    : "bg-transparent border-transparent text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                                }`}
-                        >
-                            <div className="flex items-center gap-2 truncate">
-                                <span
-                                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                                    style={{ backgroundColor: f.color }}
-                                />
-                                <span className="truncate">{f.label}</span>
-                            </div>
-                            {selectedFilter === f.id && (
-                                <div className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse" />
-                            )}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Live stream indicator */}
-                <div className="mt-3 pt-2.5 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground font-mono">
-                    <span className="flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-grove animate-ping" />
-                        Live Hypersonic Tracking
-                    </span>
-                    <span className="text-signal">2.0s refresh</span>
-                </div>
-            </div>
 
         </div>
     );

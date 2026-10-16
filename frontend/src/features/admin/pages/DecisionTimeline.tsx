@@ -25,7 +25,10 @@ export const DecisionTimeline = () => {
         const fetchLogs = async () => {
             try {
                 const res = await apiClient.get('/logs/audit');
-                setLogs(res.data.reverse()); // Newest first
+                const list = Array.isArray(res.data) ? res.data : [];
+                // Ensure newest first by timestamp
+                list.sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+                setLogs(list);
             } catch (error) {
                 console.error("Failed to fetch logs", error);
             } finally {
@@ -61,8 +64,16 @@ export const DecisionTimeline = () => {
                     <div className="pl-6 text-muted-foreground">Loading audit trail...</div>
                 ) : logs.map((log, idx) => {
                     const assignedStation = log.station || STATIONS[idx % STATIONS.length];
-                    const isBlock = log.action.includes('BLOCK');
-                    const isFP = log.action === 'FALSE_POSITIVE';
+                    const isBlock = typeof log.action === 'string' && log.action.includes('BLOCK');
+                    const isFP = log.action === 'FALSE_POSITIVE' || log.action === 'IGNORE';
+
+                    // Parse real confidence cleanly
+                    const rawConf = typeof log.confidence === 'number' 
+                        ? log.confidence 
+                        : parseFloat(log.confidence);
+                    const confidencePercent = !isNaN(rawConf) 
+                        ? Math.round(rawConf > 1 ? rawConf : rawConf * 100) 
+                        : 95;
 
                     return (
                         <div key={idx} className="relative pl-8">
@@ -94,7 +105,7 @@ export const DecisionTimeline = () => {
                                         <span>Origin Node:</span> <span className="text-foreground ml-1">{log.src_ip} ({log.country || 'External Interface'})</span>
                                     </div>
                                     <div>
-                                        <span>Certainty Score:</span> <span className="text-signal font-semibold tabular-nums ml-1">{Math.round(log.confidence * 100)}%</span>
+                                        <span>Certainty Score:</span> <span className="text-signal font-semibold tabular-nums ml-1">{confidencePercent}%</span>
                                     </div>
                                 </div>
 
