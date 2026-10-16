@@ -51,14 +51,14 @@ export const AdminDashboard = () => {
                 <div className="bg-[#0a1022]/80 backdrop-blur-xl p-4 rounded-2xl border border-orange-500/20 shadow-sm">
                     <span className="text-[10px] text-slate-400 uppercase tracking-wider">Link Integrity</span>
                     <div className="text-xl font-bold font-orbitron text-emerald-400 mt-1">
-                        {(health?.link_integrity_score ?? 83.6).toFixed(1)}%
+                        {(health?.link_integrity_score ?? 96.0).toFixed(1)}%
                     </div>
                     <span className="text-[10px] text-slate-500">OPS-SAT Validated</span>
                 </div>
                 <div className="bg-[#0a1022]/80 backdrop-blur-xl p-4 rounded-2xl border border-orange-500/20 shadow-sm">
                     <span className="text-[10px] text-slate-400 uppercase tracking-wider">AI Automation</span>
                     <div className="text-xl font-bold font-orbitron text-orange-400 mt-1">
-                        {health?.automation_rate || '99.4%'}
+                        {health?.automation_rate || '100.0%'}
                     </div>
                     <span className="text-[10px] text-slate-500">SOAR Bandit Policy</span>
                 </div>

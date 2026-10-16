@@ -82,10 +82,10 @@ export const AutomationStatus = () => {
                         <TrendingUp className="w-4 h-4 text-emerald-400" />
                     </div>
                     <div className="text-3xl font-bold font-orbitron text-emerald-400 mb-1">
-                        {health?.controller_hours_saved || '142h'}
+                        {health?.controller_hours_saved || '20.1h'}
                     </div>
                     <div className="text-[10px] text-slate-400">
-                        Automated triage across {health ? health.traffic_processed : '142,850'} telemetry flows.
+                        Automated triage across {health ? health.traffic_processed : '688'} telemetry flows.
                     </div>
                 </div>
 
@@ -96,7 +96,7 @@ export const AutomationStatus = () => {
                         <TrendingDown className="w-4 h-4 text-emerald-400" />
                     </div>
                     <div className="text-3xl font-bold font-orbitron text-white mb-1">
-                        {health?.false_alarm_rate || '0.04%'}
+                        {health?.false_alarm_rate || '0.00%'}
                     </div>
                     <div className="text-[10px] text-slate-400">Pass-window safety benchmark compliant (&lt;0.05%).</div>
                 </div>
@@ -153,7 +153,7 @@ export const AutomationStatus = () => {
                                 <circle className="text-orange-400 stroke-current transition-all duration-1000" cx="50" cy="50" fill="transparent" r="40" strokeDasharray="251.2" strokeDashoffset={`${251.2 * (1 - (parseFloat(health?.automation_rate || "99.4") / 100))}`} strokeLinecap="round" strokeWidth="8" transform="rotate(-90 50 50)"></circle>
                             </svg>
                             <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center font-mono">
-                                <span className="text-3xl font-bold font-orbitron text-white">{health?.automation_rate || '99.4%'}</span>
+                                <span className="text-3xl font-bold font-orbitron text-white">{health?.automation_rate || '100.0%'}</span>
                                 <span className="text-[9px] text-orange-400 uppercase tracking-widest font-bold">Automated</span>
                             </div>
                         </div>
@@ -161,7 +161,7 @@ export const AutomationStatus = () => {
                     <div className="mt-4 grid grid-cols-2 gap-3 text-center z-10 font-mono text-xs">
                         <div className="bg-[#080d1e]/80 rounded-xl p-3 border border-slate-800">
                             <div className="text-[10px] text-slate-400">Total Telemetry</div>
-                            <div className="font-bold text-white mt-0.5">{health ? health.traffic_processed : '142,850'}</div>
+                            <div className="font-bold text-white mt-0.5">{health ? health.traffic_processed : '688'}</div>
                         </div>
                         <div className="bg-[#080d1e]/80 rounded-xl p-3 border border-slate-800">
                             <div className="text-[10px] text-slate-400">Review Queue</div>

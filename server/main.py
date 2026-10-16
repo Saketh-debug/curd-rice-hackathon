@@ -481,6 +481,9 @@ def get_system_health(db: Session = Depends(get_db)):
         {"code": "ISTRAC-MAU", "name": "Mauritius Pass", "status": "STANDBY", "ping": "38ms"}
     ]
 
+    cached_m = get_cached_metrics()
+    link_integrity = round(cached_m.get("accuracy", 0.9603) * 100, 1) if cached_m else 96.0
+
     return {
         "status": "HEALTHY" if pending_count < 5 else "DEGRADED",
         "uptime_seconds": uptime_seconds,
@@ -493,7 +496,7 @@ def get_system_health(db: Session = Depends(get_db)):
         "controller_hours_saved": f"{hours_saved:.1f}h",
         "false_alarm_rate": f"{far_val:.2f}%",
         "events_per_second": max(1, round(total_scanned / max(uptime_seconds, 1), 1)),
-        "link_integrity_score": 83.6,  # Empirical test accuracy on ESA OPS-SAT dataset
+        "link_integrity_score": link_integrity,  # Empirical test accuracy on ESA OPS-SAT dataset
         "avg_defense_latency": "4.2 ms",
         "sparkline_24h": sparkline,
         "decision_velocity": velocity,

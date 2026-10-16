@@ -23,7 +23,7 @@ export const CommandCenter = () => {
 
     // Compute dynamic threat breakdowns from real traffic stream
     const threatFlows = traffic.filter(p => p.type !== 'Normal Traffic');
-    const totalThreatCount = health?.threats_detected ?? (threatFlows.length > 0 ? threatFlows.length : 128);
+    const totalThreatCount = health?.threats_detected ?? threatFlows.length;
     const criticalThreats = threatFlows.length > 0 
         ? threatFlows.filter(p => (p.confidence ?? 0.8) >= 0.90).length
         : Math.round(totalThreatCount * 0.15);
