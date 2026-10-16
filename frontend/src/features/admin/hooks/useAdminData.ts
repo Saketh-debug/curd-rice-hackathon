@@ -60,5 +60,5 @@ export const useAdminData = () => {
         }
     };
 
-    return { stats, pendingIncidents, recentActions, isLoading, resolveIncident };
+    return { stats, pendingIncidents, recentActions, isLoading, resolveIncident, refreshData: fetchData };
 };

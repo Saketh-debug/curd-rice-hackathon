@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useAdminData } from '../hooks/useAdminData';
 import { useSystemHealth } from '../../../hooks/useSystemHealth';
-import { AlertTriangle, Clock, ShieldAlert, CheckCircle, XCircle, ArrowRight, Filter, Satellite, Radio, Zap, Activity } from 'lucide-react';
+import { AttackSimulatorTrigger } from '../../../components/AttackSimulator/AttackSimulatorTrigger';
+import { AlertTriangle, Clock, ShieldAlert, CheckCircle, XCircle, ArrowRight, Filter, Satellite, Radio, Zap, Activity, ShieldCheck } from 'lucide-react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import StarBorder from '../../../components/StarBorder';
@@ -18,7 +19,7 @@ const mapSpaceThreatName = (type: string) => {
 };
 
 export const AdminDashboard = () => {
-    const { pendingIncidents, stats, recentActions } = useAdminData();
+    const { pendingIncidents, stats, recentActions, refreshData } = useAdminData();
     const { health } = useSystemHealth();
 
     return (
@@ -36,10 +37,14 @@ export const AdminDashboard = () => {
                         <h2 className="text-2xl font-semibold tracking-tight text-foreground flex items-center gap-2">
                             <AlertTriangle className="text-signal w-5 h-5" />
                             Pending Telemetry Anomalies Requiring Action
+                            <span className="text-xs px-2.5 py-0.5 rounded-full bg-signal/10 border border-signal/20 text-signal font-mono font-medium">
+                                {pendingIncidents.length} Unresolved
+                            </span>
                         </h2>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-2">
+                        <AttackSimulatorTrigger variant="header" onSuccess={refreshData} />
                         <StarBorder
                             as={Link}
                             to="/admin/benchmark"

@@ -26,6 +26,17 @@ export const IncidentReview = () => {
     useEffect(() => {
         const fetchIncident = async () => {
             try {
+                // Try direct single incident endpoint first
+                try {
+                    const singleRes = await apiClient.get<Packet>(`/incidents/${id}`);
+                    if (singleRes.data && singleRes.data.id) {
+                        setIncident(singleRes.data);
+                        return;
+                    }
+                } catch {
+                    // Fallback to searching pending list
+                }
+
                 const res = await apiClient.get('/incidents/pending');
                 const found = res.data.find((i: Packet) => i.id === Number(id));
                 setIncident(found || null);
