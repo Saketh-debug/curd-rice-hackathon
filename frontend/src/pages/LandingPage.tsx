@@ -18,6 +18,7 @@ import {
 import { EarthGlobe3D } from "../components/EarthGlobe3D";
 import { apiClient } from "../api/client";
 import type { SatellitePassData, SatelliteMissionTelemetry } from "../types";
+import StarBorder from "../components/StarBorder";
 
 const LandingPage = () => {
     const [activePass, setActivePass] = useState<SatellitePassData | null>(null);
@@ -38,21 +39,21 @@ const LandingPage = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#050814] text-white font-sans selection:bg-cyan-500 selection:text-black starfield overflow-x-hidden">
+        <div className="min-h-screen bg-background text-foreground font-sans selection:bg-signal selection:text-[#161513] overflow-x-hidden">
 
             {/* ================= TOP MISSION STATUS STRIP ================= */}
-            <div className="bg-[#090f24] border-b border-cyan-900/40 px-4 py-2 text-xs font-mono text-slate-300 flex items-center justify-between overflow-hidden">
+            <div className="bg-card border-b border-border px-4 py-2 text-xs font-mono text-muted-foreground flex items-center justify-between overflow-hidden">
                 <div className="flex items-center gap-3 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-[10px]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-grove/10 border border-grove/20 text-grove font-medium text-[11px]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-grove"></span>
                         ISTRAC MOX LINK NOMINAL
                     </span>
-                    <span className="text-slate-500 hidden sm:inline">|</span>
-                    <span className="text-cyan-400 hidden sm:inline">
+                    <span className="text-border hidden sm:inline">|</span>
+                    <span className="text-foreground hidden sm:inline">
                         GROUND STATION: {activePass ? activePass.station_code : 'ISTRAC-BLR'}
                     </span>
                 </div>
-                <div className="animate-pulse text-slate-400 text-[11px] truncate ml-4">
+                <div className="text-muted-foreground text-[11px] truncate ml-4 font-mono">
                     {activePass ? (
                         `🛰️ ACTIVE PASS: ${activePass.satellite} (${activePass.orbit}) • AOS: ${activePass.aos} • LOS: ${activePass.los} • CHANNEL: ${activePass.channel} • STATUS: ${activePass.threatStatus}`
                     ) : (
@@ -61,71 +62,103 @@ const LandingPage = () => {
                 </div>
             </div>
 
+            {/* ================= SITE HEADER ================= */}
+            <header className="sticky top-0 z-40 bg-card/80 backdrop-blur-md border-b border-border px-6 py-3.5">
+                <div className="max-w-7xl mx-auto flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-secondary border border-border flex items-center justify-center text-signal">
+                            <Satellite className="w-4 h-4" />
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="font-logo font-bold text-sm tracking-wider text-foreground">SOAR SPACE</span>
+                            <span className="font-mono text-[11px] px-1.5 py-0.5 rounded-md bg-signal text-signal-foreground font-medium">ISRO GROUND DEFENSE</span>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-2.5">
+                        <Link
+                            to="/client/dashboard"
+                            className="px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-muted text-xs font-mono text-foreground font-medium transition-colors"
+                        >
+                            Client Operations →
+                        </Link>
+                        <Link
+                            to="/admin/dashboard"
+                            className="px-3 py-1.5 rounded-lg border border-signal/40 bg-signal text-signal-foreground hover:bg-signal/90 text-xs font-mono font-medium transition-colors"
+                        >
+                            SecOps Admin →
+                        </Link>
+                    </div>
+                </div>
+            </header>
+
             {/* ================= HERO SECTION ================= */}
             <section className="px-6 pt-12 pb-20 max-w-7xl mx-auto relative">
-                {/* Ambient Radial Glows */}
-                <div className="absolute top-10 left-1/4 w-[500px] h-[400px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none"></div>
-                <div className="absolute top-20 right-1/4 w-[400px] h-[350px] bg-orange-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-
                 <div className="grid lg:grid-cols-12 gap-10 items-center">
                     {/* Left: Text & Pitch */}
                     <div className="lg:col-span-7 space-y-6 text-left">
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono font-semibold tracking-wider uppercase">
-                            <Satellite className="w-3.5 h-3.5 text-cyan-400" />
+                        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-card border border-border text-signal text-[11px] font-mono tracking-wider uppercase">
+                            <Satellite className="w-3.5 h-3.5 text-signal" />
                             ISRO Space Ground Segment Cyber Defense
                         </div>
 
-                        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-orbitron tracking-tight leading-tight">
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-tight text-foreground">
                             SOAR Platform
-                            <span className="block text-2xl sm:text-3xl md:text-3xl font-normal text-slate-400 mt-2 font-sans">
+                            <span className="block text-xl sm:text-2xl md:text-3xl font-normal text-muted-foreground mt-2 font-sans">
                                 Intelligent Ground Station Defense for Space Missions
                             </span>
                         </h1>
 
-                        <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-light">
-                            Engineered for <strong className="text-white font-medium">ISTRAC & IDSN Ground Stations</strong>: Safeguarding telemetry, tracking & command (TT&C) links against satellite pass-window saturation, telecommand injection, and SLE protocol exploits with zero live packet probing.
+                        <p className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
+                            Engineered for <strong className="text-foreground font-medium">ISTRAC & IDSN Ground Stations</strong>: Safeguarding telemetry, tracking & command (TT&C) links against satellite pass-window saturation, telecommand injection, and SLE protocol exploits with zero live packet probing.
                         </p>
 
                         {/* Quick Spec Tags */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                            <div className="bg-[#0c142b]/80 border border-cyan-500/20 rounded-xl p-3">
-                                <div className="text-cyan-400 font-mono text-xl font-bold">52</div>
-                                <div className="text-[11px] text-slate-400 uppercase tracking-wide">Flow Features</div>
+                            <div className="bg-card border border-border rounded-xl p-3.5">
+                                <div className="text-signal font-mono text-xl font-semibold tabular-nums">52</div>
+                                <div className="text-[11px] text-muted-foreground uppercase tracking-wide font-mono mt-0.5">Flow Features</div>
                             </div>
-                            <div className="bg-[#0c142b]/80 border border-emerald-500/20 rounded-xl p-3">
-                                <div className="text-emerald-400 font-mono text-xl font-bold">100%</div>
-                                <div className="text-[11px] text-slate-400 uppercase tracking-wide">Air-Gapped Safe</div>
+                            <div className="bg-card border border-border rounded-xl p-3.5">
+                                <div className="text-grove font-mono text-xl font-semibold tabular-nums">100%</div>
+                                <div className="text-[11px] text-muted-foreground uppercase tracking-wide font-mono mt-0.5">Air-Gapped Safe</div>
                             </div>
-                            <div className="bg-[#0c142b]/80 border border-orange-500/20 rounded-xl p-3">
-                                <div className="text-orange-400 font-mono text-xl font-bold">7 Classes</div>
-                                <div className="text-[11px] text-slate-400 uppercase tracking-wide">Space Threats</div>
+                            <div className="bg-card border border-border rounded-xl p-3.5">
+                                <div className="text-foreground font-mono text-xl font-semibold tabular-nums">7 Classes</div>
+                                <div className="text-[11px] text-muted-foreground uppercase tracking-wide font-mono mt-0.5">Space Threats</div>
                             </div>
-                            <div className="bg-[#0c142b]/80 border border-blue-500/20 rounded-xl p-3">
-                                <div className="text-blue-400 font-mono text-xl font-bold">&lt; 12ms</div>
-                                <div className="text-[11px] text-slate-400 uppercase tracking-wide">Triage Velocity</div>
+                            <div className="bg-card border border-border rounded-xl p-3.5">
+                                <div className="text-slate font-mono text-xl font-semibold tabular-nums">&lt; 12ms</div>
+                                <div className="text-[11px] text-muted-foreground uppercase tracking-wide font-mono mt-0.5">Triage Velocity</div>
                             </div>
                         </div>
 
                         {/* CTAs */}
                         <div className="flex flex-wrap gap-4 pt-4">
-                            <a
+                            <StarBorder
+                                as="a"
                                 href="#portal-access"
-                                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-orbitron font-bold text-sm tracking-wider transition-all shadow-[0_0_20px_rgba(0,212,255,0.4)] flex items-center gap-2"
+                                backgroundColor="#f1efea"
+                                borderColor="#f1efea"
+                                className="px-6 py-3 text-[#161513] font-semibold text-sm tracking-wide flex items-center gap-2 cursor-pointer hover:bg-[#e4e1d8]"
                             >
-                                Enter Mission Control <ArrowRight className="w-4 h-4" />
-                            </a>
-                            <Link
+                                Enter Mission Control <ArrowRight className="w-4 h-4 text-[#161513]" />
+                            </StarBorder>
+                            <StarBorder
+                                as={Link}
                                 to="/admin/benchmark"
-                                className="px-6 py-3.5 rounded-xl bg-[#0c142b] hover:bg-[#132044] border border-cyan-500/40 text-cyan-300 font-orbitron font-semibold text-sm tracking-wider transition-all flex items-center gap-2"
+                                backgroundColor="#292825"
+                                borderColor="#34322d"
+                                className="px-6 py-3 text-foreground font-medium text-sm tracking-wide flex items-center gap-2 cursor-pointer hover:bg-[#34322d]"
                             >
                                 Model Benchmark (7x7 Matrix)
-                            </Link>
+                            </StarBorder>
                         </div>
                     </div>
 
                     {/* Right: Interactive 3D Earth Globe */}
                     <div className="lg:col-span-5 relative">
-                        <div className="relative rounded-3xl bg-gradient-to-b from-[#0e1736]/60 to-[#060a1a]/80 border border-cyan-500/30 p-2 shadow-[0_0_40px_rgba(0,212,255,0.15)]">
+                        <div className="relative rounded-2xl bg-card border border-border p-2">
                             <EarthGlobe3D className="w-full h-[420px]" />
                         </div>
                     </div>
@@ -133,77 +166,77 @@ const LandingPage = () => {
             </section>
 
             {/* ================= SPACE THREAT TAXONOMY ================= */}
-            <section className="px-6 py-16 bg-[#080d1e]/80 border-y border-slate-800">
+            <section className="px-6 py-16 bg-background border-y border-border">
                 <div className="max-w-7xl mx-auto space-y-10">
-                    <div className="text-center max-w-3xl mx-auto space-y-3">
-                        <div className="text-xs font-mono uppercase tracking-[0.25em] text-cyan-400 font-semibold">
+                    <div className="text-center max-w-3xl mx-auto space-y-2">
+                        <div className="caps-label text-signal mb-1">
                             Aerospace Cyber Defense Mapping
                         </div>
-                        <h2 className="text-2xl sm:text-3xl font-bold font-orbitron text-white">
+                        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
                             Ground Segment Threat Vectors Defended
                         </h2>
-                        <p className="text-slate-400 text-sm">
+                        <p className="text-muted-foreground text-sm font-sans">
                             Real-time multiclass classification addressing vulnerabilities across Space Link Extension (SLE) and TT&C architectures.
                         </p>
                     </div>
 
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {[
                             {
                                 icon: Radio,
                                 code: "DoS / DDoS",
                                 title: "TT&C Uplink Saturation",
                                 impact: "Floods ground station transceivers during an 8-12 min LEO pass window, causing Loss of Signal (LOS).",
-                                color: "border-red-500/30 text-red-400 bg-red-950/10",
+                                color: "text-destructive",
                             },
                             {
                                 icon: Lock,
                                 code: "Brute Force",
                                 title: "Telecommand (TC) Bypass",
                                 impact: "Attempts to inject unauthorized thruster firings or corrupt CCSDS COP-1 sequence counters.",
-                                color: "border-orange-500/30 text-orange-400 bg-orange-950/10",
+                                color: "text-signal",
                             },
                             {
                                 icon: Radar,
                                 code: "Port Scanning",
                                 title: "SLE Service Reconnaissance",
                                 impact: "Probes ground station ports 5100-5102, antenna position encoders, and RF matrix controllers.",
-                                color: "border-yellow-500/30 text-yellow-400 bg-yellow-950/10",
+                                color: "text-slate",
                             },
                             {
                                 icon: Cpu,
                                 code: "Bot Traffic",
                                 title: "Ground RTU / Sensor Hijack",
                                 impact: "Compromises remote weather sensors or calibration feeds feeding orbital determination software.",
-                                color: "border-purple-500/30 text-purple-400 bg-purple-950/10",
+                                color: "text-foreground",
                             },
                             {
                                 icon: Compass,
                                 code: "Web Attacks",
                                 title: "Mission Data Portal Exploit",
                                 impact: "Attacks Bhuvan / EOS telemetry dissemination servers and public earth observation APIs.",
-                                color: "border-cyan-500/30 text-cyan-400 bg-cyan-950/10",
+                                color: "text-signal",
                             },
                             {
                                 icon: CheckCircle2,
                                 code: "Normal Flow",
                                 title: "Routine Housekeeping Telemetry",
                                 impact: "Reaction wheel RPM, star tracker quaternion data, solar panel battery bus voltage (Nominal).",
-                                color: "border-emerald-500/30 text-emerald-400 bg-emerald-950/10",
+                                color: "text-grove",
                             },
                         ].map((item, idx) => (
                             <div
                                 key={idx}
-                                className={`rounded-2xl p-6 border ${item.color} backdrop-blur-md hover:border-cyan-400 transition-all duration-300 group`}
+                                className="bg-card rounded-xl p-5 border border-border hover:border-muted-foreground/30 transition-all duration-200 group"
                             >
-                                <div className="flex items-center justify-between mb-4">
-                                    <item.icon className="w-8 h-8 group-hover:scale-110 transition-transform" />
-                                    <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-black/40 border border-slate-700 uppercase">
+                                <div className="flex items-center justify-between mb-3">
+                                    <item.icon className={`w-6 h-6 ${item.color}`} />
+                                    <span className="text-[11px] font-mono font-medium px-2 py-0.5 rounded bg-background border border-border uppercase text-muted-foreground">
                                         {item.code}
                                     </span>
                                 </div>
-                                <h3 className="text-lg font-bold font-orbitron text-white mb-2">{item.title}</h3>
-                                <p className="text-slate-400 text-xs leading-relaxed">{item.impact}</p>
+                                <h3 className="text-base font-semibold text-foreground mb-1">{item.title}</h3>
+                                <p className="text-muted-foreground text-xs leading-relaxed">{item.impact}</p>
                             </div>
                         ))}
                     </div>
@@ -212,100 +245,102 @@ const LandingPage = () => {
 
             {/* ================= PORTAL ACCESS CARDS ================= */}
             <section id="portal-access" className="px-6 py-20 max-w-6xl mx-auto">
-                <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-                    <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest">
+                <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+                    <span className="caps-label text-signal mb-1">
                         System Access Point
                     </span>
-                    <h2 className="text-3xl font-bold font-orbitron text-white">
+                    <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
                         Dual Operational Consoles
                     </h2>
-                    <p className="text-slate-400 text-sm">
+                    <p className="text-muted-foreground text-sm font-sans">
                         Choose your operational interface based on your mission role.
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-6">
                     {/* Portal A */}
                     <Link
                         to="/client/dashboard"
-                        className="group relative bg-[#0a1022] rounded-2xl p-8 border border-cyan-500/30 hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(0,212,255,0.25)] transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                        className="group relative bg-card rounded-xl p-7 border border-border hover:border-muted-foreground/40 transition-all duration-200 flex flex-col justify-between"
                     >
-                        <Satellite className="absolute -right-6 -bottom-6 w-40 h-40 opacity-5 text-cyan-400 group-hover:scale-110 transition-transform duration-500" />
                         <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-mono font-bold mb-4 border border-cyan-500/20">
+                            <div className="caps-label text-signal mb-3">
                                 PORTAL A • OPERATIONS
                             </div>
-                            <h3 className="text-2xl font-bold font-orbitron text-white mb-3">
+                            <h3 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground mb-2 group-hover:text-signal transition-colors">
                                 Mission Operations Center (MOC)
                             </h3>
-                            <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                            <p className="text-muted-foreground text-sm leading-relaxed mb-6 font-sans">
                                 Live orbital telemetry monitoring, active pass window countdowns, ISTRAC ground station threat map, and real-time automated defense counters.
                             </p>
-                            <ul className="space-y-2 text-xs font-mono text-slate-300 mb-8">
+                            <ul className="space-y-2 text-xs font-mono text-muted-foreground mb-8">
                                 <li className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-                                    ISTRAC Station Threat Visualizer (BLR, SHAR, Byalalu)
+                                    <span className="w-1.5 h-1.5 rounded-full bg-signal"></span>
+                                    <span>ISTRAC Station Threat Visualizer (BLR, SHAR, Byalalu)</span>
                                 </li>
                                 <li className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-                                    Satellite Pass Window Triage & LOS Risk Counter
+                                    <span className="w-1.5 h-1.5 rounded-full bg-signal"></span>
+                                    <span>Satellite Pass Window Triage & LOS Risk Counter</span>
                                 </li>
                                 <li className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-                                    Live Telemetry Stream with Zero Probing Impact
+                                    <span className="w-1.5 h-1.5 rounded-full bg-signal"></span>
+                                    <span>Live Telemetry Stream with Zero Probing Impact</span>
                                 </li>
                             </ul>
                         </div>
-                        <div className="text-cyan-400 font-orbitron font-bold text-sm group-hover:translate-x-2 transition-transform inline-flex items-center gap-2">
-                            Open Mission Operations Console →
+                        <div className="pt-2">
+                            <span className="text-foreground font-mono text-xs font-medium inline-flex items-center gap-1.5 group-hover:text-signal">
+                                Open Mission Operations Console →
+                            </span>
                         </div>
                     </Link>
 
                     {/* Portal B */}
                     <Link
                         to="/admin/dashboard"
-                        className="group relative bg-[#0a1022] rounded-2xl p-8 border border-orange-500/30 hover:border-orange-400 hover:shadow-[0_0_30px_rgba(255,107,26,0.25)] transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                        className="group relative bg-card rounded-xl p-7 border border-border hover:border-muted-foreground/40 transition-all duration-200 flex flex-col justify-between"
                     >
-                        <Lock className="absolute -right-6 -bottom-6 w-40 h-40 opacity-5 text-orange-400 group-hover:scale-110 transition-transform duration-500" />
                         <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-mono font-bold mb-4 border border-orange-500/20">
+                            <div className="caps-label text-signal mb-3">
                                 PORTAL B • GOVERNANCE
                             </div>
-                            <h3 className="text-2xl font-bold font-orbitron text-white mb-3">
+                            <h3 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground mb-2 group-hover:text-signal transition-colors">
                                 Ground Security Administration
                             </h3>
-                            <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                            <p className="text-muted-foreground text-sm leading-relaxed mb-6 font-sans">
                                 Mission controller investigation queue, SHAP telemetry attribution, adaptive False Alarm Rate (FAR) tuning, and official ISRO compliance logs.
                             </p>
-                            <ul className="space-y-2 text-xs font-mono text-slate-300 mb-8">
+                            <ul className="space-y-2 text-xs font-mono text-muted-foreground mb-8">
                                 <li className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
-                                    Priority Review Queue with Feature Attribution
+                                    <span className="w-1.5 h-1.5 rounded-full bg-signal"></span>
+                                    <span>Priority Review Queue with Feature Attribution</span>
                                 </li>
                                 <li className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
-                                    Online Bandit Threshold Tuning (Pass Window Mode)
+                                    <span className="w-1.5 h-1.5 rounded-full bg-signal"></span>
+                                    <span>Online Bandit Threshold Tuning (Pass Window Mode)</span>
                                 </li>
                                 <li className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
-                                    Model Benchmark: 7x7 Multi-Class Confusion Matrix
+                                    <span className="w-1.5 h-1.5 rounded-full bg-signal"></span>
+                                    <span>Model Benchmark: 7x7 Multi-Class Confusion Matrix</span>
                                 </li>
                             </ul>
                         </div>
-                        <div className="text-orange-400 font-orbitron font-bold text-sm group-hover:translate-x-2 transition-transform inline-flex items-center gap-2">
-                            Open Security Admin Console →
+                        <div className="pt-2">
+                            <span className="text-foreground font-mono text-xs font-medium inline-flex items-center gap-1.5 group-hover:text-signal">
+                                Open Security Admin Console →
+                            </span>
                         </div>
                     </Link>
                 </div>
             </section>
 
             {/* ================= FOOTER ================= */}
-            <footer className="border-t border-slate-800/80 py-8 text-center text-slate-500 bg-[#04060f] text-xs font-mono">
+            <footer className="border-t border-border py-8 text-center text-muted-foreground bg-background text-xs font-mono">
                 <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div>
-                        <strong>SOAR Platform</strong> • ISRO Aerospace Ground Segment Cyber Defense Extension
+                        <strong className="text-foreground">SOAR Platform</strong> • ISRO Aerospace Ground Segment Cyber Defense Extension
                     </div>
-                    <div className="text-slate-600">
+                    <div className="text-muted-foreground">
                         Evaluated for ISTRAC / IDSN Mission Operations • Air-Gapped Offline Intrusion Detection
                     </div>
                 </div>

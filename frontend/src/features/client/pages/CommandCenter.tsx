@@ -41,92 +41,92 @@ export const CommandCenter = () => {
     const avgLatency = health?.avg_defense_latency || '4.2 ms';
 
     return (
-        <div className="max-w-[1600px] mx-auto p-6 lg:p-8 space-y-6 bg-[#050814] text-slate-100 font-sans">
+        <div className="max-w-7xl mx-auto p-6 lg:p-8 space-y-6 bg-background text-foreground font-sans min-h-screen">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-3">
                 <div>
-                    <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-widest mb-1">
-                        <Satellite className="w-4 h-4" />
+                    <div className="flex items-center gap-2 caps-label text-signal mb-1">
+                        <Satellite className="w-3.5 h-3.5" />
                         ISTRAC MOX Flight Telemetry Protection
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-bold font-orbitron text-white">
+                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
                         Threat Command Bridge
                     </h1>
                 </div>
                 <div className="flex items-center gap-2 font-mono text-xs">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span className="text-slate-300">DEFENSE STATUS: </span>
-                    <span className="text-emerald-400 font-bold">ALL LINKS SECURED</span>
+                    <span className="w-2 h-2 rounded-full bg-grove"></span>
+                    <span className="text-muted-foreground">DEFENSE STATUS: </span>
+                    <span className="text-grove font-semibold">ALL LINKS SECURED</span>
                 </div>
             </div>
 
             {/* KPI Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 font-sans">
-                <div className="bg-[#0a1022] rounded-xl p-5 border border-slate-800 shadow-sm relative overflow-hidden group hover:border-cyan-500/40 transition-colors">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <Radar className="w-16 h-16 text-cyan-400" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 font-sans">
+                <div className="bg-card rounded-xl p-5 border border-border relative overflow-hidden group hover:border-muted-foreground/30 transition-colors">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <Radar className="w-16 h-16 text-foreground" />
                     </div>
-                    <p className="text-xs text-slate-400 font-mono mb-1 uppercase tracking-wider">Active Space Threats</p>
+                    <p className="caps-label text-muted-foreground mb-1">Active Space Threats</p>
                     <div className="flex items-baseline gap-2">
-                        <h3 className="text-3xl font-bold font-orbitron text-white">
+                        <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight tabular-nums text-foreground">
                             {totalThreatCount.toLocaleString()}
                         </h3>
-                        <span className="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800">
+                        <span className="text-xs font-mono text-muted-foreground bg-muted px-2 py-0.5 rounded border border-border">
                             LEO Contact Cone
                         </span>
                     </div>
-                    <div className="w-full bg-slate-800 h-1 mt-4 rounded-full overflow-hidden">
-                        <div className="bg-cyan-400 h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, Math.max(15, (totalThreatCount / 2000) * 100))}%` }}></div>
+                    <div className="w-full bg-muted h-1 mt-4 rounded-full overflow-hidden">
+                        <div className="bg-signal h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, Math.max(15, (totalThreatCount / 2000) * 100))}%` }}></div>
                     </div>
                 </div>
 
-                <div className="bg-[#0a1022] rounded-xl p-5 border border-slate-800 shadow-sm relative overflow-hidden group hover:border-emerald-500/40 transition-colors">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <ShieldBan className="w-16 h-16 text-emerald-400" />
+                <div className="bg-card rounded-xl p-5 border border-border relative overflow-hidden group hover:border-muted-foreground/30 transition-colors">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <ShieldBan className="w-16 h-16 text-foreground" />
                     </div>
-                    <p className="text-xs text-slate-400 font-mono mb-1 uppercase tracking-wider">Auto-Neutralized Threats</p>
+                    <p className="caps-label text-muted-foreground mb-1">Auto-Neutralized Threats</p>
                     <div className="flex items-baseline gap-2">
-                        <h3 className="text-3xl font-bold font-orbitron text-emerald-400">
+                        <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight tabular-nums text-grove">
                             {autoBlockedCount.toLocaleString()}
                         </h3>
-                        <span className="text-xs font-mono text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">
+                        <span className="text-xs font-mono text-muted-foreground bg-muted px-2 py-0.5 rounded border border-border">
                             Zero Delay
                         </span>
                     </div>
-                    <div className="w-full bg-slate-800 h-1 mt-4 rounded-full overflow-hidden">
-                        <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: health?.automation_rate ? `${parseFloat(health.automation_rate)}%` : '94%' }}></div>
+                    <div className="w-full bg-muted h-1 mt-4 rounded-full overflow-hidden">
+                        <div className="bg-grove h-full rounded-full transition-all duration-500" style={{ width: health?.automation_rate ? `${parseFloat(health.automation_rate)}%` : '94%' }}></div>
                     </div>
                 </div>
 
-                <div className="bg-[#0a1022] rounded-xl p-5 border border-slate-800 shadow-sm relative overflow-hidden group hover:border-cyan-500/40 transition-colors">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <Wand2 className="w-16 h-16 text-cyan-400" />
+                <div className="bg-card rounded-xl p-5 border border-border relative overflow-hidden group hover:border-muted-foreground/30 transition-colors">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <Wand2 className="w-16 h-16 text-foreground" />
                     </div>
-                    <p className="text-xs text-slate-400 font-mono mb-1 uppercase tracking-wider">AI Defense Coverage</p>
+                    <p className="caps-label text-muted-foreground mb-1">AI Defense Coverage</p>
                     <div className="flex items-baseline gap-2">
-                        <h3 className="text-3xl font-bold font-orbitron text-white">{health?.automation_rate || '99.4%'}</h3>
-                        <span className="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800">
+                        <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight tabular-nums text-foreground">{health?.automation_rate || '99.4%'}</h3>
+                        <span className="text-xs font-mono text-signal bg-signal/10 px-2 py-0.5 rounded border border-signal/25">
                             SOAR Bandit
                         </span>
                     </div>
-                    <div className="w-full bg-slate-800 h-1 mt-4 rounded-full overflow-hidden">
-                        <div className="bg-cyan-400 h-full rounded-full transition-all duration-500" style={{ width: health?.automation_rate ? `${parseFloat(health.automation_rate)}%` : '99.4%' }}></div>
+                    <div className="w-full bg-muted h-1 mt-4 rounded-full overflow-hidden">
+                        <div className="bg-signal h-full rounded-full transition-all duration-500" style={{ width: health?.automation_rate ? `${parseFloat(health.automation_rate)}%` : '99.4%' }}></div>
                     </div>
                 </div>
 
-                <div className="bg-[#0a1022] rounded-xl p-5 border border-slate-800 shadow-sm relative overflow-hidden group hover:border-orange-500/40 transition-colors">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <Timer className="w-16 h-16 text-orange-400" />
+                <div className="bg-card rounded-xl p-5 border border-border relative overflow-hidden group hover:border-muted-foreground/30 transition-colors">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <Timer className="w-16 h-16 text-foreground" />
                     </div>
-                    <p className="text-xs text-slate-400 font-mono mb-1 uppercase tracking-wider">Mean Pass Recovery (MTPR)</p>
+                    <p className="caps-label text-muted-foreground mb-1">Mean Pass Recovery (MTPR)</p>
                     <div className="flex items-baseline gap-2">
-                        <h3 className="text-3xl font-bold font-orbitron text-orange-400">{avgLatency}</h3>
-                        <span className="text-xs font-mono text-emerald-400 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800">
+                        <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight tabular-nums text-signal">{avgLatency}</h3>
+                        <span className="text-xs font-mono text-grove bg-grove/10 px-2 py-0.5 rounded border border-grove/25">
                             &lt; AOS Limit
                         </span>
                     </div>
-                    <div className="w-full bg-slate-800 h-1 mt-4 rounded-full overflow-hidden">
-                        <div className="bg-orange-500 h-full rounded-full" style={{ width: '35%' }}></div>
+                    <div className="w-full bg-muted h-1 mt-4 rounded-full overflow-hidden">
+                        <div className="bg-signal h-full rounded-full" style={{ width: '35%' }}></div>
                     </div>
                 </div>
             </div>
@@ -134,125 +134,125 @@ export const CommandCenter = () => {
             {/* Split Section */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
                 {/* Severity Distribution */}
-                <div className="lg:col-span-2 bg-[#0a1022] rounded-xl border border-slate-800 shadow-sm flex flex-col">
-                    <div className="px-6 py-4 border-b border-slate-800 flex justify-between items-center">
-                        <h3 className="font-orbitron font-bold text-base text-white tracking-wide">
+                <div className="lg:col-span-2 bg-card rounded-xl border border-border flex flex-col">
+                    <div className="px-6 py-4 border-b border-border flex justify-between items-center">
+                        <h3 className="font-semibold text-base text-foreground tracking-tight">
                             Space Threat Mission Impact Distribution
                         </h3>
-                        <span className="text-xs font-mono text-cyan-400">EOS-09 Contact Window</span>
+                        <span className="text-xs font-mono text-muted-foreground">EOS-09 Contact Window</span>
                     </div>
                     <div className="p-6 flex-1 flex flex-col md:flex-row items-center gap-8">
                         {/* Circular Visualization */}
                         <div className="relative w-44 h-44 flex-shrink-0 flex items-center justify-center">
-                            <div className="absolute inset-0 rounded-full border-8 border-red-500/80"></div>
-                            <div className="absolute inset-2 rounded-full border-8 border-orange-500/80"></div>
-                            <div className="absolute inset-4 rounded-full border-8 border-cyan-500/80"></div>
+                            <div className="absolute inset-0 rounded-full border-4 border-destructive/80"></div>
+                            <div className="absolute inset-2.5 rounded-full border-4 border-signal/80"></div>
+                            <div className="absolute inset-5 rounded-full border-4 border-muted"></div>
                             <div className="flex flex-col items-center justify-center font-mono">
-                                <span className="text-2xl font-bold text-white font-orbitron">{totalThreatCount}</span>
-                                <span className="text-[10px] text-slate-400">Threat Flows</span>
+                                <span className="text-2xl font-semibold text-foreground tabular-nums">{totalThreatCount}</span>
+                                <span className="text-[11px] text-muted-foreground font-mono">Threat Flows</span>
                             </div>
                         </div>
 
                         {/* Legend */}
                         <div className="flex-1 grid grid-cols-2 gap-3 w-full font-mono text-xs">
-                            <div className="bg-[#080d1e] p-3 rounded-lg border border-red-500/30">
+                            <div className="bg-background p-3.5 rounded-lg border border-border">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                                    <span className="font-bold text-red-400">CRITICAL</span>
+                                    <span className="w-2 h-2 rounded-full bg-destructive"></span>
+                                    <span className="font-semibold text-destructive">CRITICAL</span>
                                 </div>
-                                <div className="text-[11px] text-slate-400">Pass Window Threatening</div>
-                                <div className="text-xl font-bold text-white mt-1">{criticalThreats}</div>
+                                <div className="text-[11px] text-muted-foreground">Pass Window Threatening</div>
+                                <div className="text-xl font-semibold text-foreground mt-1 tabular-nums">{criticalThreats}</div>
                             </div>
-                            <div className="bg-[#080d1e] p-3 rounded-lg border border-orange-500/30">
+                            <div className="bg-background p-3.5 rounded-lg border border-border">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
-                                    <span className="font-bold text-orange-400">HIGH</span>
+                                    <span className="w-2 h-2 rounded-full bg-signal"></span>
+                                    <span className="font-semibold text-signal">HIGH</span>
                                 </div>
-                                <div className="text-[11px] text-slate-400">TC Uplink Degradation</div>
-                                <div className="text-xl font-bold text-white mt-1">{highThreats}</div>
+                                <div className="text-[11px] text-muted-foreground">TC Uplink Degradation</div>
+                                <div className="text-xl font-semibold text-foreground mt-1 tabular-nums">{highThreats}</div>
                             </div>
-                            <div className="bg-[#080d1e] p-3 rounded-lg border border-cyan-500/30">
+                            <div className="bg-background p-3.5 rounded-lg border border-border">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
-                                    <span className="font-bold text-cyan-400">MEDIUM</span>
+                                    <span className="w-2 h-2 rounded-full bg-slate"></span>
+                                    <span className="font-semibold text-foreground">MEDIUM</span>
                                 </div>
-                                <div className="text-[11px] text-slate-400">SLE Port Probing</div>
-                                <div className="text-xl font-bold text-white mt-1">{mediumThreats}</div>
+                                <div className="text-[11px] text-muted-foreground">SLE Port Probing</div>
+                                <div className="text-xl font-semibold text-foreground mt-1 tabular-nums">{mediumThreats}</div>
                             </div>
-                            <div className="bg-[#080d1e] p-3 rounded-lg border border-slate-700">
+                            <div className="bg-background p-3.5 rounded-lg border border-border">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
-                                    <span className="font-bold text-slate-300">LOW</span>
+                                    <span className="w-2 h-2 rounded-full bg-muted-foreground"></span>
+                                    <span className="font-semibold text-muted-foreground">LOW</span>
                                 </div>
-                                <div className="text-[11px] text-slate-400">Routine Tracking Dev.</div>
-                                <div className="text-xl font-bold text-white mt-1">{lowThreats}</div>
+                                <div className="text-[11px] text-muted-foreground">Routine Tracking Dev.</div>
+                                <div className="text-xl font-semibold text-foreground mt-1 tabular-nums">{lowThreats}</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Ground Station Subsystems */}
-                <div className="bg-[#0a1022] rounded-xl border border-slate-800 shadow-sm flex flex-col font-mono text-xs">
-                    <div className="px-6 py-4 border-b border-slate-800">
-                        <h3 className="font-orbitron font-bold text-base text-white tracking-wide">
+                <div className="bg-card rounded-xl border border-border flex flex-col font-mono text-xs">
+                    <div className="px-6 py-4 border-b border-border">
+                        <h3 className="font-semibold text-base text-foreground tracking-tight">
                             Ground Telemetry Health
                         </h3>
                     </div>
                     <div className="p-6 flex flex-col gap-3">
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-[#080d1e] border border-slate-800">
+                        <div className="flex items-center justify-between p-3.5 rounded-lg bg-background border border-border">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-emerald-500/10 rounded text-emerald-400 border border-emerald-500/20">
-                                    <AlertOctagon className="w-4 h-4" />
+                                <div className="p-2 bg-muted rounded-md text-foreground border border-border">
+                                    <AlertOctagon className="w-4 h-4 text-grove" />
                                 </div>
                                 <div>
-                                    <h4 className="text-xs font-bold text-white">TT&C Uplink Transceiver</h4>
-                                    <p className="text-[10px] text-emerald-400">Online • 2098 MHz Locked</p>
+                                    <h4 className="text-xs font-medium text-foreground">TT&C Uplink Transceiver</h4>
+                                    <p className="text-[11px] text-grove font-mono">Online • 2098 MHz Locked</p>
                                 </div>
                             </div>
-                            <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                            <div className="h-2 w-2 rounded-full bg-grove"></div>
                         </div>
 
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-[#080d1e] border border-slate-800">
+                        <div className="flex items-center justify-between p-3.5 rounded-lg bg-background border border-border">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-cyan-500/10 rounded text-cyan-400 border border-cyan-500/20">
-                                    <Radio className="w-4 h-4" />
+                                <div className="p-2 bg-muted rounded-md text-foreground border border-border">
+                                    <Radio className="w-4 h-4 text-signal" />
                                 </div>
                                 <div>
-                                    <h4 className="text-xs font-bold text-white">SLE Ground Gateway (TCP 5100)</h4>
-                                    <p className="text-[10px] text-cyan-400">Active • 105 Mbps Downlink</p>
+                                    <h4 className="text-xs font-medium text-foreground">SLE Ground Gateway (TCP 5100)</h4>
+                                    <p className="text-[11px] text-muted-foreground font-mono">Active • 105 Mbps Downlink</p>
                                 </div>
                             </div>
-                            <div className="h-2 w-2 rounded-full bg-cyan-400"></div>
+                            <div className="h-2 w-2 rounded-full bg-grove"></div>
                         </div>
 
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-[#080d1e] border border-slate-800 border-l-4 border-l-orange-400">
+                        <div className="flex items-center justify-between p-3.5 rounded-lg bg-background border border-border border-l-2 border-l-signal">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-orange-500/10 rounded text-orange-400 border border-orange-500/20">
-                                    <AlertTriangle className="w-4 h-4" />
+                                <div className="p-2 bg-muted rounded-md text-foreground border border-border">
+                                    <AlertTriangle className="w-4 h-4 text-signal" />
                                 </div>
                                 <div>
-                                    <h4 className="text-xs font-bold text-white">CCSDS COP-1 Frame Parser</h4>
-                                    <p className="text-[10px] text-orange-400">{health?.pending_reviews ?? traffic.filter(p => p.action === 'PENDING_REVIEW').length} Anomaly Sequences Flagged</p>
+                                    <h4 className="text-xs font-medium text-foreground">CCSDS COP-1 Frame Parser</h4>
+                                    <p className="text-[11px] text-signal font-mono">{health?.pending_reviews ?? traffic.filter(p => p.action === 'PENDING_REVIEW').length} Anomaly Sequences Flagged</p>
                                 </div>
                             </div>
-                            <div className="h-2 w-2 rounded-full bg-orange-400"></div>
+                            <div className="h-2 w-2 rounded-full bg-signal"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Recent Automated Actions */}
-            <div className="bg-[#0a1022] rounded-xl border border-slate-800 shadow-sm overflow-hidden font-mono text-xs">
-                <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-[#0e1733]">
-                    <h3 className="font-orbitron font-bold text-base text-white flex items-center gap-2">
-                        <Timer className="text-cyan-400 w-5 h-5" />
+            <div className="bg-card rounded-xl border border-border overflow-hidden font-mono text-xs">
+                <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-card">
+                    <h3 className="font-semibold text-base text-foreground flex items-center gap-2">
+                        <Timer className="text-signal w-5 h-5" />
                         Recent Automated Space Defense Actions
                     </h3>
-                    <span className="text-[11px] text-slate-400">Air-Gapped Real-Time Log</span>
+                    <span className="text-[11px] text-muted-foreground font-mono">Air-Gapped Real-Time Log</span>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-[#080d1e] border-b border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider">
+                        <thead className="bg-muted/40 border-b border-border text-muted-foreground uppercase text-[11px] font-mono tracking-wider">
                             <tr>
                                 <th className="px-6 py-3">Time (UTC)</th>
                                 <th className="px-6 py-3">SOAR Action</th>
@@ -261,25 +261,25 @@ export const CommandCenter = () => {
                                 <th className="px-6 py-3">Mission Outcome</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800/60">
+                        <tbody className="divide-y divide-border font-mono tabular-nums">
                             {recentActions.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                                    <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground">
                                         No threat actions required. Nominal housekeeping telemetry.
                                     </td>
                                 </tr>
                             ) : (
                                 recentActions.map((action, idx) => (
-                                    <tr key={idx} className="hover:bg-slate-800/40 transition-colors">
-                                        <td className="px-6 py-3 text-slate-400">{new Date(action.timestamp).toLocaleTimeString()}</td>
-                                        <td className="px-6 py-3 text-white font-bold">
+                                    <tr key={idx} className="hover:bg-muted/30 transition-colors">
+                                        <td className="px-6 py-3 text-muted-foreground">{new Date(action.timestamp).toLocaleTimeString()}</td>
+                                        <td className="px-6 py-3 text-foreground font-medium">
                                             {action.action === 'AUTO_BLOCKED' ? 'AUTO_NEUTRALIZE' : action.action}
                                         </td>
-                                        <td className="px-6 py-3 text-cyan-300">{action.src_ip}</td>
-                                        <td className="px-6 py-3 text-slate-300">{mapSpaceThreatName(action.type)}</td>
+                                        <td className="px-6 py-3 text-foreground">{action.src_ip}</td>
+                                        <td className="px-6 py-3 text-muted-foreground">{mapSpaceThreatName(action.type)}</td>
                                         <td className="px-6 py-3">
-                                            <span className={clsx("inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide",
-                                                action.action.includes('BLOCK') ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"
+                                            <span className={clsx("inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium font-mono tabular-nums uppercase tracking-wide",
+                                                action.action.includes('BLOCK') ? "bg-grove/10 text-grove border border-grove/20" : "bg-signal/10 text-signal border border-signal/20"
                                             )}>
                                                 {action.action.includes('BLOCK') ? 'LINK PROTECTED' : 'UNDER REVIEW'}
                                             </span>

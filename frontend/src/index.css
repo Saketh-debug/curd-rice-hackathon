@@ -1,22 +1,126 @@
-/* 1. In v4, this single line replaces the old @tailwind directives */
 @import "tailwindcss";
 
-/* 2. Keep your font imports (ensure they are at the top) */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600;700&family=Orbitron:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round');
 
-/* 3. Link your JS config */
-@config "../tailwind.config.js";
+:root,
+.dark {
+    --background: #161513;
+    --foreground: #f1efea;
+    --card: #1f1e1b;
+    --card-foreground: #f1efea;
+    --popover: #1f1e1b;
+    --popover-foreground: #f1efea;
+    --primary: #f1efea;
+    --primary-foreground: #161513;
+    --secondary: #292825;
+    --secondary-foreground: #f1efea;
+    --muted: #292825;
+    --muted-foreground: #a19c92;
+    --accent: #292825;
+    --accent-foreground: #f1efea;
+    --destructive: #ff6568;
+    --border: #34322d;
+    --input: #34322d;
+    --ring: #66625a;
+    --signal: #f5b325;
+    --signal-foreground: #161513;
+    --grove: #8abf84;
+    --grove-foreground: #161513;
+    --slate: #7c9bda;
+    --slate-soft: #242e48;
+    --radius: 0.625rem;
+    --radius-md: 0.5rem;
+    --radius-xl: 0.875rem;
+
+    --font-sans: 'Geist', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, monospace;
+    --font-heading: 'Geist', system-ui, -apple-system, sans-serif;
+    --font-logo: 'Orbitron', sans-serif;
+}
+
+@theme {
+    --color-background: #161513;
+    --color-foreground: #f1efea;
+    --color-card: #1f1e1b;
+    --color-card-foreground: #f1efea;
+    --color-popover: #1f1e1b;
+    --color-popover-foreground: #f1efea;
+    --color-muted: #292825;
+    --color-muted-foreground: #a19c92;
+    --color-border: #34322d;
+    --color-input: #34322d;
+    --color-ring: #66625a;
+    --color-signal: #f5b325;
+    --color-signal-foreground: #161513;
+    --color-grove: #8abf84;
+    --color-grove-foreground: #161513;
+    --color-destructive: #ff6568;
+    --color-slate: #7c9bda;
+    --color-slate-soft: #242e48;
+
+    --color-surface-dark: #161513;
+    --color-surface-card: #1f1e1b;
+    --color-surface-border: #34322d;
+
+    --font-display: 'Geist', system-ui, -apple-system, sans-serif;
+    --font-sans: 'Geist', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Geist', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, monospace;
+    --font-logo: 'Orbitron', sans-serif;
+}
 
 @layer base {
     body {
-        @apply bg-[#050814] text-slate-100 antialiased;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        background-image: 
-            radial-gradient(circle at 10% 15%, rgba(0, 212, 255, 0.05) 0%, transparent 40%),
-            radial-gradient(circle at 90% 25%, rgba(255, 107, 26, 0.05) 0%, transparent 45%),
-            radial-gradient(circle at 50% 85%, rgba(0, 255, 157, 0.04) 0%, transparent 50%);
+        background-color: #161513;
+        color: #f1efea;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-family: 'Geist', system-ui, -apple-system, sans-serif;
     }
+
+    .font-mono,
+    code, kbd, samp, pre {
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-feature-settings: "tnum" 1, "zero" 1;
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+/* FieldRank Monospace Caps Label */
+.caps-label {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 11px;
+    line-height: 0.875rem;
+    color: #a19c92;
+}
+
+/* FieldRank Surface Panels */
+.glass-panel {
+    background: rgba(31, 30, 27, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid #34322d;
+}
+
+.glass-panel-elevated {
+    background: rgba(31, 30, 27, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid #45423b;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.glass-panel-hover {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+    background: rgba(41, 40, 37, 0.95);
+    border-color: #555148;
+    transform: translateY(-1px);
 }
 
 /* Custom Telemetry Scrollbar */
@@ -56,19 +160,7 @@
     pointer-events: none;
 }
 
-.starfield {
-    background-image: 
-        radial-gradient(1px 1px at 25px 35px, #ffffff, rgba(0,0,0,0)),
-        radial-gradient(1.5px 1.5px at 85px 125px, #00d4ff, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 165px 235px, #ffffff, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 320px 80px, #ff9933, rgba(0,0,0,0)),
-        radial-gradient(1.5px 1.5px at 450px 290px, #00ff9d, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 580px 140px, #ffffff, rgba(0,0,0,0));
-    background-repeat: repeat;
-    background-size: 650px 350px;
-}
-
 /* Dark mode styling filter for standard OSM tiles */
 .map-tiles-dark {
     filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
-}
+}

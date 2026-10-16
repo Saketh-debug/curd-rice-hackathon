@@ -35,12 +35,12 @@ export const EarthGlobe3D: React.FC<EarthGlobe3DProps> = ({ className = '' }) =>
         canvas.height = 1024;
         const ctx = canvas.getContext('2d');
         if (ctx) {
-            // Deep space ocean
-            ctx.fillStyle = '#060d1f';
+            // Deep basalt space ocean
+            ctx.fillStyle = '#161513';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Latitude / Longitude grid lines
-            ctx.strokeStyle = 'rgba(0, 212, 255, 0.12)';
+            ctx.strokeStyle = 'rgba(245, 179, 37, 0.08)';
             ctx.lineWidth = 1;
             for (let y = 0; y <= canvas.height; y += 64) {
                 ctx.beginPath();
@@ -70,32 +70,32 @@ export const EarthGlobe3D: React.FC<EarthGlobe3DProps> = ({ className = '' }) =>
                 }
             };
 
-            // Indian subcontinent (prominently highlighted)
-            drawContinentCluster(1450, 480, 110, 350, '#ff9933'); // Saffron/ISRO gold
-            drawContinentCluster(1450, 520, 100, 300, '#00ff9d'); // Green
-            drawContinentCluster(1450, 440, 120, 400, '#38bdf8'); // Cyan/Blue
+            // Indian subcontinent (prominently highlighted in Signal Gold & Grove)
+            drawContinentCluster(1450, 480, 110, 350, '#f5b325'); // Signal gold
+            drawContinentCluster(1450, 520, 100, 300, '#8abf84'); // Grove safe
+            drawContinentCluster(1450, 440, 120, 400, '#7c9bda'); // Slate
             // Asia & Middle East
-            drawContinentCluster(1400, 360, 220, 600, '#00d4ff');
-            drawContinentCluster(1650, 420, 180, 500, '#0284c7');
+            drawContinentCluster(1400, 360, 220, 600, '#a19c92');
+            drawContinentCluster(1650, 420, 180, 500, '#7c9bda');
             // Europe
-            drawContinentCluster(1100, 320, 140, 450, '#0284c7');
+            drawContinentCluster(1100, 320, 140, 450, '#8abf84');
             // Africa
-            drawContinentCluster(1120, 560, 180, 500, '#0369a1');
+            drawContinentCluster(1120, 560, 180, 500, '#a19c92');
             // Australia
-            drawContinentCluster(1750, 720, 110, 300, '#0284c7');
+            drawContinentCluster(1750, 720, 110, 300, '#7c9bda');
             // Americas
-            drawContinentCluster(500, 360, 190, 550, '#0369a1');
-            drawContinentCluster(600, 640, 160, 450, '#0284c7');
+            drawContinentCluster(500, 360, 190, 550, '#a19c92');
+            drawContinentCluster(600, 640, 160, 450, '#8abf84');
         }
 
         const earthTexture = new THREE.CanvasTexture(canvas);
         const globeGeo = new THREE.SphereGeometry(1, 64, 64);
         const globeMat = new THREE.MeshPhongMaterial({
             map: earthTexture,
-            color: 0x1a365d,
-            emissive: 0x051329,
-            specular: 0x00d4ff,
-            shininess: 25,
+            color: 0x1f1e1b,
+            emissive: 0x161513,
+            specular: 0xf5b325,
+            shininess: 20,
             transparent: true,
             opacity: 0.95,
         });
@@ -105,9 +105,9 @@ export const EarthGlobe3D: React.FC<EarthGlobe3DProps> = ({ className = '' }) =>
         // Atmosphere glow outer shell
         const atmosGeo = new THREE.SphereGeometry(1.04, 64, 64);
         const atmosMat = new THREE.MeshBasicMaterial({
-            color: 0x00d4ff,
+            color: 0xf5b325,
             transparent: true,
-            opacity: 0.14,
+            opacity: 0.08,
             side: THREE.BackSide,
         });
         const atmosMesh = new THREE.Mesh(atmosGeo, atmosMat);
@@ -116,7 +116,7 @@ export const EarthGlobe3D: React.FC<EarthGlobe3DProps> = ({ className = '' }) =>
         // Orbital Trajectory Ring 1 (LEO polar / SSO)
         const orbit1Geo = new THREE.RingGeometry(1.28, 1.29, 96);
         const orbit1Mat = new THREE.MeshBasicMaterial({
-            color: 0x00d4ff,
+            color: 0xf5b325,
             side: THREE.DoubleSide,
             transparent: true,
             opacity: 0.45,
@@ -129,7 +129,7 @@ export const EarthGlobe3D: React.FC<EarthGlobe3DProps> = ({ className = '' }) =>
         // Orbital Trajectory Ring 2 (Equatorial / GTO)
         const orbit2Geo = new THREE.RingGeometry(1.45, 1.46, 96);
         const orbit2Mat = new THREE.MeshBasicMaterial({
-            color: 0xff6b1a,
+            color: 0x7c9bda,
             side: THREE.DoubleSide,
             transparent: true,
             opacity: 0.35,
@@ -141,13 +141,13 @@ export const EarthGlobe3D: React.FC<EarthGlobe3DProps> = ({ className = '' }) =>
 
         // Satellite 1 (EOS-09 LEO)
         const sat1Geo = new THREE.SphereGeometry(0.032, 16, 16);
-        const sat1Mat = new THREE.MeshBasicMaterial({ color: 0x00ff9d });
+        const sat1Mat = new THREE.MeshBasicMaterial({ color: 0x8abf84 });
         const sat1 = new THREE.Mesh(sat1Geo, sat1Mat);
         globeGroup.add(sat1);
 
         // Satellite 2 (Aditya-L1 / GSO link)
         const sat2Geo = new THREE.SphereGeometry(0.038, 16, 16);
-        const sat2Mat = new THREE.MeshBasicMaterial({ color: 0xff9933 });
+        const sat2Mat = new THREE.MeshBasicMaterial({ color: 0xf5b325 });
         const sat2 = new THREE.Mesh(sat2Geo, sat2Mat);
         globeGroup.add(sat2);
 

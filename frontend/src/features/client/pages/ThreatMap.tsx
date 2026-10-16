@@ -9,6 +9,7 @@ import {
     CircleMarker,
     Tooltip,
     ZoomControl,
+    useMap,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Satellite, Radio, Shield, Globe } from 'lucide-react';
@@ -76,10 +77,10 @@ const ISRO_GROUND_STATIONS: GroundStation[] = [
 
 /* ================= Attack Colors ================= */
 const attackColors: Record<string, string> = {
-    ddos: "#ff2244",    // TT&C Saturation
-    dos: "#ff6b1a",     // Gateway Flood
-    brute: "#00d4ff",   // TC Auth Bypass
-    bot: "#d946ef",     // RTU Sensor Hijack
+    ddos: "#ff6568",    // TT&C Saturation (Destructive Red)
+    dos: "#f5b325",     // Gateway Flood (Signal Amber)
+    brute: "#7c9bda",   // TC Auth Bypass (Slate Periwinkle)
+    bot: "#c084fc",     // RTU Sensor Hijack (Muted Violet)
 };
 
 const getAttackColor = (type: string = "") => {
@@ -88,7 +89,7 @@ const getAttackColor = (type: string = "") => {
     if (lowerType.includes('dos')) return attackColors.dos;
     if (lowerType.includes('brute')) return attackColors.brute;
     if (lowerType.includes('bot')) return attackColors.bot;
-    return "#ff2244";
+    return "#ff6568";
 };
 
 /* ================= Curve Generator ================= */
@@ -177,6 +178,17 @@ function TravelingDot({ path, color }: TravelingDotProps) {
     );
 }
 
+function MapResizer() {
+    const map = useMap();
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            map.invalidateSize();
+        }, 200);
+        return () => clearTimeout(timer);
+    }, [map]);
+    return null;
+}
+
 /* ================= MAIN COMPONENT ================= */
 export const ThreatMap = () => {
     const { health } = useSystemHealth();
@@ -201,19 +213,20 @@ export const ThreatMap = () => {
     ];
 
     return (
-        <div className="relative h-full w-full bg-[#050814] overflow-hidden flex flex-col font-sans">
+        <div className="relative w-full h-[calc(100vh-65px)] bg-background overflow-hidden flex flex-col font-sans">
 
             {/* ================= MAP ================= */}
-            <div className="absolute inset-0">
+            <div className="absolute inset-0 w-full h-full">
                 <MapContainer
                     center={[20.5937, 78.9629]} // Centered on India
                     zoom={5}
                     minZoom={4}
                     maxBounds={[[6.0, 68.0], [36.0, 98.0]]}
                     className="h-full w-full"
-                    style={{ height: "100%", width: "100%", background: "#050814" }}
+                    style={{ height: "100%", width: "100%", background: "#161513" }}
                     zoomControl={false}
                 >
+                    <MapResizer />
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -230,9 +243,9 @@ export const ThreatMap = () => {
                                 center={station.coords}
                                 radius={14}
                                 pathOptions={{
-                                    color: "#00d4ff",
-                                    fillColor: "#00d4ff",
-                                    fillOpacity: 0.15,
+                                    color: "#f5b325",
+                                    fillColor: "#f5b325",
+                                    fillOpacity: 0.12,
                                     weight: 1,
                                     dashArray: "3, 3",
                                 }}
@@ -242,14 +255,14 @@ export const ThreatMap = () => {
                                 center={station.coords}
                                 radius={5}
                                 pathOptions={{
-                                    color: "#ffffff",
-                                    fillColor: "#00d4ff",
+                                    color: "#f1efea",
+                                    fillColor: "#f5b325",
                                     fillOpacity: 1,
                                     weight: 2,
                                 }}
                             >
                                 <Tooltip permanent direction="top" offset={[0, -8]} className="custom-station-tooltip">
-                                    <span className="font-mono text-[10px] font-bold text-cyan-300 bg-[#080d1e] px-1.5 py-0.5 rounded border border-cyan-500/40">
+                                    <span className="font-mono text-[11px] font-medium text-[#f1efea] bg-[#1f1e1b] px-1.5 py-0.5 rounded border border-[#34322d]">
                                         🛰️ {station.code}
                                     </span>
                                 </Tooltip>
@@ -318,36 +331,36 @@ export const ThreatMap = () => {
 
             {/* ================= HEADER ================= */}
             <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-start z-[500] pointer-events-none">
-                <div className="pointer-events-auto bg-[#080d1e]/85 backdrop-blur-md border border-cyan-500/30 p-4 rounded-2xl shadow-xl">
-                    <div className="text-[10px] uppercase tracking-[0.25em] text-cyan-400 font-mono mb-1">
+                <div className="pointer-events-auto bg-card/90 backdrop-blur-md border border-border p-4 rounded-xl shadow-xl">
+                    <div className="caps-label text-signal mb-1">
                         ISTRAC Defense Network
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <h2 className="text-lg font-bold font-orbitron text-white tracking-wide">
+                        <span className="w-2 h-2 rounded-full bg-grove"></span>
+                        <h2 className="text-base sm:text-lg font-semibold tracking-tight text-foreground">
                             Ground Station Cyber Attack Vector Map
                         </h2>
                     </div>
-                    <p className="text-xs text-slate-400 font-mono mt-1">
+                    <p className="text-xs text-muted-foreground font-mono mt-1">
                         Tracking 7 National ISRO Ground & Tracking Centers • India Network
                     </p>
                 </div>
 
-                <div className="hidden lg:flex gap-4 pointer-events-auto">
-                    <div className="bg-[#080d1e]/85 backdrop-blur-md border border-slate-700/60 px-4 py-2.5 rounded-xl flex flex-col items-center min-w-[130px] shadow-lg">
-                        <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">
+                <div className="hidden lg:flex gap-3 pointer-events-auto">
+                    <div className="bg-card/90 backdrop-blur-md border border-border px-4 py-2.5 rounded-xl flex flex-col items-center min-w-[130px] shadow-lg">
+                        <span className="caps-label text-muted-foreground">
                             Flow Ingestion / Sec
                         </span>
-                        <span className="text-lg font-bold text-white font-mono">
+                        <span className="text-base font-semibold text-foreground font-mono tabular-nums">
                             {health?.events_per_second?.toLocaleString() || '1,420'}
                         </span>
                     </div>
 
-                    <div className="bg-[#080d1e]/85 backdrop-blur-md border border-cyan-500/40 px-4 py-2.5 rounded-xl flex flex-col items-center min-w-[130px] border-l-4 border-l-cyan-400 shadow-lg">
-                        <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">
+                    <div className="bg-card/90 backdrop-blur-md border border-border px-4 py-2.5 rounded-xl flex flex-col items-center min-w-[130px] shadow-lg">
+                        <span className="caps-label text-muted-foreground">
                             Auto-Neutralized
                         </span>
-                        <span className="text-lg font-bold text-cyan-400 font-mono">
+                        <span className="text-base font-semibold text-grove font-mono tabular-nums">
                             {health?.automation_rate || '99.4%'}
                         </span>
                     </div>
@@ -355,10 +368,10 @@ export const ThreatMap = () => {
             </div>
 
             {/* ================= ATTACK FILTER ================= */}
-            <div className="absolute bottom-6 right-6 w-72 bg-[#080d1e]/90 backdrop-blur-xl border border-cyan-500/30 rounded-2xl p-4 z-[500] shadow-2xl">
-                <h3 className="text-xs font-orbitron font-semibold text-white mb-3 flex items-center justify-between">
+            <div className="absolute bottom-6 right-6 w-72 bg-card/95 backdrop-blur-xl border border-border rounded-xl p-4 z-[500] shadow-2xl">
+                <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center justify-between">
                     <span>Space Threat Vector Filter</span>
-                    <span className="text-[10px] font-mono bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded border border-cyan-500/30">
+                    <span className="text-[11px] font-mono bg-muted text-muted-foreground px-2 py-0.5 rounded border border-border tabular-nums">
                         {threats.length} ACTIVE
                     </span>
                 </h3>
@@ -368,10 +381,10 @@ export const ThreatMap = () => {
                         <button
                             key={f.id}
                             onClick={() => setSelectedFilter(f.id)}
-                            className={`w-full flex items-center justify-between p-2 rounded-xl transition-all duration-200 border text-[11px] ${
+                            className={`w-full flex items-center justify-between p-2 rounded-lg transition-all duration-200 border text-[11px] ${
                                 selectedFilter === f.id
-                                    ? "bg-cyan-500/15 border-cyan-500/40 text-cyan-200 font-bold"
-                                    : "bg-transparent border-transparent text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
+                                    ? "bg-muted border-border text-foreground font-medium"
+                                    : "bg-transparent border-transparent text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                             }`}
                         >
                             <div className="flex items-center gap-2 truncate">
@@ -382,7 +395,7 @@ export const ThreatMap = () => {
                                 <span className="truncate">{f.label}</span>
                             </div>
                             {selectedFilter === f.id && (
-                                <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-signal" />
                             )}
                         </button>
                     ))}

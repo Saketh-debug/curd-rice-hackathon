@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { apiClient } from '../../../api/client';
 import type { SatellitePassData, SatelliteMissionTelemetry } from '../../../types';
+import StarBorder from '../../../components/StarBorder';
 
 const INITIAL_PASSES: SatellitePassData[] = [
     {
@@ -193,115 +194,113 @@ export const PassWindowStatus = () => {
     const activePass = passes.find(p => p.status === 'ACTIVE') || passes[0];
 
     return (
-        <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8 bg-[#050814] text-slate-100 min-h-screen">
+        <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 bg-background text-foreground min-h-screen font-sans">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border">
                 <div>
-                    <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-widest mb-1">
-                        <Satellite className="w-4 h-4" />
+                    <div className="flex items-center gap-2 caps-label text-signal mb-1">
+                        <Satellite className="w-3.5 h-3.5" />
                         ISTRAC / IDSN Mission Schedule • ESA OPS-SAT Space Data
                     </div>
-                    <h1 className="text-3xl font-bold font-orbitron text-white">
+                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
                         Orbital Pass Windows & TT&C Link Defense
                     </h1>
-                    <p className="text-slate-400 text-sm mt-1">
+                    <p className="text-muted-foreground text-xs font-mono mt-1">
                         Real-time pass telemetry evaluated on {datasetMeta?.total_records || 2123} spacecraft sensor records from European Space Agency (ESA) OPS-SAT.
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <button
+                    <StarBorder
                         onClick={fetchTelemetryPasses}
                         disabled={isLoading}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0e1733] hover:bg-[#15244d] border border-cyan-500/30 text-cyan-300 font-mono text-xs transition-all"
+                        backgroundColor="#292825"
+                        borderColor="#34322d"
+                        className="px-3.5 py-1.5 text-foreground hover:bg-[#34322d] font-mono text-xs flex items-center gap-2 cursor-pointer"
                     >
                         <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
                         Sync Real Dataset
-                    </button>
-                    <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    </StarBorder>
+                    <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-card border border-border text-grove font-mono text-xs font-medium">
+                        <span className="w-2 h-2 rounded-full bg-grove"></span>
                         PASS WINDOW DEFENSE: ACTIVE
                     </span>
                 </div>
             </div>
 
             {/* Active Contact Banner */}
-            <div className="relative rounded-2xl bg-gradient-to-r from-[#0c1836] via-[#0e224d] to-[#0a142e] border border-cyan-500/40 p-6 md:p-8 overflow-hidden shadow-[0_0_40px_rgba(0,212,255,0.15)]">
-                <div className="absolute -right-10 -bottom-10 w-64 h-64 opacity-10 text-cyan-400 pointer-events-none">
-                    <Radio className="w-full h-full" />
-                </div>
-
+            <div className="relative rounded-xl bg-card border border-border p-6 md:p-8 overflow-hidden">
                 <div className="grid md:grid-cols-12 gap-6 items-center relative z-10">
                     <div className="md:col-span-8 space-y-4">
                         <div className="flex flex-wrap items-center gap-2">
-                            <span className="px-2.5 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/40 font-mono text-xs font-bold animate-pulse">
+                            <span className="px-2.5 py-1 rounded bg-destructive/10 text-destructive border border-destructive/20 font-mono text-xs font-medium">
                                 ● LIVE CONTACT IN PROGRESS
                             </span>
-                            <span className="px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 font-mono text-xs">
+                            <span className="px-2.5 py-1 rounded bg-background text-foreground border border-border font-mono text-xs">
                                 Spacecraft: {activePass.satellite} ({activePass.orbit})
                             </span>
-                            <span className="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-mono text-xs">
+                            <span className="px-2.5 py-1 rounded bg-background text-muted-foreground border border-border font-mono text-xs">
                                 Ground Station: {activePass.station}
                             </span>
-                            <span className="px-2.5 py-1 rounded bg-purple-950/40 text-purple-300 border border-purple-700/50 font-mono text-xs">
+                            <span className="px-2.5 py-1 rounded bg-background text-signal border border-border font-mono text-xs">
                                 Dataset Channel: {activePass.channel}
                             </span>
                         </div>
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
                             <div>
-                                <div className="text-xs text-slate-400 font-mono">Carrier Status</div>
-                                <div className="text-emerald-400 font-bold font-mono text-base flex items-center gap-1.5">
+                                <div className="text-xs text-muted-foreground font-mono">Carrier Status</div>
+                                <div className="text-grove font-semibold font-mono text-base flex items-center gap-1.5 mt-0.5">
                                     <Signal className="w-4 h-4" /> LOCKED
                                 </div>
                             </div>
                             <div>
-                                <div className="text-xs text-slate-400 font-mono">Uplink Frequency</div>
-                                <div className="text-white font-bold font-mono text-base">{activePass.frequency}</div>
+                                <div className="text-xs text-muted-foreground font-mono">Uplink Frequency</div>
+                                <div className="text-foreground font-semibold font-mono text-base mt-0.5">{activePass.frequency}</div>
                             </div>
                             <div>
-                                <div className="text-xs text-slate-400 font-mono">Max Elevation</div>
-                                <div className="text-cyan-400 font-bold font-mono text-base">{activePass.maxElevation} (Zenith)</div>
+                                <div className="text-xs text-muted-foreground font-mono">Max Elevation</div>
+                                <div className="text-foreground font-semibold font-mono text-base mt-0.5">{activePass.maxElevation} (Zenith)</div>
                             </div>
                             <div>
-                                <div className="text-xs text-slate-400 font-mono">Channel Anomaly Rate</div>
-                                <div className={`font-bold font-mono text-base ${activePass.anomaly_rate > 0.25 ? 'text-red-400' : activePass.anomaly_rate > 0.15 ? 'text-orange-400' : 'text-emerald-400'}`}>
+                                <div className="text-xs text-muted-foreground font-mono">Channel Anomaly Rate</div>
+                                <div className={`font-semibold font-mono text-base mt-0.5 ${activePass.anomaly_rate > 0.25 ? 'text-destructive' : activePass.anomaly_rate > 0.15 ? 'text-signal' : 'text-grove'}`}>
                                     {(activePass.anomaly_rate * 100).toFixed(1)}% ({activePass.anomalous_segments}/{activePass.total_segments})
                                 </div>
                             </div>
                         </div>
 
                         {/* Real Telemetry Signal Metrics from dataset */}
-                        <div className="p-3 rounded-xl bg-black/30 border border-cyan-500/20 text-xs font-mono text-slate-300 flex flex-wrap gap-4">
+                        <div className="p-3 rounded-lg bg-background border border-border text-xs font-mono text-muted-foreground flex flex-wrap gap-4">
                             <div>
-                                <span className="text-slate-400">Signal Length:</span>{' '}
-                                <span className="text-cyan-300 font-bold">{activePass.mean_signal_length} samples</span>
+                                <span>Signal Length:</span>{' '}
+                                <span className="text-foreground font-medium">{activePass.mean_signal_length} samples</span>
                             </div>
                             <div>
-                                <span className="text-slate-400">Telemetry Variance:</span>{' '}
-                                <span className="text-cyan-300 font-bold">{activePass.signal_variance.toExponential(2)}</span>
+                                <span>Telemetry Variance:</span>{' '}
+                                <span className="text-foreground font-medium">{activePass.signal_variance.toExponential(2)}</span>
                             </div>
                             <div>
-                                <span className="text-slate-400">Mean Wave Peaks:</span>{' '}
-                                <span className="text-cyan-300 font-bold">{activePass.peak_count} peaks</span>
+                                <span>Mean Wave Peaks:</span>{' '}
+                                <span className="text-foreground font-medium">{activePass.peak_count} peaks</span>
                             </div>
                             <div>
-                                <span className="text-slate-400">Laya Defense Decision:</span>{' '}
-                                <span className={`font-bold ${activePass.threatStatus === 'CRITICAL' ? 'text-red-400' : activePass.threatStatus === 'MONITOR' ? 'text-orange-400' : 'text-emerald-400'}`}>
+                                <span>Laya Defense Decision:</span>{' '}
+                                <span className={`font-medium ${activePass.threatStatus === 'CRITICAL' ? 'text-destructive' : activePass.threatStatus === 'MONITOR' ? 'text-signal' : 'text-grove'}`}>
                                     {activePass.threatStatus} ({activePass.laya_risk_tier})
                                 </span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="md:col-span-4 flex flex-col items-center justify-center p-4 bg-black/40 rounded-xl border border-cyan-500/30">
-                        <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5" /> Remaining Pass Time
+                    <div className="md:col-span-4 flex flex-col items-center justify-center p-5 bg-background rounded-xl border border-border">
+                        <div className="caps-label text-muted-foreground mb-1 flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5 text-signal" /> Remaining Pass Time
                         </div>
-                        <div className="text-4xl sm:text-5xl font-mono font-bold text-white tracking-wider text-cyan-300">
+                        <div className="text-4xl sm:text-5xl font-mono font-semibold text-foreground tracking-wider my-1">
                             {formatTimer(secondsLeft)}
                         </div>
-                        <div className="text-[11px] text-slate-400 font-mono mt-2 text-center">
+                        <div className="text-[11px] text-muted-foreground font-mono mt-2 text-center">
                             AOS: {activePass.aos} • LOS in {Math.ceil(secondsLeft / 60)} mins
                         </div>
                     </div>
@@ -309,34 +308,72 @@ export const PassWindowStatus = () => {
             </div>
 
             {/* Critical Doctrine Callout */}
-            <div className="p-4 rounded-xl bg-orange-950/20 border border-orange-500/30 flex items-start gap-4">
-                <AlertTriangle className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
-                <div className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                    <strong className="text-orange-400 font-semibold font-orbitron">
+            <div className="p-4 rounded-xl bg-card border border-border flex items-start gap-3.5">
+                <AlertTriangle className="w-5 h-5 text-signal shrink-0 mt-0.5" />
+                <div className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    <strong className="text-foreground font-semibold">
                         Operational Pass Window Policy:
                     </strong>{' '}
                     During satellite orbital passes (typically 8–12 minutes), False Positive blocks directly cause{' '}
-                    <span className="text-orange-300 font-mono">Loss of Signal (LOS)</span> and can abort scheduled telecommand burns.
+                    <span className="text-signal font-mono">Loss of Signal (LOS)</span> and can abort scheduled telecommand burns.
                     The online adaptive bandit dynamically relaxes auto-block probability thresholds to preserve link continuity.
                 </div>
             </div>
 
+            {/* Upcoming Pass Windows Bento Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-sans">
+                {passes.slice(1, 4).map((p, idx) => (
+                    <div key={idx} className="bg-card rounded-xl p-5 border border-border hover:border-muted-foreground/30 transition-all flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center justify-between mb-3 font-mono">
+                                <span className={`px-2 py-0.5 rounded text-[11px] font-medium ${
+                                    p.status === 'ACTIVE' ? 'bg-destructive/10 text-destructive border border-destructive/20' : 'bg-muted text-muted-foreground border border-border'
+                                }`}>
+                                    {p.status}
+                                </span>
+                                <span className="text-[11px] text-muted-foreground font-mono">{p.channel}</span>
+                            </div>
+                            <h4 className="font-semibold text-base text-foreground flex items-center gap-2">
+                                <Satellite className="w-4 h-4 text-signal" />
+                                {p.satellite}
+                            </h4>
+                            <p className="text-xs text-muted-foreground font-mono mt-0.5">{p.orbit}</p>
+                            <div className="text-xs text-muted-foreground font-mono mt-3 space-y-1">
+                                <div><span>Station:</span> <span className="text-foreground ml-1">{p.station_code}</span></div>
+                                <div><span>Contact:</span> <span className="text-foreground ml-1">{p.aos} → {p.los}</span></div>
+                                <div><span>Elevation:</span> <span className="text-foreground ml-1">{p.maxElevation}</span></div>
+                            </div>
+                        </div>
+
+                        <div className="mt-4 pt-3 border-t border-border flex items-center justify-between font-mono text-xs">
+                            <span className="text-muted-foreground text-[11px]">Threat Status:</span>
+                            <span className={`font-semibold flex items-center gap-1 ${
+                                p.threatStatus === 'SECURE' ? 'text-grove' : p.threatStatus === 'MONITOR' ? 'text-signal' : 'text-destructive'
+                            }`}>
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                {p.threatStatus}
+                            </span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
             {/* Ground Station Tracking Windows with Real ESA OPS-SAT Data */}
-            <div className="rounded-xl border border-slate-800 bg-[#0a1022] overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-[#0e1733]">
-                    <h3 className="font-orbitron font-bold text-base text-white flex items-center gap-2">
-                        <Globe className="w-4 h-4 text-cyan-400" />
+            <div className="rounded-xl border border-border bg-card overflow-hidden">
+                <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-card">
+                    <h3 className="font-semibold text-base text-foreground flex items-center gap-2">
+                        <Globe className="w-4 h-4 text-signal" />
                         Scheduled Ground Station Tracking Windows & Real Sensor Provenance
                     </h3>
-                    <span className="text-xs font-mono text-cyan-400 flex items-center gap-1.5">
-                        <Database className="w-3.5 h-3.5" />
+                    <span className="text-xs font-mono text-muted-foreground flex items-center gap-1.5">
+                        <Database className="w-3.5 h-3.5 text-signal" />
                         ESA OPS-SAT (2,123 Segments Evaluated)
                     </span>
                 </div>
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm font-sans">
-                        <thead className="bg-[#080d1e] text-[11px] font-mono uppercase text-slate-400 tracking-wider border-b border-slate-800">
+                        <thead className="bg-muted/40 text-[11px] font-mono uppercase text-muted-foreground tracking-wider border-b border-border">
                             <tr>
                                 <th className="px-6 py-3">Spacecraft</th>
                                 <th className="px-6 py-3">Channel</th>
@@ -349,37 +386,37 @@ export const PassWindowStatus = () => {
                                 <th className="px-6 py-3 text-right">Defense Status</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800/60 font-mono text-xs">
+                        <tbody className="divide-y divide-border font-mono text-xs">
                             {passes.map((pass, i) => (
-                                <tr key={i} className="hover:bg-cyan-950/20 transition-colors">
-                                    <td className="px-6 py-4 font-bold text-white flex items-center gap-2">
-                                        <Satellite className="w-4 h-4 text-cyan-400" />
+                                <tr key={i} className="hover:bg-muted/20 transition-colors">
+                                    <td className="px-6 py-4 font-semibold text-foreground flex items-center gap-2">
+                                        <Satellite className="w-4 h-4 text-signal" />
                                         {pass.satellite}
                                     </td>
-                                    <td className="px-6 py-4 text-cyan-300 font-bold">
-                                        <span className="px-2 py-0.5 rounded bg-black/40 border border-cyan-800 text-[10px]">
+                                    <td className="px-6 py-4 text-foreground font-medium">
+                                        <span className="px-2 py-0.5 rounded bg-background border border-border text-[11px]">
                                             {pass.channel}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-slate-300">{pass.orbit}</td>
-                                    <td className="px-6 py-4 text-slate-300">{pass.station}</td>
-                                    <td className="px-6 py-4 text-slate-400">
+                                    <td className="px-6 py-4 text-muted-foreground">{pass.orbit}</td>
+                                    <td className="px-6 py-4 text-muted-foreground">{pass.station}</td>
+                                    <td className="px-6 py-4 text-muted-foreground">
                                         {pass.aos} → {pass.los}
                                     </td>
-                                    <td className="px-6 py-4 text-slate-300">
+                                    <td className="px-6 py-4 text-muted-foreground">
                                         {pass.anomalous_segments} / {pass.total_segments}
                                     </td>
-                                    <td className="px-6 py-4 font-bold">
-                                        <span className={pass.anomaly_rate > 0.3 ? 'text-red-400' : pass.anomaly_rate > 0.15 ? 'text-orange-400' : 'text-emerald-400'}>
+                                    <td className="px-6 py-4 font-semibold">
+                                        <span className={pass.anomaly_rate > 0.3 ? 'text-destructive' : pass.anomaly_rate > 0.15 ? 'text-signal' : 'text-grove'}>
                                             {(pass.anomaly_rate * 100).toFixed(1)}%
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">
                                         <span
-                                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                            className={`px-2 py-0.5 rounded text-[11px] font-medium ${
                                                 pass.status === 'ACTIVE'
-                                                    ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                                                    : 'bg-slate-800 text-slate-400 border border-slate-700'
+                                                    ? 'bg-destructive/10 text-destructive border border-destructive/20'
+                                                    : 'bg-muted text-muted-foreground border border-border'
                                             }`}
                                         >
                                             {pass.status}
@@ -387,12 +424,12 @@ export const PassWindowStatus = () => {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <span
-                                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${
+                                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium ${
                                                 pass.threatStatus === 'SECURE'
-                                                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                                                    ? 'bg-grove/10 text-grove border border-grove/20'
                                                     : pass.threatStatus === 'MONITOR'
-                                                    ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/30'
-                                                    : 'bg-red-500/10 text-red-400 border border-red-500/30'
+                                                    ? 'bg-signal/10 text-signal border border-signal/20'
+                                                    : 'bg-destructive/10 text-destructive border border-destructive/20'
                                             }`}
                                         >
                                             <CheckCircle2 className="w-3 h-3" />
