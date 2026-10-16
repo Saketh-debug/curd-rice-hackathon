@@ -2,7 +2,6 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { FloatingNav } from '@/components/soar/FloatingNav';
 import { AttackSimulatorModal } from '@/components/soar/AttackSimulator';
-import { Aegis } from '@/components/soar/Aegis';
 import { Toaster } from '@/components/ui/sonner';
 
 export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
@@ -18,7 +17,6 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
                     {children}
                 </main>
                 <AttackSimulatorModal />
-                <Aegis />
                 <Toaster position="top-center" offset={88} />
             </div>
         );
@@ -53,9 +51,8 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
                 </div>
             </footer>
 
-            {/* Modals & AI Agents */}
+            {/* Modals */}
             <AttackSimulatorModal />
-            <Aegis />
             <Toaster position="top-center" offset={88} />
         </div>
     );
