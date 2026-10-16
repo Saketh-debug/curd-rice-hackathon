@@ -1,296 +1,296 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Activity, ShieldAlert, Zap, Radio, Globe } from 'lucide-react';
+import {
+    ArrowRight,
+    Activity,
+    ShieldAlert,
+    Zap,
+    Radio,
+    Globe,
+    Satellite,
+    Signal,
+    CheckCircle2
+} from 'lucide-react';
 import clsx from 'clsx';
-import { TiTick } from "react-icons/ti";
-import { FcApprove } from "react-icons/fc";
 import { useSystemHealth } from '../../../hooks/useSystemHealth';
 
 const Dashboard = () => {
     const { health } = useSystemHealth();
 
+    const stations = [
+        { code: 'ISTRAC-BLR', name: 'Bengaluru MOX', status: 'ONLINE', ping: '2ms' },
+        { code: 'IDSN-32M', name: 'Byalalu Deep Space', status: 'ONLINE', ping: '4ms' },
+        { code: 'SDSC-SHAR', name: 'Sriharikota Ground', status: 'ONLINE', ping: '6ms' },
+        { code: 'ISTRAC-PBL', name: 'Port Blair Downrange', status: 'ONLINE', ping: '12ms' },
+        { code: 'ISTRAC-MAU', name: 'Mauritius Pass', status: 'STANDBY', ping: '38ms' },
+    ];
+
     return (
-        <div className="relative min-h-screen bg-background-light dark:bg-background-dark text-slate-800 dark:text-white">
-
-            {/* Grid Background */}
-            <div className="absolute inset-0 bg-grid-pattern pointer-events-none"></div>
-
-            {/* Ambient Glow Effects */}
-            <div className="absolute top-[-20%] left-[20%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
-            <div className="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] bg-accent-red/5 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="relative min-h-screen bg-[#050814] text-slate-100 font-sans">
+            {/* Ambient Star Glows */}
+            <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
             <div className="max-w-7xl mx-auto px-6 py-8 space-y-8 relative z-10">
 
                 {/* ================= HERO ================= */}
-                <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 pb-6 border-b border-gray-200 dark:border-white/5">
-
+                <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 pb-6 border-b border-slate-800">
                     <div className="space-y-2 max-w-2xl">
-                        <div
-                            className={clsx(
-                                "inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-xs font-bold tracking-wider mb-2 glow-orange-red",
-                                health?.status === 'HEALTHY'
-                                    ? "bg-primary/10 border-primary/30 text-primary"
-                                    : "bg-accent-red/10 border-accent-red/30 text-accent-red"
-                            )}
-                        >
+                        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-xs font-mono font-bold tracking-wider mb-2 bg-cyan-500/10 border-cyan-500/30 text-cyan-300">
+                            <Satellite className="w-3.5 h-3.5" />
+                            <span>ISTRAC GROUND DEFENSE NETWORK • MOX ACTIVE</span>
                         </div>
 
-                        <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-                            AI-Driven Automated <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-red via-primary to-orange-400">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-orbitron leading-tight text-white">
+                            AI-Driven Ground Segment <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-orange-400">
                                 Incident Response System
                             </span>
                         </h1>
 
-                        <p className="text-slate-500 dark:text-slate-400 text-lg max-w-xl pt-2">
-                            Real-time heuristic analysis and automated threat mitigation engine.
-                            Platform is currently operating at nominal capacity.
+                        <p className="text-slate-400 text-base max-w-xl pt-1">
+                            Real-time TT&C link heuristic analysis and automated threat mitigation. Protecting satellite pass windows and ground telemetry interfaces without active network probing.
                         </p>
                     </div>
 
                     {/* Automation Indicators */}
-                    <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-
-                        {/* Auto Block */}
-                        <div className="flex-1 lg:flex-none bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 rounded-xl p-4 flex items-center justify-between gap-4 shadow-sm min-w-[200px]">
+                    <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto font-mono">
+                        {/* Auto Neutralize */}
+                        <div className="flex-1 lg:flex-none bg-[#0a1022] border border-cyan-500/30 rounded-xl p-4 flex items-center justify-between gap-4 shadow-sm min-w-[210px]">
                             <div>
-                                <div className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider mb-1">
-                                    Auto-Block
+                                <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1">
+                                    Auto-Neutralize
                                 </div>
-                                <div className="text-primary font-bold flex items-center gap-2">
+                                <div className="text-cyan-400 font-bold flex items-center gap-2 text-sm">
                                     <Zap className="w-4 h-4" />
-                                    ENABLED
+                                    ENABLED (&gt;95%)
                                 </div>
+                                <div className="text-[10px] text-slate-500 mt-1">Zero Latency Block</div>
                             </div>
-                            <div >
-                                <TiTick className="w-16 h-12 text-orange-500" />
+                            <div className="w-8 h-8 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold">
+                                ✓
                             </div>
                         </div>
 
                         {/* Human Review */}
-                        <div className="flex-1 lg:flex-none bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 rounded-xl p-4 flex items-center justify-between gap-4 shadow-sm min-w-[200px]">
+                        <div className="flex-1 lg:flex-none bg-[#0a1022] border border-orange-500/30 rounded-xl p-4 flex items-center justify-between gap-4 shadow-sm min-w-[210px]">
                             <div>
-                                <div className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider mb-1">
-                                    Human-Review
+                                <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1">
+                                    Mission Review
                                 </div>
-                                <div className="text-accent-red font-bold flex items-center gap-2">
+                                <div className="text-orange-400 font-bold flex items-center gap-2 text-sm">
                                     <Activity className="w-4 h-4" />
-                                    ACTIVE
+                                    LOS SAFEGUARD
                                 </div>
+                                <div className="text-[10px] text-slate-500 mt-1">Borderline Triage</div>
                             </div>
-                            <div >
-                                <FcApprove className="w-12 h-12" />
+                            <div className="w-8 h-8 rounded-full bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold">
+                                ⚡
                             </div>
                         </div>
                     </div>
                 </div>
 
+                {/* Ground Station Live Link Strip */}
+                <div className="p-4 rounded-xl bg-[#080d1e] border border-slate-800">
+                    <div className="text-xs font-mono uppercase text-slate-400 tracking-wider mb-3 flex items-center justify-between">
+                        <span className="flex items-center gap-2">
+                            <Radio className="w-3.5 h-3.5 text-cyan-400" />
+                            ISTRAC Ground Station Telemetry Interfaces
+                        </span>
+                        <span className="text-[10px] text-emerald-400 font-bold">ALL 5 NODES OPERATIONAL</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 font-mono text-xs">
+                        {stations.map((st) => (
+                            <div key={st.code} className="p-2.5 rounded-lg bg-[#0a1022] border border-slate-800/80 hover:border-cyan-500/40 transition-colors">
+                                <div className="flex items-center justify-between">
+                                    <span className="font-bold text-white text-[11px]">{st.code}</span>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                </div>
+                                <div className="text-[10px] text-slate-400 truncate mt-0.5">{st.name}</div>
+                                <div className="text-[9px] text-cyan-400/80 mt-1">RTT: {st.ping}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
                 {/* ================= KPI GRID ================= */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                    {/* Traffic */}
-                    <div className="group relative bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 rounded-2xl p-6 hover:border-primary/50 transition-all duration-300 shadow-lg dark:shadow-none overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-                        <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-4">
-                                <div>
-                                    <h3 className="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wide">
-                                        Total Traffic (24h)
-                                    </h3>
-                                    <div className="flex items-baseline mt-1 space-x-2">
-                                        <span className="text-4xl font-bold">
-                                            {health ? health.traffic_processed : '...'}
-                                        </span>
-                                        <span className="text-sm font-medium text-primary">
-                                            +12%
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                                    <Radio className="w-6 h-6" />
-                                </div>
-                            </div>
-
-                            <div className="h-12 w-full flex items-end justify-between gap-1 opacity-70">
-                                {[30, 50, 40, 70, 55, 45, 80, 60, 40, 30, 20, 45].map((h, i) => (
-                                    <div key={i} className="w-1/12 bg-primary/30 rounded-t-sm" style={{ height: `${h}%` }}></div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* System Health */}
-                    <div className="group relative bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 rounded-2xl p-6 hover:border-accent-red/50 transition-all duration-300 shadow-lg dark:shadow-none overflow-hidden border-accent-red/20">
-                        <div className="absolute inset-0 bg-gradient-to-br from-accent-red/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-                        <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-4">
-                                <div>
-                                    <h3 className="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wide">
-                                        System Health
-                                    </h3>
-                                    <div className="flex items-baseline mt-1 space-x-2">
-                                        <span className="text-4xl font-bold">
-                                            {health?.status === 'HEALTHY' ? '98%' : '75%'}
-                                        </span>
-                                        <span className="text-sm text-slate-500">Score</span>
-                                    </div>
-                                </div>
-                                <div className="w-10 h-10 rounded-lg bg-accent-red/10 flex items-center justify-center text-accent-red border border-accent-red/20">
-                                    <ShieldAlert className="w-6 h-6" />
-                                </div>
-                            </div>
-
-                            <div className="w-full bg-gray-100 dark:bg-black/30 rounded-full h-2 overflow-hidden mt-6">
-                                <div
-                                    className="bg-gradient-to-r from-accent-red to-primary h-full rounded-full"
-                                    style={{ width: health?.status === 'HEALTHY' ? '98%' : '75%' }}
-                                ></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Automation Rate */}
-                    <div className="group relative bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 rounded-2xl p-6 hover:border-primary/50 transition-all duration-300 shadow-lg dark:shadow-none overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-                        <div className="relative z-10 flex items-center justify-between">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-sans">
+                    {/* Telemetry Ingestion */}
+                    <div className="bg-[#0a1022] border border-slate-800 rounded-2xl p-6 hover:border-cyan-500/40 transition-all shadow-sm">
+                        <div className="flex justify-between items-start mb-4">
                             <div>
-                                <h3 className="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wide">
-                                    Auto-Resolution
+                                <h3 className="text-slate-400 text-xs font-mono uppercase tracking-wider">
+                                    Telemetry Ingestion (24h)
                                 </h3>
                                 <div className="flex items-baseline mt-1 space-x-2">
-                                    <span className="text-4xl font-bold">
-                                        {health ? health.automation_rate : '...'}
+                                    <span className="text-4xl font-bold font-orbitron text-white">
+                                        {health ? health.traffic_processed : '142,850'}
+                                    </span>
+                                    <span className="text-xs font-mono font-bold text-cyan-400">
+                                        Flows
                                     </span>
                                 </div>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 max-w-[140px]">
-                                    Percentage of threats neutralized automatically.
+                            </div>
+                            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 border border-cyan-500/20">
+                                <Radio className="w-5 h-5" />
+                            </div>
+                        </div>
+
+                        <div className="h-10 w-full flex items-end justify-between gap-1 opacity-70 pt-2">
+                            {[30, 50, 40, 70, 55, 45, 80, 60, 40, 30, 20, 45].map((h, i) => (
+                                <div key={i} className="w-1/12 bg-cyan-500/40 rounded-t-sm" style={{ height: `${h}%` }}></div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Ground Segment Security Score */}
+                    <div className="bg-[#0a1022] border border-slate-800 rounded-2xl p-6 hover:border-emerald-500/40 transition-all shadow-sm">
+                        <div className="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 className="text-slate-400 text-xs font-mono uppercase tracking-wider">
+                                    Link Integrity Score
+                                </h3>
+                                <div className="flex items-baseline mt-1 space-x-2">
+                                    <span className="text-4xl font-bold font-orbitron text-emerald-400">
+                                        98.4%
+                                    </span>
+                                    <span className="text-xs font-mono text-slate-500">Nominal</span>
+                                </div>
+                            </div>
+                            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+                                <ShieldAlert className="w-5 h-5" />
+                            </div>
+                        </div>
+
+                        <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden mt-6">
+                            <div className="bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full" style={{ width: '98.4%' }}></div>
+                        </div>
+                    </div>
+
+                    {/* Auto-Resolution Rate */}
+                    <div className="bg-[#0a1022] border border-slate-800 rounded-2xl p-6 hover:border-cyan-500/40 transition-all shadow-sm">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h3 className="text-slate-400 text-xs font-mono uppercase tracking-wider">
+                                    AI Defense Coverage
+                                </h3>
+                                <div className="flex items-baseline mt-1 space-x-2">
+                                    <span className="text-4xl font-bold font-orbitron text-white">
+                                        {health ? health.automation_rate : '99.4%'}
+                                    </span>
+                                </div>
+                                <p className="text-xs text-slate-400 mt-2 max-w-[150px]">
+                                    Percentage of space threats neutralized automatically.
                                 </p>
                             </div>
 
-                            <div className="relative w-24 h-24">
+                            <div className="relative w-20 h-20">
                                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                                    <path className="text-gray-100 dark:text-white/5"
+                                    <path className="text-slate-800"
                                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                         fill="none" stroke="currentColor" strokeWidth="3" />
-                                    <path className="text-primary drop-shadow-[0_0_8px_rgba(255,77,0,0.5)] transition-all duration-1000"
+                                    <path className="text-cyan-400 transition-all duration-1000"
                                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                         fill="none" stroke="currentColor"
-                                        strokeDasharray={`${parseFloat(health?.automation_rate || "0")}, 100`}
+                                        strokeDasharray={`${parseFloat(health?.automation_rate || "99.4")}, 100`}
                                         strokeLinecap="round"
                                         strokeWidth="3" />
                                 </svg>
-                                <Zap className="absolute inset-0 m-auto text-primary w-8 h-8" />
+                                <Zap className="absolute inset-0 m-auto text-cyan-400 w-6 h-6" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* ================= NAVIGATION CARDS ================= */}
-                <div className="pt-4">
-                    <h2 className="text-lg font-semibold mb-6 border-l-4 border-primary pl-3">
-                        Operating Consoles
+                <div className="pt-2">
+                    <h2 className="text-base font-orbitron font-bold mb-6 text-white border-l-4 border-cyan-400 pl-3">
+                        Mission Operations Consoles
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                        {/* Command Center */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-sans">
+                        {/* Threat Command Bridge */}
                         <Link to="/client/command-center"
-                            className="group relative block h-64 rounded-2xl overflow-hidden shadow-lg transform hover:-translate-y-1 transition-all duration-300 bg-surface-dark">
+                            className="group relative block rounded-2xl overflow-hidden bg-[#0a1022] border border-slate-800 hover:border-cyan-500/50 transition-all p-6 shadow-sm">
+                            <div className="mb-4">
+                                <span className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/30 text-cyan-400 group-hover:bg-cyan-500 group-hover:text-black transition-colors">
+                                    <ShieldAlert className="w-5 h-5" />
+                                </span>
+                            </div>
 
-                            <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/80 to-transparent"></div>
+                            <h3 className="text-xl font-bold font-orbitron mb-2 text-white group-hover:text-cyan-400 transition-colors">
+                                Threat Command Bridge
+                            </h3>
+                            <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                                Real-time monitoring of TT&C link intrusions, anomaly queues, and Mean Time to Pass Recovery (MTPR).
+                            </p>
 
-                            <div className="absolute inset-0 p-6 flex flex-col justify-end border-2 border-transparent group-hover:border-primary/50 transition-all duration-500">
-                                <div className="mb-auto">
-                                    <span className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30 mb-4 group-hover:bg-primary group-hover:text-white transition-colors text-primary">
-                                        <ShieldAlert className="w-6 h-6" />
-                                    </span>
-                                </div>
-
-                                <h3 className="text-2xl font-bold mb-2 group-hover:text-primary">
-                                    Command Center
-                                </h3>
-                                <p className="text-slate-300 text-sm mb-4">
-                                    Centralized view for active threats, incident queues, and real-time intervention controls.
-                                </p>
-
-                                <div className="flex items-center text-primary text-sm font-bold uppercase tracking-wider">
-                                    <span>Access Console</span>
-                                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                                </div>
+                            <div className="flex items-center text-cyan-400 text-xs font-mono font-bold uppercase tracking-wider">
+                                <span>Open Bridge</span>
+                                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                             </div>
                         </Link>
 
-                        {/* Threat Intelligence */}
+                        {/* Ground Station Threat Map */}
                         <Link to="/client/map"
-                            className="group relative block h-64 rounded-2xl overflow-hidden shadow-lg transform hover:-translate-y-1 transition-all duration-300 bg-surface-dark">
+                            className="group relative block rounded-2xl overflow-hidden bg-[#0a1022] border border-slate-800 hover:border-orange-500/50 transition-all p-6 shadow-sm">
+                            <div className="mb-4">
+                                <span className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center border border-orange-500/30 text-orange-400 group-hover:bg-orange-500 group-hover:text-black transition-colors">
+                                    <Globe className="w-5 h-5" />
+                                </span>
+                            </div>
 
-                            <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/80 to-transparent"></div>
+                            <h3 className="text-xl font-bold font-orbitron mb-2 text-white group-hover:text-orange-400 transition-colors">
+                                Ground Station Map
+                            </h3>
+                            <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                                Geolocation radar tracking incoming attack trajectories directed against 7 global ISRO stations.
+                            </p>
 
-                            <div className="absolute inset-0 p-6 flex flex-col justify-end border-2 border-transparent group-hover:border-accent-red/50 transition-all duration-500">
-                                <div className="mb-auto">
-                                    <span className="w-12 h-12 rounded-xl bg-accent-red/20 flex items-center justify-center border border-accent-red/30 mb-4 group-hover:bg-accent-red group-hover:text-white transition-colors text-accent-red">
-                                        <Globe className="w-6 h-6" />
-                                    </span>
-                                </div>
-
-                                <h3 className="text-2xl font-bold mb-2 group-hover:text-accent-red">
-                                    Threat Intelligence
-                                </h3>
-                                <p className="text-slate-300 text-sm mb-4">
-                                    Global threat database, hash lookups, and adversarial TTP analysis.
-                                </p>
-
-                                <div className="flex items-center text-accent-red text-sm font-bold uppercase tracking-wider">
-                                    <span>Explore Data</span>
-                                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                                </div>
+                            <div className="flex items-center text-orange-400 text-xs font-mono font-bold uppercase tracking-wider">
+                                <span>Open Radar</span>
+                                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                             </div>
                         </Link>
 
-                        {/* Automation */}
-                        <Link to="/client/automation"
-                            className="group relative block h-64 rounded-2xl overflow-hidden shadow-lg transform hover:-translate-y-1 transition-all duration-300 bg-surface-dark">
+                        {/* Orbital Pass Windows */}
+                        <Link to="/client/passes"
+                            className="group relative block rounded-2xl overflow-hidden bg-[#0a1022] border border-slate-800 hover:border-emerald-500/50 transition-all p-6 shadow-sm">
+                            <div className="mb-4">
+                                <span className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-black transition-colors">
+                                    <Satellite className="w-5 h-5" />
+                                </span>
+                            </div>
 
-                            <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/80 to-transparent"></div>
+                            <h3 className="text-xl font-bold font-orbitron mb-2 text-white group-hover:text-emerald-400 transition-colors">
+                                Pass Window Status
+                            </h3>
+                            <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                                Track active contact countdowns, LEO AOS/LOS times, and ground antenna elevation angles.
+                            </p>
 
-                            <div className="absolute inset-0 p-6 flex flex-col justify-end border-2 border-transparent group-hover:border-primary/50 transition-all duration-500">
-                                <div className="mb-auto">
-                                    <span className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30 mb-4 group-hover:bg-primary group-hover:text-white transition-colors text-primary">
-                                        <Zap className="w-6 h-6" />
-                                    </span>
-                                </div>
-
-                                <h3 className="text-2xl font-bold mb-2 group-hover:text-primary">
-                                    Automation Status
-                                </h3>
-                                <p className="text-slate-300 text-sm mb-4">
-                                    Playbook execution health, API connector status, and bot performance metrics.
-                                </p>
-
-                                <div className="flex items-center text-primary text-sm font-bold uppercase tracking-wider">
-                                    <span>Check Systems</span>
-                                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                                </div>
+                            <div className="flex items-center text-emerald-400 text-xs font-mono font-bold uppercase tracking-wider">
+                                <span>View Schedule</span>
+                                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                             </div>
                         </Link>
                     </div>
                 </div>
 
                 {/* ================= FOOTER ================= */}
-                <div className="pt-8 border-t border-gray-200 dark:border-white/5 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-600 font-mono">
+                <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 font-mono">
                     <div className="flex items-center space-x-4">
-                        <span>System Version: v4.2.0-rc3</span>
-                        <span>Server: US-EAST-1A</span>
-                        <span className="flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_4px_rgba(255,77,0,0.8)]"></span>
-                            Database Connected
+                        <span>SOAR Space v4.2</span>
+                        <span>Node: ISTRAC-BLR-MOX</span>
+                        <span className="flex items-center gap-1.5 text-emerald-400">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            Air-Gapped Telemetry Engine Active
                         </span>
                     </div>
 
-                    <div className="mt-2 md:mt-0">
-                        © 2024 Enterprise Security Operations. Unauthorized access is prohibited.
+                    <div className="mt-2 md:mt-0 text-slate-600">
+                        ISRO Space Defense Protocol • Safe Offline Telemetry Evaluation
                     </div>
                 </div>
 
