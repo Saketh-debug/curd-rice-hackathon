@@ -1,7 +1,10 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useSim } from '@/lib/sim/store';
 
 // Landing Page
 import LandingPage from './pages/LandingPage';
+import Docs from './pages/Docs';
 
 // Client Portal (Portal A)
 import ClientLayout from './features/client/layouts/ClientLayout';
@@ -22,11 +25,18 @@ import ComplianceReports from './features/admin/pages/ComplianceReports';
 import ModelBenchmark from './features/admin/pages/ModelBenchmark';
 
 function App() {
+  useEffect(() => {
+    const timer = setInterval(() => {
+      useSim.getState().tick();
+    }, 2000);
+    return () => clearInterval(timer);
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
-        {/* Landing Page */}
+        {/* Landing Page & Docs */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/docs" element={<Docs />} />
 
         {/* Client Portal Routes */}
         <Route path="/client/*" element={

@@ -1,69 +1,92 @@
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round');
 
 @config "../tailwind.config.js";
 
 :root,
 .dark {
-    --background: #161513;
-    --foreground: #f1efea;
-    --card: #1f1e1b;
-    --card-foreground: #f1efea;
-    --popover: #1f1e1b;
-    --popover-foreground: #f1efea;
-    --primary: #f1efea;
-    --primary-foreground: #161513;
-    --secondary: #292825;
-    --secondary-foreground: #f1efea;
-    --muted: #292825;
-    --muted-foreground: #a19c92;
-    --accent: #292825;
-    --accent-foreground: #f1efea;
-    --destructive: #ff6568;
-    --border: #34322d;
-    --input: #34322d;
-    --ring: #66625a;
-    --signal: #f5b325;
-    --signal-foreground: #161513;
-    --grove: #8abf84;
-    --grove-foreground: #161513;
+    --radius: 1rem;
+    --radius-md: 0.75rem;
+    --radius-xl: 1.25rem;
+
+    --ink: oklch(0.165 0.006 70);
+    --background: oklch(0.165 0.006 70);
+    --foreground: oklch(0.95 0.012 85);
+    --card: oklch(0.21 0.008 70 / 0.6);
+    --card-foreground: oklch(0.95 0.012 85);
+    --popover: oklch(0.2 0.008 70 / 0.92);
+    --popover-foreground: oklch(0.95 0.012 85);
+    --signal: oklch(0.81 0.16 78);
+    --signal-foreground: oklch(0.18 0.02 70);
+    --grove: oklch(0.76 0.09 140);
+    --grove-foreground: oklch(0.18 0.02 70);
+    --alert: oklch(0.7 0.18 20);
+    --sky: oklch(0.78 0.08 230);
+    --primary: var(--signal);
+    --primary-foreground: oklch(0.18 0.02 70);
+    --secondary: oklch(1 0 0 / 0.06);
+    --secondary-foreground: oklch(0.95 0.012 85);
+    --muted: oklch(1 0 0 / 0.05);
+    --muted-foreground: oklch(0.72 0.02 80);
+    --accent: oklch(1 0 0 / 0.08);
+    --accent-foreground: oklch(0.97 0.01 85);
+    --destructive: var(--alert);
+    --destructive-foreground: oklch(0.18 0.02 70);
+    --border: oklch(1 0 0 / 0.09);
+    --hairline: oklch(1 0 0 / 0.12);
+    --input: oklch(1 0 0 / 0.12);
+    --ring: var(--signal);
+    --glass: oklch(0.24 0.01 75 / 0.42);
+    --glass-strong: oklch(0.2 0.01 75 / 0.94);
     --slate: #7c9bda;
     --slate-soft: #242e48;
-    --radius: 0.625rem;
-    --radius-md: 0.5rem;
-    --radius-xl: 0.875rem;
 
-    --font-sans: 'Geist', system-ui, -apple-system, sans-serif;
-    --font-mono: 'Geist Mono', ui-monospace, monospace;
-    --font-heading: 'Geist', system-ui, -apple-system, sans-serif;
-    --font-logo: 'Orbitron', sans-serif;
+    --shadow-glass: 0 1px 0 0 oklch(1 0 0 / 0.07) inset, 0 24px 60px -30px oklch(0 0 0 / 0.7);
+    --shadow-glow: 0 0 0 1px oklch(0.81 0.16 78 / 0.35), 0 10px 40px -10px oklch(0.81 0.16 78 / 0.45);
+    --gradient-signal: linear-gradient(135deg, oklch(0.85 0.15 85), oklch(0.74 0.17 60));
+    --gradient-text: linear-gradient(100deg, oklch(0.96 0.02 85) 10%, oklch(0.84 0.14 80) 55%, oklch(0.78 0.09 140) 100%);
+
+    --font-display: "Unbounded", "Geist", system-ui, sans-serif;
+    --font-sans: "Manrope", "Geist", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "Geist Mono", ui-monospace, monospace;
+    --font-heading: "Unbounded", "Geist", system-ui, sans-serif;
+    --font-logo: "Orbitron", "Unbounded", sans-serif;
 }
 
 @theme {
-    --color-background: #161513;
-    --color-foreground: #f1efea;
-    --color-card: #1f1e1b;
-    --color-card-foreground: #f1efea;
-    --color-popover: #1f1e1b;
-    --color-popover-foreground: #f1efea;
-    --color-muted: #292825;
-    --color-muted-foreground: #a19c92;
-    --color-border: #34322d;
-    --color-input: #34322d;
-    --color-ring: #66625a;
-    --color-signal: #f5b325;
-    --color-signal-foreground: #161513;
-    --color-grove: #8abf84;
-    --color-grove-foreground: #161513;
-    --color-destructive: #ff6568;
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-signal: var(--signal);
+    --color-signal-foreground: var(--signal-foreground);
+    --color-grove: var(--grove);
+    --color-grove-foreground: var(--grove-foreground);
     --color-slate: #7c9bda;
     --color-slate-soft: #242e48;
+    --color-alert: var(--alert);
+    --color-sky: var(--sky);
+    --color-ink: var(--ink);
+    --color-glass: var(--glass);
+    --color-hairline: var(--hairline);
 
-    --color-primary: #f97316;
-    --color-primary-light: #fb923c;
-    --color-primary-dark: #ea580c;
     --color-primary-orange: #ff6b1a;
     --color-isro-orange: #ff9933;
     --color-accent-red: #ff2244;
@@ -72,34 +95,39 @@
     --color-background-light: #1f1e1b;
     --color-background-dark: #161513;
     --color-surface-dark: #161513;
-    --color-surface-card: #1f1e1b;
-    --color-surface-border: #34322d;
+    --color-surface-card: var(--card);
+    --color-surface-border: var(--border);
 
-    --font-orbitron: 'Orbitron', sans-serif;
-    --font-display: 'Geist', 'Orbitron', system-ui, sans-serif;
-    --font-heading: 'Geist', system-ui, -apple-system, sans-serif;
-    --font-mono: 'Geist Mono', 'Space Mono', monospace;
-    --font-sans: 'Geist', 'Inter', system-ui, sans-serif;
-    --font-logo: 'Orbitron', sans-serif;
+    --font-display: "Unbounded", "Geist", system-ui, sans-serif;
+    --font-sans: "Manrope", "Geist", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "Geist Mono", monospace;
+    --font-orbitron: "Orbitron", sans-serif;
+    --font-heading: "Unbounded", system-ui, sans-serif;
+    --font-logo: "Orbitron", sans-serif;
 }
 
 @layer base {
+    * {
+        border-color: var(--border);
+    }
     body {
-        background-color: #161513;
-        color: #f1efea;
+        background-color: var(--background);
+        color: var(--foreground);
+        font-family: var(--font-sans);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        font-family: 'Geist', system-ui, -apple-system, sans-serif;
-        background-image: 
-            radial-gradient(circle at 15% 10%, rgba(245, 179, 37, 0.04) 0%, transparent 45%),
-            radial-gradient(circle at 85% 20%, rgba(245, 179, 37, 0.03) 0%, transparent 45%),
-            radial-gradient(circle at 50% 90%, rgba(245, 179, 37, 0.03) 0%, transparent 50%);
+        overflow-x: clip;
         min-height: 100vh;
+    }
+
+    h1, h2, h3 {
+        font-family: var(--font-display);
+        letter-spacing: -0.02em;
     }
 
     .font-mono,
     code, kbd, samp, pre {
-        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-family: var(--font-mono);
         font-feature-settings: "tnum" 1, "zero" 1;
         font-variant-numeric: tabular-nums;
     }
@@ -107,38 +135,50 @@
 
 /* FieldRank Monospace Caps Label */
 .caps-label {
-    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-family: var(--font-mono);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     font-size: 11px;
     line-height: 0.875rem;
-    color: #a19c92;
+    color: var(--muted-foreground);
 }
 
-/* FieldRank Surface Panels */
+/* "Orbital Night" Frosted Glass Surfaces */
+.glass,
 .glass-panel {
-    background: rgba(31, 30, 27, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid #34322d;
+    background: var(--glass) !important;
+    backdrop-filter: blur(20px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+    border: 1px solid var(--hairline) !important;
+    box-shadow: var(--shadow-glass) !important;
 }
 
+.glass-strong,
 .glass-panel-elevated {
-    background: rgba(31, 30, 27, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid #45423b;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    background: var(--glass-strong) !important;
+    backdrop-filter: blur(28px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(150%);
+    border: 1px solid var(--hairline) !important;
+    box-shadow: var(--shadow-glass) !important;
 }
 
 .glass-panel-hover {
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-hover:hover {
-    background: rgba(41, 40, 37, 0.95);
-    border-color: #555148;
+    background: oklch(0.26 0.01 75 / 0.7) !important;
+    border-color: oklch(1 0 0 / 0.2) !important;
     transform: translateY(-1px);
+}
+
+/* Glass-enhanced card surfaces across all pages */
+.bg-card {
+    background-color: var(--card) !important;
+    backdrop-filter: blur(20px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+    border: 1px solid var(--hairline) !important;
+    box-shadow: var(--shadow-glass);
 }
 
 /* Custom Telemetry Scrollbar */
@@ -194,3 +234,69 @@
 .map-tiles-dark {
     filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
 }
+
+@utility glass {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-glass);
+}
+@utility glass-strong {
+  background: var(--glass-strong);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-glass);
+}
+@utility text-gradient {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility bg-signal-gradient {
+  background: var(--gradient-signal);
+}
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+@utility glass-solid {
+  background: oklch(0.19 0.008 72);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-glass);
+}
+
+/* Aurora backdrop */
+.aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.aurora span { position: absolute; border-radius: 9999px; filter: blur(90px); opacity: 0.5; animation: drift 28s ease-in-out infinite alternate; }
+.aurora span:nth-child(1) { width: 42vw; height: 42vw; left: -10vw; top: -12vw; background: oklch(0.81 0.16 78 / 0.28); }
+.aurora span:nth-child(2) { width: 36vw; height: 36vw; right: -8vw; top: 30vh; background: oklch(0.76 0.09 140 / 0.22); animation-duration: 34s; }
+.aurora span:nth-child(3) { width: 30vw; height: 30vw; left: 30vw; bottom: -14vw; background: oklch(0.78 0.08 230 / 0.16); animation-duration: 40s; }
+.grain { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.06;
+  background-image: radial-gradient(oklch(1 0 0 / 0.6) 0.5px, transparent 0.5px); background-size: 3px 3px; }
+@keyframes drift { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(6vw,4vh,0) scale(1.15); } }
+
+/* Reveal on scroll */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s cubic-bezier(.2,.7,.1,1), transform .9s cubic-bezier(.2,.7,.1,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ticker { animation: ticker 40s linear infinite; }
+@keyframes pulse-ring { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(2.4); opacity: 0; } }
+.pulse-ring { animation: pulse-ring 1.8s ease-out infinite; }
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+.star-border { isolation: isolate; overflow: hidden; }
+.star-border::before { content: ""; position: absolute; inset: -150%; z-index: -2;
+  background: conic-gradient(from 0deg, transparent 0 70%, oklch(0.85 0.15 85) 85%, transparent 100%);
+  animation: spin-slow 4s linear infinite; }
+.star-border::after { content: ""; position: absolute; inset: 1px; z-index: -1; border-radius: inherit; background: var(--glass-strong); }
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora span, .ticker, .pulse-ring, .star-border::before { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+

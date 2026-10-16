@@ -445,6 +445,11 @@ app.include_router(ai_router)
 
 # === PORTAL A ENDPOINTS (Read-Only / Monitoring) ===
 
+@app.get("/health")
+@app.get("/api/health")
+def health_check():
+    return {"status": "ok", "service": "SOAR Platform API"}
+
 @app.get("/api/system/health")
 def get_system_health(db: Session = Depends(get_db)):
     """For Page A0: System Overview"""

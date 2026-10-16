@@ -19,6 +19,11 @@ import { EarthGlobe3D } from "../components/EarthGlobe3D";
 import { apiClient } from "../api/client";
 import type { SatellitePassData, SatelliteMissionTelemetry } from "../types";
 import StarBorder from "../components/StarBorder";
+import { FloatingNav } from "@/components/soar/FloatingNav";
+import { AttackSimulatorModal } from "@/components/soar/AttackSimulator";
+import { Aegis } from "@/components/soar/Aegis";
+import { Toaster } from "@/components/ui/sonner";
+import { Dot } from "@/components/soar/ui";
 
 const LandingPage = () => {
     const [activePass, setActivePass] = useState<SatellitePassData | null>(null);
@@ -39,61 +44,39 @@ const LandingPage = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-background text-foreground font-sans selection:bg-signal selection:text-[#161513] overflow-x-hidden">
+        <div className="min-h-screen bg-background text-foreground font-sans selection:bg-signal selection:text-signal-foreground overflow-x-hidden relative">
+            {/* Ambient Aurora Cyber Backdrop */}
+            <div className="aurora" aria-hidden><span /><span /><span /></div>
+            <div className="grain" aria-hidden />
 
-            {/* ================= TOP MISSION STATUS STRIP ================= */}
-            <div className="bg-card border-b border-border px-4 py-2 text-xs font-mono text-muted-foreground flex items-center justify-between overflow-hidden">
-                <div className="flex items-center gap-3 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-grove/10 border border-grove/20 text-grove font-medium text-[11px]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-grove"></span>
-                        ISTRAC MOX LINK NOMINAL
-                    </span>
-                    <span className="text-border hidden sm:inline">|</span>
-                    <span className="text-foreground hidden sm:inline">
-                        GROUND STATION: {activePass ? activePass.station_code : 'ISTRAC-BLR'}
-                    </span>
-                </div>
-                <div className="text-muted-foreground text-[11px] truncate ml-4 font-mono">
-                    {activePass ? (
-                        `🛰️ ACTIVE PASS: ${activePass.satellite} (${activePass.orbit}) • AOS: ${activePass.aos} • LOS: ${activePass.los} • CHANNEL: ${activePass.channel} • STATUS: ${activePass.threatStatus}`
-                    ) : (
-                        '🛰️ ACTIVE PASS: EOS-09 (LEO 500KM SSO) • AOS: 08:14 UTC • LOS: 08:26 UTC • TT&C LINK: SECURE'
-                    )}
+            {/* Futuristic Floating Glass Navbar */}
+            <FloatingNav />
+
+            {/* Top Mission Status Strip (Floats elegantly under the pill nav) */}
+            <div className="pt-24 px-4 max-w-7xl mx-auto relative z-10">
+                <div className="glass rounded-2xl px-4 py-2.5 text-xs font-mono text-muted-foreground flex items-center justify-between overflow-hidden border border-hairline">
+                    <div className="flex items-center gap-3 shrink-0">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-grove/15 text-grove font-medium text-[11px] border border-grove/20">
+                            <Dot tone="grove" pulse />
+                            ISTRAC MOX LINK NOMINAL
+                        </span>
+                        <span className="text-border hidden sm:inline">|</span>
+                        <span className="text-foreground hidden sm:inline">
+                            GROUND STATION: {activePass ? activePass.station_code : 'ISTRAC-BLR'}
+                        </span>
+                    </div>
+                    <div className="text-muted-foreground text-[11px] truncate ml-4 font-mono">
+                        {activePass ? (
+                            `🛰️ ACTIVE PASS: ${activePass.satellite} (${activePass.orbit}) • AOS: ${activePass.aos} • LOS: ${activePass.los} • CHANNEL: ${activePass.channel} • STATUS: ${activePass.threatStatus}`
+                        ) : (
+                            '🛰️ ACTIVE PASS: EOS-09 (LEO 500KM SSO) • AOS: 08:14 UTC • LOS: 08:26 UTC • TT&C LINK: SECURE'
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {/* ================= SITE HEADER ================= */}
-            <header className="sticky top-0 z-40 bg-card/80 backdrop-blur-md border-b border-border px-6 py-3.5">
-                <div className="max-w-7xl mx-auto flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-secondary border border-border flex items-center justify-center text-signal">
-                            <Satellite className="w-4 h-4" />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="font-logo font-bold text-sm tracking-wider text-foreground">SOAR SPACE</span>
-                            <span className="font-mono text-[11px] px-1.5 py-0.5 rounded-md bg-signal text-signal-foreground font-medium">ISRO GROUND DEFENSE</span>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-2.5">
-                        <Link
-                            to="/client/dashboard"
-                            className="px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-muted text-xs font-mono text-foreground font-medium transition-colors"
-                        >
-                            Client Operations →
-                        </Link>
-                        <Link
-                            to="/admin/dashboard"
-                            className="px-3 py-1.5 rounded-lg border border-signal/40 bg-signal text-signal-foreground hover:bg-signal/90 text-xs font-mono font-medium transition-colors"
-                        >
-                            SecOps Admin →
-                        </Link>
-                    </div>
-                </div>
-            </header>
-
             {/* ================= HERO SECTION ================= */}
-            <section className="px-6 pt-12 pb-20 max-w-7xl mx-auto relative">
+            <section className="px-6 pt-8 pb-20 max-w-7xl mx-auto relative z-10">
                 <div className="grid lg:grid-cols-12 gap-10 items-center">
                     {/* Left: Text & Pitch */}
                     <div className="lg:col-span-7 space-y-6 text-left">
@@ -345,6 +328,11 @@ const LandingPage = () => {
                     </div>
                 </div>
             </footer>
+
+            {/* Modals & AI Copilot */}
+            <AttackSimulatorModal />
+            <Aegis />
+            <Toaster position="top-center" offset={88} />
         </div>
     );
 };
