@@ -51,7 +51,9 @@ export const AdminDashboard = () => {
                             backgroundColor="#1f1e1b"
                             borderColor="#34322d"
                             textColor="#f1efea"
-                            className="px-3.5 py-1.5 font-sans font-medium text-xs tracking-tight cursor-pointer hover:bg-muted"
+                            hoverBackgroundColor="#292825"
+                            activeBackgroundColor="#ff9933"
+                            className="px-3.5 py-1.5 font-sans font-medium text-xs tracking-tight cursor-pointer hover:bg-muted active:bg-signal active:text-[#161513]"
                         >
                             View 7x7 Benchmark
                         </StarBorder>
@@ -143,9 +145,12 @@ export const AdminDashboard = () => {
                                                 backgroundColor="#f1efea"
                                                 textColor="#161513"
                                                 borderColor="transparent"
-                                                className="px-3.5 py-1.5 font-sans font-medium text-xs tracking-tight flex items-center gap-1.5 cursor-pointer shadow-xs hover:bg-[#e2dfd7]"
+                                                hoverBackgroundColor="#e4e1d8"
+                                                activeBackgroundColor="#ff9933"
+                                                className="px-3.5 py-1.5 font-sans font-semibold text-xs tracking-tight flex items-center gap-1.5 cursor-pointer shadow-xs hover:bg-[#e4e1d8] active:bg-signal active:text-[#161513]"
                                             >
-                                                Investigate Anomaly <ArrowRight className="w-3.5 h-3.5 text-[#161513]" />
+                                                <span className="text-[#161513] font-semibold">Investigate Anomaly</span>
+                                                <ArrowRight className="w-3.5 h-3.5 text-[#161513] transition-transform group-hover:translate-x-0.5" />
                                             </StarBorder>
                                         </div>
                                     </div>

@@ -132,6 +132,7 @@ export const ModelBenchmark = () => {
     const [selectedCell, setSelectedCell] = useState<{ r: number; c: number; val: number } | null>(null);
     const [flowCellDetail, setFlowCellDetail] = useState<FlowCellSampleResponse | null>(null);
     const [isLoadingFlowDetail, setIsLoadingFlowDetail] = useState(false);
+    const [isExported, setIsExported] = useState(false);
 
     // XAI Telemetry Drill-Down States
     const [activeDrilldownCell, setActiveDrilldownCell] = useState<'TP' | 'FP' | 'FN' | 'TN' | null>('FP');
@@ -252,6 +253,8 @@ export const ModelBenchmark = () => {
     };
 
     const exportEvaluationReport = () => {
+        setIsExported(true);
+        setTimeout(() => setIsExported(false), 2500);
         const reportData = {
             timestamp: new Date().toISOString(),
             dataset_evaluation: metrics,
@@ -288,22 +291,29 @@ export const ModelBenchmark = () => {
                     <StarBorder
                         onClick={() => fetchMetrics(true)}
                         disabled={isRecomputing || isLoading}
-backgroundColor="#f1efea"
+                        backgroundColor={isRecomputing ? "#ff9933" : "#f1efea"}
                         textColor="#161513"
                         borderColor="transparent"
-                        className="px-3.5 py-1.5 font-sans font-medium text-xs tracking-tight flex items-center gap-2 cursor-pointer shadow-xs hover:bg-[#e2dfd7] disabled:opacity-50"
+                        hoverBackgroundColor={isRecomputing ? "#ff9933" : "#e4e1d8"}
+                        activeBackgroundColor="#ff9933"
+                        className="px-3.5 py-1.5 font-sans font-semibold text-xs tracking-tight flex items-center gap-2 cursor-pointer shadow-xs hover:bg-[#e4e1d8] active:bg-signal active:text-[#161513] disabled:opacity-80"
                     >
-                        <RefreshCw className={`w-3.5 h-3.5 ${isRecomputing ? 'animate-spin' : ''}`} />
-                        {isRecomputing ? 'Recomputing...' : 'Re-Evaluate on Test Split'}
+                        <RefreshCw className={`w-3.5 h-3.5 text-[#161513] ${isRecomputing ? 'animate-spin' : ''}`} />
+                        <span className="font-semibold text-[#161513]">{isRecomputing ? 'Recomputing...' : 'Re-Evaluate on Test Split'}</span>
                     </StarBorder>
                     <StarBorder
                         onClick={exportEvaluationReport}
-backgroundColor="#1f1e1b"
-                        textColor="#f1efea"
-                        borderColor="#34322d"
-                        className="px-3.5 py-1.5 font-sans font-medium text-xs tracking-tight flex items-center gap-2 cursor-pointer hover:bg-muted"
+                        backgroundColor={isExported ? "#8abf84" : "#1f1e1b"}
+                        textColor={isExported ? "#161513" : "#f1efea"}
+                        borderColor={isExported ? "#8abf84" : "#34322d"}
+                        hoverBackgroundColor={isExported ? "#78af72" : "#292825"}
+                        activeBackgroundColor="#ff9933"
+                        className="px-3.5 py-1.5 font-sans font-medium text-xs tracking-tight flex items-center gap-2 cursor-pointer hover:bg-muted active:bg-signal active:text-[#161513]"
                     >
-                        <Download className="w-3.5 h-3.5" /> Export Report JSON
+                        {isExported ? <Check className="w-3.5 h-3.5 text-[#161513]" /> : <Download className="w-3.5 h-3.5 text-[#f1efea]" />}
+                        <span className={isExported ? "text-[#161513] font-semibold" : "text-[#f1efea]"}>
+                            {isExported ? 'Report Exported ✓' : 'Export Report JSON'}
+                        </span>
                     </StarBorder>
                 </div>
             </div>
@@ -482,10 +492,10 @@ backgroundColor="#1f1e1b"
                 <button
                     onClick={() => setActiveTab('real_dataset')}
                     className={clsx(
-                        'pb-2.5 font-medium transition-all border-b-2 flex items-center gap-2 px-3.5 py-2 cursor-pointer',
+                        'pb-2.5 font-medium transition-all border-b-2 flex items-center gap-2 px-3.5 py-2 cursor-pointer active:scale-95',
                         activeTab === 'real_dataset'
-                            ? 'text-foreground border-foreground bg-muted/60 rounded-t-lg'
-                            : 'text-muted-foreground border-transparent hover:text-foreground'
+                            ? 'text-signal border-signal bg-signal/15 rounded-t-lg font-semibold shadow-xs'
+                            : 'text-muted-foreground border-transparent hover:text-foreground hover:bg-muted/40 active:bg-signal/20'
                     )}
                 >
                     <Satellite className="w-4 h-4 text-signal" />
@@ -494,10 +504,10 @@ backgroundColor="#1f1e1b"
                 <button
                     onClick={() => setActiveTab('flow_matrix')}
                     className={clsx(
-                        'pb-2.5 font-medium transition-all border-b-2 flex items-center gap-2 px-3.5 py-2 cursor-pointer',
+                        'pb-2.5 font-medium transition-all border-b-2 flex items-center gap-2 px-3.5 py-2 cursor-pointer active:scale-95',
                         activeTab === 'flow_matrix'
-                            ? 'text-foreground border-foreground bg-muted/60 rounded-t-lg'
-                            : 'text-muted-foreground border-transparent hover:text-foreground'
+                            ? 'text-signal border-signal bg-signal/15 rounded-t-lg font-semibold shadow-xs'
+                            : 'text-muted-foreground border-transparent hover:text-foreground hover:bg-muted/40 active:bg-signal/20'
                     )}
                 >
                     <Layers className="w-4 h-4 text-signal" />
@@ -543,33 +553,33 @@ backgroundColor="#1f1e1b"
                                         <button
                                             onClick={() => fetchTelemetrySamples('TP')}
                                             className={clsx(
-                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border',
+                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border active:scale-95',
                                                 activeDrilldownCell === 'TP'
-                                                    ? 'bg-grove/30 text-foreground border-grove ring-2 ring-grove scale-[1.02]'
-                                                    : 'bg-grove/20 text-grove border-grove/40 hover:bg-grove/30 hover:scale-[1.01]'
+                                                    ? 'bg-grove text-[#161513] border-grove ring-4 ring-grove/30 scale-[1.02] shadow-lg'
+                                                    : 'bg-grove/15 text-grove border-grove/40 hover:bg-grove/25 hover:scale-[1.01]'
                                             )}
                                         >
-                                            <div className="text-2xl font-semibold font-sans tabular-nums">{metrics.confusion_matrix.tp}</div>
-                                            <div className="text-[11px] uppercase font-medium tracking-wide mt-1">TRUE POSITIVE</div>
-                                            <div className="text-[11px] opacity-80 font-sans">Correct Detections</div>
-                                            <div className="text-[10px] font-medium font-mono text-grove mt-1 opacity-90 group-hover:underline flex items-center justify-center gap-1">
-                                                <Eye className="w-3 h-3" /> Inspect Samples
+                                            <div className="text-2xl font-bold font-sans tabular-nums">{metrics.confusion_matrix.tp}</div>
+                                            <div className={clsx("text-[11px] uppercase tracking-wide mt-1", activeDrilldownCell === 'TP' ? 'font-black text-[#161513]' : 'font-medium')}>TRUE POSITIVE</div>
+                                            <div className={clsx("text-[11px] font-sans", activeDrilldownCell === 'TP' ? 'font-semibold text-[#161513]/90' : 'opacity-80')}>Correct Detections</div>
+                                            <div className={clsx("text-[10px] font-mono mt-1 flex items-center justify-center gap-1", activeDrilldownCell === 'TP' ? 'font-black text-[#161513]' : 'font-medium text-grove opacity-90 group-hover:underline')}>
+                                                <Eye className="w-3 h-3" /> {activeDrilldownCell === 'TP' ? 'Active Inspector ✓' : 'Inspect Samples'}
                                             </div>
                                         </button>
                                         <button
                                             onClick={() => fetchTelemetrySamples('FN')}
                                             className={clsx(
-                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border',
+                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border active:scale-95',
                                                 activeDrilldownCell === 'FN'
-                                                    ? 'bg-destructive/30 text-foreground border-destructive ring-2 ring-destructive scale-[1.02]'
-                                                    : 'bg-destructive/20 text-destructive border-destructive/40 hover:bg-destructive/30 hover:scale-[1.01]'
+                                                    ? 'bg-destructive text-white border-destructive ring-4 ring-destructive/30 scale-[1.02] shadow-lg'
+                                                    : 'bg-destructive/15 text-destructive border-destructive/40 hover:bg-destructive/25 hover:scale-[1.01]'
                                             )}
                                         >
-                                            <div className="text-2xl font-semibold font-sans tabular-nums">{metrics.confusion_matrix.fn}</div>
-                                            <div className="text-[11px] uppercase font-medium tracking-wide mt-1">FALSE NEGATIVE</div>
-                                            <div className="text-[11px] opacity-80 font-sans">Missed Anomalies</div>
-                                            <div className="text-[10px] font-medium font-mono text-destructive mt-1 opacity-90 group-hover:underline flex items-center justify-center gap-1">
-                                                <Eye className="w-3 h-3" /> Inspect Samples
+                                            <div className="text-2xl font-bold font-sans tabular-nums">{metrics.confusion_matrix.fn}</div>
+                                            <div className={clsx("text-[11px] uppercase tracking-wide mt-1", activeDrilldownCell === 'FN' ? 'font-black text-white' : 'font-medium')}>FALSE NEGATIVE</div>
+                                            <div className={clsx("text-[11px] font-sans", activeDrilldownCell === 'FN' ? 'font-semibold text-white/90' : 'opacity-80')}>Missed Anomalies</div>
+                                            <div className={clsx("text-[10px] font-mono mt-1 flex items-center justify-center gap-1", activeDrilldownCell === 'FN' ? 'font-black text-white' : 'font-medium text-destructive opacity-90 group-hover:underline')}>
+                                                <Eye className="w-3 h-3" /> {activeDrilldownCell === 'FN' ? 'Active Inspector ✓' : 'Inspect Samples'}
                                             </div>
                                         </button>
                                     </div>
@@ -582,33 +592,33 @@ backgroundColor="#1f1e1b"
                                         <button
                                             onClick={() => fetchTelemetrySamples('FP')}
                                             className={clsx(
-                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border',
+                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border active:scale-95',
                                                 activeDrilldownCell === 'FP'
-                                                    ? 'bg-signal/30 text-foreground border-signal ring-2 ring-signal scale-[1.02]'
-                                                    : 'bg-signal/20 text-signal border-signal/40 hover:bg-signal/30 hover:scale-[1.01]'
+                                                    ? 'bg-signal text-[#161513] border-signal ring-4 ring-signal/30 scale-[1.02] shadow-lg'
+                                                    : 'bg-signal/15 text-signal border-signal/40 hover:bg-signal/25 hover:scale-[1.01]'
                                             )}
                                         >
-                                            <div className="text-2xl font-semibold font-sans tabular-nums">{metrics.confusion_matrix.fp}</div>
-                                            <div className="text-[11px] uppercase font-medium tracking-wide mt-1">FALSE POSITIVE</div>
-                                            <div className="text-[11px] opacity-80 font-sans">False Alarms ({pct(metrics.false_positive_rate)})</div>
-                                            <div className="text-[10px] font-medium font-mono text-signal mt-1 opacity-90 group-hover:underline flex items-center justify-center gap-1">
-                                                <Eye className="w-3 h-3" /> Inspect Samples
+                                            <div className="text-2xl font-bold font-sans tabular-nums">{metrics.confusion_matrix.fp}</div>
+                                            <div className={clsx("text-[11px] uppercase tracking-wide mt-1", activeDrilldownCell === 'FP' ? 'font-black text-[#161513]' : 'font-medium')}>FALSE POSITIVE</div>
+                                            <div className={clsx("text-[11px] font-sans", activeDrilldownCell === 'FP' ? 'font-semibold text-[#161513]/90' : 'opacity-80')}>False Alarms ({pct(metrics.false_positive_rate)})</div>
+                                            <div className={clsx("text-[10px] font-mono mt-1 flex items-center justify-center gap-1", activeDrilldownCell === 'FP' ? 'font-black text-[#161513]' : 'font-medium text-signal opacity-90 group-hover:underline')}>
+                                                <Eye className="w-3 h-3" /> {activeDrilldownCell === 'FP' ? 'Active Inspector ✓' : 'Inspect Samples'}
                                             </div>
                                         </button>
                                         <button
                                             onClick={() => fetchTelemetrySamples('TN')}
                                             className={clsx(
-                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border',
+                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border active:scale-95',
                                                 activeDrilldownCell === 'TN'
-                                                    ? 'bg-muted text-foreground ring-2 ring-foreground scale-[1.02]'
+                                                    ? 'bg-[#f1efea] text-[#161513] border-[#f1efea] ring-4 ring-white/20 scale-[1.02] shadow-lg'
                                                     : 'bg-muted/70 text-foreground border-border hover:bg-muted hover:scale-[1.01]'
                                             )}
                                         >
-                                            <div className="text-2xl font-semibold font-sans tabular-nums">{metrics.confusion_matrix.tn}</div>
-                                            <div className="text-[11px] uppercase font-medium tracking-wide mt-1">TRUE NEGATIVE</div>
-                                            <div className="text-[11px] opacity-80 font-sans">Pass Clearances</div>
-                                            <div className="text-[10px] font-medium font-mono text-muted-foreground mt-1 opacity-90 group-hover:underline flex items-center justify-center gap-1">
-                                                <Eye className="w-3 h-3" /> Inspect Samples
+                                            <div className="text-2xl font-bold font-sans tabular-nums">{metrics.confusion_matrix.tn}</div>
+                                            <div className={clsx("text-[11px] uppercase tracking-wide mt-1", activeDrilldownCell === 'TN' ? 'font-black text-[#161513]' : 'font-medium')}>TRUE NEGATIVE</div>
+                                            <div className={clsx("text-[11px] font-sans", activeDrilldownCell === 'TN' ? 'font-semibold text-[#161513]/90' : 'opacity-80')}>Pass Clearances</div>
+                                            <div className={clsx("text-[10px] font-mono mt-1 flex items-center justify-center gap-1", activeDrilldownCell === 'TN' ? 'font-black text-[#161513]' : 'font-medium text-muted-foreground opacity-90 group-hover:underline')}>
+                                                <Eye className="w-3 h-3" /> {activeDrilldownCell === 'TN' ? 'Active Inspector ✓' : 'Inspect Samples'}
                                             </div>
                                         </button>
                                     </div>
@@ -716,10 +726,10 @@ backgroundColor="#1f1e1b"
                                             key={c}
                                             onClick={() => fetchTelemetrySamples(c)}
                                             className={clsx(
-                                                'px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer',
+                                                'px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer active:scale-95',
                                                 activeDrilldownCell === c
-                                                    ? 'bg-signal text-signal-foreground shadow-sm'
-                                                    : 'text-muted-foreground hover:text-foreground'
+                                                    ? 'bg-signal text-[#161513] shadow-sm scale-105'
+                                                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/60 active:bg-signal/40'
                                             )}
                                         >
                                             {c}
@@ -767,10 +777,10 @@ backgroundColor="#1f1e1b"
                                             key={ch}
                                             onClick={() => setChannelFilter(ch)}
                                             className={clsx(
-                                                'px-2.5 py-1 rounded-lg border text-xs font-bold transition-all cursor-pointer',
+                                                'px-2.5 py-1 rounded-lg border text-xs font-bold transition-all cursor-pointer active:scale-95',
                                                 channelFilter === ch
-                                                    ? 'bg-signal/15 border-signal text-signal'
-                                                    : 'bg-background border-border text-muted-foreground hover:text-foreground'
+                                                    ? 'bg-signal text-[#161513] border-signal shadow-sm'
+                                                    : 'bg-background border-border text-muted-foreground hover:text-foreground hover:border-signal/50 active:bg-signal/20'
                                             )}
                                         >
                                             {ch} ({ch === 'ALL' ? telemetrySamplesData.samples.length : telemetrySamplesData.samples.filter(s => s.channel === ch).length})
@@ -984,14 +994,10 @@ backgroundColor="#1f1e1b"
                                             <button
                                                 key={cIdx}
                                                 onClick={() => handleSelectFlowCell(rIdx, cIdx, val)}
-                                                className={`p-3 rounded-lg text-center transition-transform hover:scale-105 cursor-pointer ${getCellColor(
-                                                    rIdx,
-                                                    cIdx,
-                                                    val
-                                                )} ${
+                                                className={`p-3 rounded-lg text-center transition-all cursor-pointer active:scale-95 ${
                                                     selectedCell?.r === rIdx && selectedCell?.c === cIdx
-                                                        ? 'ring-2 ring-foreground scale-105'
-                                                        : ''
+                                                        ? '!bg-signal !text-[#161513] font-black ring-4 ring-signal/40 scale-110 shadow-xl z-10'
+                                                        : `${getCellColor(rIdx, cIdx, val)} hover:scale-105 active:bg-signal active:text-[#161513]`
                                                 }`}
                                             >
                                                 {(val * 100).toFixed(1)}%

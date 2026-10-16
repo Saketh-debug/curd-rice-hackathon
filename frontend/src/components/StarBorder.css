@@ -22,13 +22,20 @@
 }
 
 .star-border:hover:not(:disabled) {
-  background: var(--star-border-hover, #292825);
-  border-color: #4a4740;
-  color: #ffffff;
+  background: var(--star-border-hover, var(--star-border-surface, #292825));
+  border-color: var(--star-border-track-hover, #4a4740);
+  color: var(--star-border-text, #ffffff);
 }
 
 .star-border:active:not(:disabled) {
-  transform: translateY(1px);
+  transform: translateY(1px) scale(0.98);
+  background: var(--star-border-active, #ff9933) !important;
+  color: var(--star-border-active-text, #161513) !important;
+  border-color: var(--star-border-active-track, #ff9933) !important;
+}
+
+.star-border:active:not(:disabled) * {
+  color: var(--star-border-active-text, #161513) !important;
 }
 
 button.star-border,
