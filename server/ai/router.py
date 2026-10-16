@@ -6,19 +6,19 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from database import get_db, ChatSession, ChatMessage, ManualReview, AutoBlocked, TrafficLog
-from .Rag.retriever import RAGSystem
-from .Rag.prompt_template import build_prompt
+# Try importing RAG System safely (handles systems with Windows DLL policies on torch)
+try:
+    from .Rag.retriever import RAGSystem
+    from .Rag.prompt_template import build_prompt
+    rag = RAGSystem([], None)
+except Exception as e:
+    print(f"Warning: RAG System could not be loaded ({e}). Continuing with LLM + DB context.")
+    rag = None
+
 from .llm.ollama_client import generate_response
 import json
 
 router = APIRouter(prefix="/api/ai", tags=["AI Assistant"])
-
-# Initialize RAG (lazy load or global)
-try:
-    rag = RAGSystem([], None) 
-except Exception as e:
-    print(f"Warning: RAG System failed to initialize: {e}")
-    rag = None
 
 class ChatRequest(BaseModel):
     query: str

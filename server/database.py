@@ -3,12 +3,14 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 
-# --- CONFIGURATION ---
-# Update with your actual PostgreSQL credentials if different
-# Format: postgresql://username:password@localhost:5432/database_name
-DATABASE_URL = "postgresql://postgres:saketh123@localhost:5432/idsdashboard"
+import os
 
-engine = create_engine(DATABASE_URL)
+# --- CONFIGURATION ---
+# Uses PostgreSQL if DATABASE_URL is set or defaults to SQLite if Postgres is unavailable
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./idsdashboard.db")
+
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
