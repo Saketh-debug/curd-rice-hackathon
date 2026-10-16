@@ -19,6 +19,7 @@ interface AttackPreset {
 }
 
 interface InjectedThreat {
+    id?: number;
     ip: string;
     type: string;
     station: string;
@@ -189,12 +190,17 @@ export const AttackSimulatorModal: React.FC<AttackSimulatorModalProps> = ({
                                                 <div className="font-bold text-white flex items-center gap-2">
                                                     <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
                                                     {t.type}
+                                                    {t.id && (
+                                                        <span className="text-[10px] text-orange-400 font-bold">
+                                                            #{t.id}
+                                                        </span>
+                                                    )}
                                                 </div>
                                                 <div className="text-[11px] text-slate-400 mt-0.5">
                                                     Station: <span className="text-orange-300">{t.station}</span> • Port: {t.port} • IP: {t.ip} ({t.location})
                                                 </div>
                                             </div>
-                                            <div className="text-right shrink-0">
+                                            <div className="text-right shrink-0 flex flex-col items-end gap-1">
                                                 <span className={clsx(
                                                     'px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border',
                                                     t.action === 'AUTO_BLOCKED' 
@@ -203,9 +209,21 @@ export const AttackSimulatorModal: React.FC<AttackSimulatorModalProps> = ({
                                                 )}>
                                                     {t.action === 'AUTO_BLOCKED' ? 'AUTO-BLOCKED' : 'PENDING REVIEW'}
                                                 </span>
-                                                <div className="text-[10px] text-slate-400 mt-1">
+                                                <div className="text-[10px] text-slate-400">
                                                     Conf: {(t.confidence * 100).toFixed(1)}%
                                                 </div>
+                                                {t.id && (
+                                                    <button
+                                                        onClick={() => {
+                                                            onClose();
+                                                            navigate(`/admin/incidents/review/${t.id}`);
+                                                        }}
+                                                        className="px-2 py-0.5 rounded bg-orange-500/20 hover:bg-orange-500/40 text-orange-300 border border-orange-500/50 text-[10px] font-mono flex items-center gap-1 cursor-pointer transition-colors"
+                                                    >
+                                                        <span>Triage #{t.id}</span>
+                                                        <ChevronRight className="w-3 h-3" />
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
@@ -217,11 +235,11 @@ export const AttackSimulatorModal: React.FC<AttackSimulatorModalProps> = ({
                                 <button
                                     onClick={() => {
                                         onClose();
-                                        navigate('/admin/queue');
+                                        navigate('/admin/dashboard');
                                     }}
                                     className="flex-1 py-2.5 px-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-black font-bold font-mono text-xs flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(249,115,22,0.3)] cursor-pointer"
                                 >
-                                    <span>Triage in Analyst Queue (Portal B)</span>
+                                    <span>Triage in Active Anomaly Feed (Portal B)</span>
                                     <ChevronRight className="w-4 h-4" />
                                 </button>
                                 <button

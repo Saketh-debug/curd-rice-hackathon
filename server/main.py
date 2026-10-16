@@ -699,25 +699,18 @@ def inject_attack_wave(req: AttackInjectionRequest, db: Session = Depends(get_db
         expl = laya_res["explanation"]
 
         # Determine SOAR Action & Confidence based on request mode
-        if req.severity == "HIGH":
-            # Analyst Review Mode: explicitly route to ManualReview (Active Anomaly Feed)
-            conf = min(conf, 0.92)
+        if req.severity == "CRITICAL":
+            conf = round(random.uniform(0.94, 0.985), 3)
+            action = "CRITICAL_INCURSION"
+            tier = "CRITICAL"
+            log_action = "CRITICAL_ANOMALY"
+        else:
+            conf = round(random.uniform(0.85, 0.915), 3)
             action = "ESCALATE_TO_ANALYST"
             tier = "HIGH"
-        elif req.severity == "CRITICAL":
-            if i == 0:
-                # Primary threat: Auto-Blocked instantly by Laya SOAR
-                conf = max(conf, 0.965)
-                action = "AUTO_BLOCK"
-                tier = "CRITICAL"
-            else:
-                # Secondary threat: Escalated to Analyst Review so Active Anomaly Feed also receives it!
-                conf = min(conf, 0.91)
-                action = "ESCALATE_TO_ANALYST"
-                tier = "HIGH"
+            log_action = "PENDING_REVIEW"
 
         # 1. Traffic Log
-        log_action = "AUTO_BLOCKED" if action == "AUTO_BLOCK" else "PENDING_REVIEW"
         traffic_entry = TrafficLog(
             timestamp=timestamp,
             src_ip=fake_ip,
@@ -737,8 +730,26 @@ def inject_attack_wave(req: AttackInjectionRequest, db: Session = Depends(get_db
         )
         db.add(traffic_entry)
 
-        # 2. SOAR Action Routing
-        if action == "AUTO_BLOCK":
+        # 2. SOAR Action Routing — ALWAYS add to ManualReview for Active Anomaly Feed visibility
+        manual_entry = ManualReview(
+            timestamp=timestamp,
+            src_ip=fake_ip,
+            country=city,
+            type=tpl["type"],
+            confidence=conf,
+            destination_port=tpl["port"],
+            status="PENDING",
+            station=target_station,
+            target_username=tpl["target_user"],
+            burst_score=tpl["burst_score"],
+            failed_attempts=tpl["failed_attempts"],
+            traffic_volume=tpl["traffic_volume"],
+            login_behavior=tpl["login_behavior"]
+        )
+        db.add(manual_entry)
+
+        # Also track in AutoBlocked audit if critical severity
+        if req.severity == "CRITICAL":
             state.stats["auto_blocked"] += 1
             auto_entry = AutoBlocked(
                 timestamp=timestamp,
@@ -750,28 +761,14 @@ def inject_attack_wave(req: AttackInjectionRequest, db: Session = Depends(get_db
                 station=target_station
             )
             db.add(auto_entry)
-        else:
-            manual_entry = ManualReview(
-                timestamp=timestamp,
-                src_ip=fake_ip,
-                country=city,
-                type=tpl["type"],
-                confidence=conf,
-                destination_port=tpl["port"],
-                status="PENDING",
-                station=target_station,
-                target_username=tpl["target_user"],
-                burst_score=tpl["burst_score"],
-                failed_attempts=tpl["failed_attempts"],
-                traffic_volume=tpl["traffic_volume"],
-                login_behavior=tpl["login_behavior"]
-            )
-            db.add(manual_entry)
 
         state.stats["threats_detected"] += 1
         state.stats["scanned"] += 1
 
+        db.flush()  # Populates manual_entry.id immediately
+
         injected_threats.append({
+            "id": manual_entry.id,
             "ip": fake_ip,
             "type": tpl["type"],
             "station": target_station,
@@ -779,7 +776,7 @@ def inject_attack_wave(req: AttackInjectionRequest, db: Session = Depends(get_db
             "port": tpl["port"],
             "confidence": conf,
             "risk_tier": tier,
-            "action": log_action,
+            "action": "CRITICAL_INCURSION" if req.severity == "CRITICAL" else "PENDING_REVIEW",
             "explanation": expl
         })
 
@@ -798,6 +795,32 @@ def inject_attack_wave(req: AttackInjectionRequest, db: Session = Depends(get_db
 def get_pending_incidents(db: Session = Depends(get_db)):
     """For Page B1 & B2: Analyst Queue - returns newest pending incidents first"""
     return db.query(ManualReview).filter(ManualReview.status == "PENDING").order_by(ManualReview.id.desc()).all()
+
+@app.get("/api/incidents/{packet_id}")
+def get_incident_by_id(packet_id: int, db: Session = Depends(get_db)):
+    """Fetch a single incident by ID from ManualReview or fallback to TrafficLog"""
+    record = db.query(ManualReview).filter(ManualReview.id == packet_id).first()
+    if record:
+        return record
+    t_log = db.query(TrafficLog).filter(TrafficLog.id == packet_id).first()
+    if t_log:
+        return {
+            "id": t_log.id,
+            "timestamp": t_log.timestamp,
+            "src_ip": t_log.src_ip,
+            "country": t_log.country,
+            "type": t_log.type,
+            "confidence": t_log.confidence,
+            "destination_port": t_log.destination_port,
+            "status": "LOGGED",
+            "station": t_log.station,
+            "target_username": t_log.target_username,
+            "burst_score": t_log.burst_score,
+            "failed_attempts": t_log.failed_attempts,
+            "traffic_volume": t_log.traffic_volume,
+            "login_behavior": t_log.login_behavior
+        }
+    raise HTTPException(status_code=404, detail="Incident not found")
 
 class ActionRequest(BaseModel):
     action: str # "BLOCK" or "IGNORE"

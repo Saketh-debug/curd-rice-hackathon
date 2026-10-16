@@ -38,7 +38,7 @@ function App() {
               <Route path="automation" element={<AutomationStatus />} />
               <Route path="map" element={<ThreatMap />} />
               <Route path="events" element={<EventStream />} />
-              <Route path="*" element={<Navigate to="dashboard" replace />} />
+              <Route path="*" element={<Navigate to="/client/dashboard" replace />} />
             </Routes>
           </ClientLayout>
         } />
@@ -48,6 +48,7 @@ function App() {
           <AdminLayout>
             <Routes>
               <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="queue" element={<Navigate to="/admin/dashboard" replace />} />
               <Route path="benchmark" element={<ModelBenchmark />} />
               <Route path="incidents/review/:id" element={<IncidentReview />} />
               <Route path="incidents" element={<Navigate to="/admin/dashboard" replace />} />
@@ -55,7 +56,7 @@ function App() {
               <Route path="policy" element={<PolicyConfig />} />
               <Route path="settings" element={<PolicyConfig />} />
               <Route path="timeline" element={<DecisionTimeline />} />
-              <Route path="*" element={<Navigate to="dashboard" replace />} />
+              <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
             </Routes>
           </AdminLayout>
         } />
