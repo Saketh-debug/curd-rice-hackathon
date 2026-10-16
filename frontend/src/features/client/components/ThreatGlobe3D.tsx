@@ -248,13 +248,12 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             const dist = Math.hypot(originLat - targetStation.coords[0], originLng - targetStation.coords[1]);
             const altitude = Math.min(0.70, Math.max(0.25, (dist / 110) * 0.46));
 
-            // Color-code arc by threat vector:
-            // Transparent tail -> luminous mid-beam in vector color -> bright blazing projectile head
-            const attackColor = getAttackColor(threat.type);
-            const arcColor: [string, string, string] = [
-                "rgba(0, 0, 0, 0)",
-                attackColor + "bb",
-                "#ffffff"
+            // Pure polished ivory-white laser trajectory:
+            // Completely transparent tail -> warm luminous ivory beam -> bright diamond ivory head
+            const ivoryArcColor: [string, string, string] = [
+                "rgba(255, 255, 240, 0.0)",
+                "rgba(255, 253, 240, 0.75)",
+                "#fffff8"
             ];
 
             return {
@@ -266,14 +265,14 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
                 startLng: originLng,
                 endLat: targetStation.coords[0],
                 endLng: targetStation.coords[1],
-                color: arcColor,
+                color: ivoryArcColor,
                 packet: threat,
                 targetStation,
                 altitude,
-                initialGap: (index * 0.17) % 1,
-                // Sleek flight duration
-                speed: 3400 + (index % 6) * 320,
-                stroke: 0.42
+                initialGap: (index * 0.16) % 1,
+                // Harmonious hypersonic flight duration
+                speed: 3400 + (index % 5) * 220,
+                stroke: 0.58
             };
         });
     }, [threats]);
@@ -489,8 +488,8 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             .arcColor((d: object) => (d as ThreatArcData).color)
             .arcAltitude((d: object) => (d as ThreatArcData).altitude)
             .arcStroke((d: object) => (d as ThreatArcData).stroke)
-            .arcDashLength(0.06) // Sharp hypersonic laser bolt
-            .arcDashGap(2.6)     // Clean spacing between bursts
+            .arcDashLength(0.08) // Distinct hypersonic ivory laser streak
+            .arcDashGap(2.8)     // Clean spacing between burst streaks
             .arcDashInitialGap((d: object) => (d as ThreatArcData).initialGap)
             .arcDashAnimateTime((d: object) => (d as ThreatArcData).speed)
             .arcsTransitionDuration(0)
@@ -556,88 +555,7 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             scene.add(cloudsMesh);
         });
 
-        // 9. Dynamic Glowing Projectile Comet Heads & Hypersonic Flight Particle Trail
-        const createGlowTexture = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = 64;
-            canvas.height = 64;
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-                const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-                gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
-                gradient.addColorStop(0.25, 'rgba(255, 255, 255, 0.9)');
-                gradient.addColorStop(0.55, 'rgba(200, 240, 255, 0.5)');
-                gradient.addColorStop(0.85, 'rgba(100, 200, 255, 0.15)');
-                gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, 64, 64);
-            }
-            const texture = new THREE.CanvasTexture(canvas);
-            texture.needsUpdate = true;
-            return texture;
-        };
-
-        const glowTexture = createGlowTexture();
-
-        // Particle group for dynamic flight projectile heads and ion tail trails
-        const MAX_ARCS = 32;
-        const TRAIL_COUNT = 5; // 1 head + 4 trail nodes
-        const totalParticles = MAX_ARCS * TRAIL_COUNT;
-
-        const cometGeo = new THREE.BufferGeometry();
-        const cometPositions = new Float32Array(totalParticles * 3);
-        const cometColors = new Float32Array(totalParticles * 3);
-
-        cometGeo.setAttribute('position', new THREE.BufferAttribute(cometPositions, 3));
-        cometGeo.setAttribute('color', new THREE.BufferAttribute(cometColors, 3));
-
-        const cometMat = new THREE.PointsMaterial({
-            size: 4.5,
-            map: glowTexture,
-            vertexColors: true,
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        });
-
-        const cometPoints = new THREE.Points(cometGeo, cometMat);
-        globe.add(cometPoints);
-
-        // Helper: Convert lat/lng to unit spherical vector on globe radius 100
-        const toUnitVec = (lat: number, lng: number) => {
-            const phi = (90 - lat) * (Math.PI / 180);
-            const theta = (90 - lng) * (Math.PI / 180);
-            const sinPhi = Math.sin(phi);
-            return new THREE.Vector3(
-                sinPhi * Math.cos(theta),
-                Math.cos(phi),
-                sinPhi * Math.sin(theta)
-            );
-        };
-
-        // Helper: Great-circle Slerp with parabolic suborbital altitude
-        const getFlightPos = (v0: THREE.Vector3, v1: THREE.Vector3, t: number, maxAlt: number) => {
-            const dot = Math.max(-1, Math.min(1, v0.dot(v1)));
-            const omega = Math.acos(dot);
-            let pt: THREE.Vector3;
-            if (omega < 0.001) {
-                pt = v0.clone();
-            } else {
-                const sinOmega = Math.sin(omega);
-                const s0 = Math.sin((1 - t) * omega) / sinOmega;
-                const s1 = Math.sin(t * omega) / sinOmega;
-                pt = new THREE.Vector3(
-                    s0 * v0.x + s1 * v1.x,
-                    s0 * v0.y + s1 * v1.y,
-                    s0 * v0.z + s1 * v1.z
-                ).normalize();
-            }
-            // Altitude envelope: reaches peak maxAlt mid-flight (4 * t * (1-t))
-            const currentR = 100 * (1 + 4 * t * (1 - t) * maxAlt);
-            return pt.multiplyScalar(currentR);
-        };
-
-        // 10. 3D Satellites & Orbital Trajectory Rings
+        // 9. 3D Satellites & Orbital Trajectory Rings
         const satGroup = new THREE.Group();
         globe.add(satGroup);
         satGroupRef.current = satGroup;
@@ -751,79 +669,6 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
             // Slowly drift Sky Dome
             skyDome.rotation.y = elapsedTime * 0.0006;
 
-            // Update Dynamic Flying Projectile Comets & Flight Opacity/Color Shift
-            const posAttr = cometGeo.attributes.position.array as Float32Array;
-            const colAttr = cometGeo.attributes.color.array as Float32Array;
-
-            // Reset all particle coordinates to origin
-            for (let i = 0; i < totalParticles * 3; i++) {
-                posAttr[i] = 0;
-                colAttr[i] = 0;
-            }
-
-            const currentArcs = arcDataList;
-            const arcCount = Math.min(currentArcs.length, MAX_ARCS);
-
-            for (let aIdx = 0; aIdx < arcCount; aIdx++) {
-                const arc = currentArcs[aIdx];
-                const v0 = toUnitVec(arc.startLat, arc.startLng);
-                const v1 = toUnitVec(arc.endLat, arc.endLng);
-
-                // Calculate current travel progress t (0 -> 1) aligned with arcDash animation
-                const cycle = (nowMs / arc.speed + arc.initialGap) % 1.0;
-                const tHead = cycle;
-
-                // Color dynamics based on actual threat vector
-                const attackColorHex = getAttackColor(arc.packet.type);
-                const threatCol = new THREE.Color(attackColorHex);
-
-                let r = threatCol.r;
-                let g = threatCol.g;
-                let b = threatCol.b;
-                let alpha = 0.95;
-
-                if (tHead < 0.65) {
-                    const midFactor = Math.sin((tHead * Math.PI) / 0.65);
-                    alpha = 0.88 - midFactor * 0.42;
-                    // White-hot plasma core blend for head
-                    r = THREE.MathUtils.lerp(threatCol.r, 1.0, 0.45);
-                    g = THREE.MathUtils.lerp(threatCol.g, 1.0, 0.45);
-                    b = THREE.MathUtils.lerp(threatCol.b, 1.0, 0.45);
-                } else {
-                    // Terminal deceleration & impact flare
-                    const decel = (tHead - 0.65) / 0.35;
-                    r = THREE.MathUtils.lerp(threatCol.r, 1.0, decel * 0.7);
-                    g = THREE.MathUtils.lerp(threatCol.g, 1.0, decel * 0.7);
-                    b = THREE.MathUtils.lerp(threatCol.b, 1.0, decel * 0.7);
-                    alpha = 0.65 + decel * 0.35;
-                }
-
-                // Render Head + 4 trailing ion sparks
-                for (let k = 0; k < TRAIL_COUNT; k++) {
-                    const trailOffset = k * 0.016;
-                    const t = Math.max(0, Math.min(1, tHead - trailOffset));
-                    const pt = getFlightPos(v0, v1, t, arc.altitude);
-
-                    const pIndex = (aIdx * TRAIL_COUNT + k) * 3;
-                    posAttr[pIndex] = pt.x;
-                    posAttr[pIndex + 1] = pt.y;
-                    posAttr[pIndex + 2] = pt.z;
-
-                    // Trail sparks fall off in brightness and inherit rich threat color
-                    const trailFalloff = Math.pow(1 - k / TRAIL_COUNT, 1.6);
-                    const sparkR = k === 0 ? r : threatCol.r;
-                    const sparkG = k === 0 ? g : threatCol.g;
-                    const sparkB = k === 0 ? b : threatCol.b;
-
-                    colAttr[pIndex] = sparkR * alpha * trailFalloff;
-                    colAttr[pIndex + 1] = sparkG * alpha * trailFalloff;
-                    colAttr[pIndex + 2] = sparkB * alpha * trailFalloff;
-                }
-            }
-
-            cometGeo.attributes.position.needsUpdate = true;
-            cometGeo.attributes.color.needsUpdate = true;
-
             if (satGroup.visible) {
                 const angle1 = elapsedTime * 0.45;
                 const sat1Pos = new THREE.Vector3(
@@ -914,10 +759,6 @@ export const ThreatGlobe3D: React.FC<ThreatGlobe3DProps> = ({
 
             beamGeo.dispose();
             beamMat.dispose();
-
-            cometGeo.dispose();
-            cometMat.dispose();
-            glowTexture.dispose();
 
             globe._destructor();
             renderer.dispose();
