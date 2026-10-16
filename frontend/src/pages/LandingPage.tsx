@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
     Shield,
@@ -15,37 +16,62 @@ import {
     CheckCircle2
 } from "lucide-react";
 import { EarthGlobe3D } from "../components/EarthGlobe3D";
+import { apiClient } from "../api/client";
+import type { SatellitePassData, SatelliteMissionTelemetry } from "../types";
 
 const LandingPage = () => {
+    const [activePass, setActivePass] = useState<SatellitePassData | null>(null);
+
+    useEffect(() => {
+        const fetchPasses = async () => {
+            try {
+                const res = await apiClient.get<SatelliteMissionTelemetry>('/satellite/telemetry-passes');
+                if (res.data?.passes?.length) {
+                    const active = res.data.passes.find(p => p.status === 'ACTIVE') || res.data.passes[0];
+                    setActivePass(active);
+                }
+            } catch (err) {
+                // Keep default
+            }
+        };
+        fetchPasses();
+    }, []);
+
     return (
-        <div className="min-h-screen bg-[#050814] text-white font-sans selection:bg-cyan-500 selection:text-black starfield overflow-x-hidden">
+        <div className="min-h-screen bg-[#050814] text-white font-sans selection:bg-orange-500 selection:text-black starfield overflow-x-hidden">
 
             {/* ================= TOP MISSION STATUS STRIP ================= */}
-            <div className="bg-[#090f24] border-b border-cyan-900/40 px-4 py-2 text-xs font-mono text-slate-300 flex items-center justify-between overflow-hidden">
+            <div className="bg-[#090f24] border-b border-orange-900/30 px-4 py-2 text-xs font-mono text-slate-300 flex items-center justify-between overflow-hidden">
                 <div className="flex items-center gap-3 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-[10px]">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-[10px]">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
                         ISTRAC MOX LINK NOMINAL
                     </span>
                     <span className="text-slate-500 hidden sm:inline">|</span>
-                    <span className="text-cyan-400 hidden sm:inline">GROUND STATION: ISTRAC-BLR (12.97° N, 77.59° E)</span>
+                    <span className="text-orange-400 hidden sm:inline">
+                        GROUND STATION: {activePass ? `${activePass.station_code} (${activePass.station})` : 'ISTRAC-BLR (12.97° N, 77.59° E)'}
+                    </span>
                 </div>
                 <div className="animate-pulse text-slate-400 text-[11px] truncate ml-4">
-                    🛰️ ACTIVE PASS: EOS-09 (LEO 500KM SSO) • AOS: 08:14 UTC • LOS: 08:26 UTC • TT&C LINK: SECURE
+                    {activePass ? (
+                        `🛰️ ACTIVE PASS: ${activePass.satellite} (${activePass.orbit}) • AOS: ${activePass.aos} • LOS: ${activePass.los} • CHANNEL: ${activePass.channel} • STATUS: ${activePass.threatStatus}`
+                    ) : (
+                        '🛰️ ACTIVE PASS: EOS-09 (LEO 500KM SSO) • AOS: 08:14 UTC • LOS: 08:26 UTC • TT&C LINK: SECURE'
+                    )}
                 </div>
             </div>
 
             {/* ================= HERO SECTION ================= */}
             <section className="px-6 pt-12 pb-20 max-w-7xl mx-auto relative">
                 {/* Ambient Radial Glows */}
-                <div className="absolute top-10 left-1/4 w-[500px] h-[400px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none"></div>
-                <div className="absolute top-20 right-1/4 w-[400px] h-[350px] bg-orange-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+                <div className="absolute top-10 left-1/4 w-[500px] h-[400px] bg-orange-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+                <div className="absolute top-20 right-1/4 w-[400px] h-[350px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
                 <div className="grid lg:grid-cols-12 gap-10 items-center">
                     {/* Left: Text & Pitch */}
                     <div className="lg:col-span-7 space-y-6 text-left">
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono font-semibold tracking-wider uppercase">
-                            <Satellite className="w-3.5 h-3.5 text-cyan-400" />
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/10 border border-orange-400/30 text-orange-300 text-xs font-mono font-semibold tracking-wider uppercase">
+                            <Satellite className="w-3.5 h-3.5 text-orange-400" />
                             ISRO Space Ground Segment Cyber Defense
                         </div>
 
@@ -62,8 +88,8 @@ const LandingPage = () => {
 
                         {/* Quick Spec Tags */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                            <div className="bg-[#0c142b]/80 border border-cyan-500/20 rounded-xl p-3">
-                                <div className="text-cyan-400 font-mono text-xl font-bold">52</div>
+                            <div className="bg-[#0c142b]/80 border border-orange-500/25 rounded-xl p-3">
+                                <div className="text-orange-400 font-mono text-xl font-bold">52</div>
                                 <div className="text-[11px] text-slate-400 uppercase tracking-wide">Flow Features</div>
                             </div>
                             <div className="bg-[#0c142b]/80 border border-emerald-500/20 rounded-xl p-3">
@@ -74,8 +100,8 @@ const LandingPage = () => {
                                 <div className="text-orange-400 font-mono text-xl font-bold">7 Classes</div>
                                 <div className="text-[11px] text-slate-400 uppercase tracking-wide">Space Threats</div>
                             </div>
-                            <div className="bg-[#0c142b]/80 border border-blue-500/20 rounded-xl p-3">
-                                <div className="text-blue-400 font-mono text-xl font-bold">&lt; 12ms</div>
+                            <div className="bg-[#0c142b]/80 border border-amber-500/20 rounded-xl p-3">
+                                <div className="text-amber-400 font-mono text-xl font-bold">&lt; 12ms</div>
                                 <div className="text-[11px] text-slate-400 uppercase tracking-wide">Triage Velocity</div>
                             </div>
                         </div>
@@ -84,13 +110,13 @@ const LandingPage = () => {
                         <div className="flex flex-wrap gap-4 pt-4">
                             <a
                                 href="#portal-access"
-                                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-orbitron font-bold text-sm tracking-wider transition-all shadow-[0_0_20px_rgba(0,212,255,0.4)] flex items-center gap-2"
+                                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-black font-orbitron font-bold text-sm tracking-wider transition-all shadow-[0_0_20px_rgba(249,115,22,0.4)] flex items-center gap-2"
                             >
                                 Enter Mission Control <ArrowRight className="w-4 h-4" />
                             </a>
                             <Link
                                 to="/admin/benchmark"
-                                className="px-6 py-3.5 rounded-xl bg-[#0c142b] hover:bg-[#132044] border border-cyan-500/40 text-cyan-300 font-orbitron font-semibold text-sm tracking-wider transition-all flex items-center gap-2"
+                                className="px-6 py-3.5 rounded-xl bg-[#0c142b] hover:bg-[#132044] border border-orange-500/40 text-orange-300 font-orbitron font-semibold text-sm tracking-wider transition-all flex items-center gap-2"
                             >
                                 Model Benchmark (7x7 Matrix)
                             </Link>
@@ -187,7 +213,7 @@ const LandingPage = () => {
             {/* ================= PORTAL ACCESS CARDS ================= */}
             <section id="portal-access" className="px-6 py-20 max-w-6xl mx-auto">
                 <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-                    <span className="text-xs font-mono text-cyan-400 uppercase tracking-widest">
+                    <span className="text-xs font-mono text-orange-400 uppercase tracking-widest font-bold">
                         System Access Point
                     </span>
                     <h2 className="text-3xl font-bold font-orbitron text-white">
@@ -202,11 +228,11 @@ const LandingPage = () => {
                     {/* Portal A */}
                     <Link
                         to="/client/dashboard"
-                        className="group relative bg-[#0a1022] rounded-2xl p-8 border border-cyan-500/30 hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(0,212,255,0.25)] transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                        className="group relative bg-[#0a1022]/80 backdrop-blur-xl rounded-2xl p-8 border border-orange-500/30 hover:border-orange-400 hover:shadow-[0_0_30px_rgba(249,115,22,0.2)] transition-all duration-300 overflow-hidden flex flex-col justify-between"
                     >
-                        <Satellite className="absolute -right-6 -bottom-6 w-40 h-40 opacity-5 text-cyan-400 group-hover:scale-110 transition-transform duration-500" />
+                        <Satellite className="absolute -right-6 -bottom-6 w-40 h-40 opacity-5 text-orange-400 group-hover:scale-110 transition-transform duration-500" />
                         <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-mono font-bold mb-4 border border-cyan-500/20">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-mono font-bold mb-4 border border-orange-500/25">
                                 PORTAL A • OPERATIONS
                             </div>
                             <h3 className="text-2xl font-bold font-orbitron text-white mb-3">
@@ -217,20 +243,20 @@ const LandingPage = () => {
                             </p>
                             <ul className="space-y-2 text-xs font-mono text-slate-300 mb-8">
                                 <li className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
                                     ISTRAC Station Threat Visualizer (BLR, SHAR, Byalalu)
                                 </li>
                                 <li className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
                                     Satellite Pass Window Triage & LOS Risk Counter
                                 </li>
                                 <li className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
                                     Live Telemetry Stream with Zero Probing Impact
                                 </li>
                             </ul>
                         </div>
-                        <div className="text-cyan-400 font-orbitron font-bold text-sm group-hover:translate-x-2 transition-transform inline-flex items-center gap-2">
+                        <div className="text-orange-400 font-orbitron font-bold text-sm group-hover:translate-x-2 transition-transform inline-flex items-center gap-2">
                             Open Mission Operations Console →
                         </div>
                     </Link>

@@ -3,106 +3,175 @@ import {
     Satellite,
     Radio,
     Clock,
-    ShieldCheck,
     AlertTriangle,
-    Wifi,
     CheckCircle2,
-    Compass,
     Signal,
-    Globe
+    Globe,
+    Database,
+    RefreshCw
 } from 'lucide-react';
+import { apiClient } from '../../../api/client';
+import type { SatellitePassData, SatelliteMissionTelemetry } from '../../../types';
 
-interface PassWindow {
-    satellite: string;
-    orbit: string;
-    station: string;
-    aos: string;
-    los: string;
-    duration: string;
-    maxElevation: string;
-    frequency: string;
-    status: 'ACTIVE' | 'UPCOMING' | 'STANDBY';
-    threatStatus: 'SECURE' | 'MONITOR' | 'CRITICAL';
-}
-
-const PASS_DATA: PassWindow[] = [
+const INITIAL_PASSES: SatellitePassData[] = [
     {
         satellite: 'EOS-09',
         orbit: 'LEO 500km SSO',
         station: 'ISTRAC-BLR (Bengaluru)',
+        station_code: 'ISTRAC-BLR',
         aos: '13:28:10 UTC',
         los: '13:38:45 UTC',
         duration: '10m 35s',
         maxElevation: '68.4°',
         frequency: 'S-Band (2098 MHz)',
+        channel: 'CADC0872',
+        total_segments: 546,
+        anomalous_segments: 131,
+        anomaly_rate: 0.2399,
+        mean_signal_length: 187.3,
+        signal_variance: 4.88e-10,
+        peak_count: 14.2,
         status: 'ACTIVE',
-        threatStatus: 'SECURE',
+        threatStatus: 'MONITOR',
+        laya_risk_tier: 'ELEVATED',
+        laya_explanation: 'ESA OPS-SAT channel CADC0872 telemetry: 131/546 anomalies (24.0%). Decision: MONITOR.'
     },
     {
         satellite: 'RISAT-2BR2',
         orbit: 'LEO 576km 37°',
         station: 'SDSC-SHAR (Sriharikota)',
+        station_code: 'SDSC-SHAR',
         aos: '13:52:00 UTC',
         los: '14:01:20 UTC',
         duration: '9m 20s',
         maxElevation: '52.1°',
         frequency: 'X-Band (8450 MHz)',
+        channel: 'CADC0884',
+        total_segments: 158,
+        anomalous_segments: 0,
+        anomaly_rate: 0.0,
+        mean_signal_length: 199.1,
+        signal_variance: 3.12e-10,
+        peak_count: 12.0,
         status: 'UPCOMING',
         threatStatus: 'SECURE',
+        laya_risk_tier: 'NOMINAL',
+        laya_explanation: 'ESA OPS-SAT channel CADC0884 telemetry: 0/158 anomalies (0.0%). Decision: SECURE.'
     },
     {
         satellite: 'Chandrayaan-3 Orbiter',
         orbit: 'Lunar Orbit (100km)',
         station: 'IDSN-32M (Byalalu)',
+        station_code: 'IDSN-32M',
         aos: 'Continuous DSN',
         los: 'Continuous DSN',
         duration: '24/7 Deep Space',
         maxElevation: '78.9°',
         frequency: 'X/Ka-Band',
+        channel: 'CADC0888',
+        total_segments: 252,
+        anomalous_segments: 60,
+        anomaly_rate: 0.2381,
+        mean_signal_length: 197.8,
+        signal_variance: 5.73e-10,
+        peak_count: 13.8,
         status: 'ACTIVE',
-        threatStatus: 'SECURE',
+        threatStatus: 'MONITOR',
+        laya_risk_tier: 'ELEVATED',
+        laya_explanation: 'ESA OPS-SAT channel CADC0888 telemetry: 60/252 anomalies (23.8%). Decision: MONITOR.'
     },
     {
         satellite: 'Aditya-L1 Halo Orbit',
         orbit: 'Sun-Earth L1 (1.5M km)',
         station: 'IDSN-32M (Byalalu)',
+        station_code: 'IDSN-32M',
         aos: 'Continuous DSN',
         los: 'Continuous DSN',
         duration: '24/7 Deep Space',
         maxElevation: '64.2°',
         frequency: 'X-Band',
+        channel: 'CADC0890',
+        total_segments: 14,
+        anomalous_segments: 11,
+        anomaly_rate: 0.7857,
+        mean_signal_length: 197.4,
+        signal_variance: 7.82e-10,
+        peak_count: 15.1,
         status: 'ACTIVE',
-        threatStatus: 'SECURE',
+        threatStatus: 'CRITICAL',
+        laya_risk_tier: 'CRITICAL',
+        laya_explanation: 'ESA OPS-SAT channel CADC0890 telemetry: 11/14 anomalies (78.6%). Decision: CRITICAL.'
     },
     {
         satellite: 'Cartosat-3',
         orbit: 'LEO 505km SSO',
         station: 'ISTRAC-MAU (Mauritius)',
+        station_code: 'ISTRAC-MAU',
         aos: '14:24:30 UTC',
         los: '14:34:10 UTC',
         duration: '9m 40s',
         maxElevation: '41.5°',
         frequency: 'S/X-Band',
+        channel: 'CADC0873',
+        total_segments: 593,
+        anomalous_segments: 105,
+        anomaly_rate: 0.1771,
+        mean_signal_length: 179.2,
+        signal_variance: 5.41e-10,
+        peak_count: 11.4,
         status: 'UPCOMING',
         threatStatus: 'MONITOR',
+        laya_risk_tier: 'ELEVATED',
+        laya_explanation: 'ESA OPS-SAT channel CADC0873 telemetry: 105/593 anomalies (17.7%). Decision: MONITOR.'
     },
     {
         satellite: 'Oceansat-3 (EOS-06)',
         orbit: 'LEO 720km SSO',
         station: 'ISTRAC-PBL (Port Blair)',
+        station_code: 'ISTRAC-PBL',
         aos: '14:58:00 UTC',
         los: '15:09:15 UTC',
         duration: '11m 15s',
         maxElevation: '76.0°',
         frequency: 'S-Band',
+        channel: 'CADC0874',
+        total_segments: 194,
+        anomalous_segments: 69,
+        anomaly_rate: 0.3557,
+        mean_signal_length: 196.4,
+        signal_variance: 6.22e-10,
+        peak_count: 14.0,
         status: 'UPCOMING',
-        threatStatus: 'SECURE',
+        threatStatus: 'CRITICAL',
+        laya_risk_tier: 'CRITICAL',
+        laya_explanation: 'ESA OPS-SAT channel CADC0874 telemetry: 69/194 anomalies (35.6%). Decision: CRITICAL.'
     },
 ];
 
 export const PassWindowStatus = () => {
-    // Dynamic countdown timer for active pass
-    const [secondsLeft, setSecondsLeft] = useState(384); // ~6m 24s
+    const [passes, setPasses] = useState<SatellitePassData[]>(INITIAL_PASSES);
+    const [datasetMeta, setDatasetMeta] = useState<SatelliteMissionTelemetry | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [secondsLeft, setSecondsLeft] = useState(384);
+
+    const fetchTelemetryPasses = async () => {
+        setIsLoading(true);
+        try {
+            const res = await apiClient.get<SatelliteMissionTelemetry>('/satellite/telemetry-passes');
+            if (res.data && res.data.passes) {
+                setPasses(res.data.passes);
+                setDatasetMeta(res.data);
+            }
+        } catch (e) {
+            console.error('Failed to load satellite telemetry passes', e);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchTelemetryPasses();
+    }, []);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -117,25 +186,35 @@ export const PassWindowStatus = () => {
         return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
+    const activePass = passes.find(p => p.status === 'ACTIVE') || passes[0];
+
     return (
-        <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8 bg-[#050814] text-slate-100 min-h-screen">
+        <div className="space-y-10">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
                 <div>
-                    <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-widest mb-1">
+                    <div className="flex items-center gap-2 text-orange-400 font-mono text-xs uppercase tracking-widest mb-1.5">
                         <Satellite className="w-4 h-4" />
-                        ISTRAC / IDSN Mission Schedule
+                        <span>ISTRAC / IDSN Mission Schedule • ESA OPS-SAT Space Data</span>
                     </div>
-                    <h1 className="text-3xl font-bold font-orbitron text-white">
+                    <h1 className="text-2xl sm:text-3xl font-bold font-orbitron text-white">
                         Orbital Pass Windows & TT&C Link Defense
                     </h1>
                     <p className="text-slate-400 text-sm mt-1">
-                        Monitoring contact windows for LEO Earth Observation & Deep Space tracking stations.
+                        Real-time pass telemetry evaluated on {datasetMeta?.total_records || 2123} spacecraft sensor records from European Space Agency (ESA) OPS-SAT.
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold">
+                    <button
+                        onClick={fetchTelemetryPasses}
+                        disabled={isLoading}
+                        className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0e1733] hover:bg-[#15244d] border border-orange-500/30 text-orange-300 font-mono text-xs transition-all"
+                    >
+                        <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+                        Sync Real Dataset
+                    </button>
+                    <span className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold shadow-[0_0_15px_rgba(16,185,129,0.1)]">
                         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                         PASS WINDOW DEFENSE: ACTIVE
                     </span>
@@ -143,117 +222,157 @@ export const PassWindowStatus = () => {
             </div>
 
             {/* Active Contact Banner */}
-            <div className="relative rounded-2xl bg-gradient-to-r from-[#0c1836] via-[#0e224d] to-[#0a142e] border border-cyan-500/40 p-6 md:p-8 overflow-hidden shadow-[0_0_40px_rgba(0,212,255,0.15)]">
-                <div className="absolute -right-10 -bottom-10 w-64 h-64 opacity-10 text-cyan-400 pointer-events-none">
+            <div className="relative rounded-2xl bg-[#0a1022]/80 backdrop-blur-xl border border-orange-500/30 p-6 md:p-8 overflow-hidden shadow-[0_4px_35px_rgba(249,115,22,0.08)]">
+                <div className="absolute -right-10 -bottom-10 w-64 h-64 opacity-5 text-orange-400 pointer-events-none">
                     <Radio className="w-full h-full" />
                 </div>
 
                 <div className="grid md:grid-cols-12 gap-6 items-center relative z-10">
-                    <div className="md:col-span-8 space-y-4">
-                        <div className="flex flex-wrap items-center gap-2">
-                            <span className="px-2.5 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/40 font-mono text-xs font-bold animate-pulse">
+                    <div className="md:col-span-8 space-y-5">
+                        <div className="flex flex-wrap items-center gap-2.5">
+                            <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/40 font-mono text-xs font-bold animate-pulse">
                                 ● LIVE CONTACT IN PROGRESS
                             </span>
-                            <span className="px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 font-mono text-xs">
-                                Spacecraft: EOS-09 (LEO 500km SSO)
+                            <span className="px-3 py-1 rounded-full bg-orange-500/10 text-orange-300 border border-orange-500/30 font-mono text-xs">
+                                Spacecraft: {activePass.satellite} ({activePass.orbit})
                             </span>
-                            <span className="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-mono text-xs">
-                                Ground Station: ISTRAC-BLR MOX
+                            <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-300 font-mono text-xs">
+                                Ground Station: {activePass.station}
+                            </span>
+                            <span className="px-3 py-1 rounded-full bg-purple-950/40 text-purple-300 border border-purple-700/50 font-mono text-xs">
+                                Dataset Channel: {activePass.channel}
                             </span>
                         </div>
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
                             <div>
                                 <div className="text-xs text-slate-400 font-mono">Carrier Status</div>
-                                <div className="text-emerald-400 font-bold font-mono text-base flex items-center gap-1.5">
+                                <div className="text-emerald-400 font-bold font-mono text-base flex items-center gap-1.5 mt-0.5">
                                     <Signal className="w-4 h-4" /> LOCKED
                                 </div>
                             </div>
                             <div>
                                 <div className="text-xs text-slate-400 font-mono">Uplink Frequency</div>
-                                <div className="text-white font-bold font-mono text-base">2098.5 MHz</div>
+                                <div className="text-white font-bold font-mono text-base mt-0.5">{activePass.frequency}</div>
                             </div>
                             <div>
                                 <div className="text-xs text-slate-400 font-mono">Max Elevation</div>
-                                <div className="text-cyan-400 font-bold font-mono text-base">68.4° (Zenith)</div>
+                                <div className="text-orange-400 font-bold font-mono text-base mt-0.5">{activePass.maxElevation} (Zenith)</div>
                             </div>
                             <div>
-                                <div className="text-xs text-slate-400 font-mono">Intrusion Shield</div>
-                                <div className="text-emerald-400 font-bold font-mono text-base">0 ANOMALIES</div>
+                                <div className="text-xs text-slate-400 font-mono">Channel Anomaly Rate</div>
+                                <div className={`font-bold font-mono text-base mt-0.5 ${activePass.anomaly_rate > 0.25 ? 'text-red-400' : activePass.anomaly_rate > 0.15 ? 'text-orange-400' : 'text-emerald-400'}`}>
+                                    {(activePass.anomaly_rate * 100).toFixed(1)}% ({activePass.anomalous_segments}/{activePass.total_segments})
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Real Telemetry Signal Metrics from dataset */}
+                        <div className="p-3.5 rounded-xl bg-black/40 border border-orange-500/20 text-xs font-mono text-slate-300 flex flex-wrap gap-4">
+                            <div>
+                                <span className="text-slate-400">Signal Length:</span>{' '}
+                                <span className="text-orange-300 font-bold">{activePass.mean_signal_length} samples</span>
+                            </div>
+                            <div>
+                                <span className="text-slate-400">Telemetry Variance:</span>{' '}
+                                <span className="text-orange-300 font-bold">{activePass.signal_variance.toExponential(2)}</span>
+                            </div>
+                            <div>
+                                <span className="text-slate-400">Mean Wave Peaks:</span>{' '}
+                                <span className="text-orange-300 font-bold">{activePass.peak_count} peaks</span>
+                            </div>
+                            <div>
+                                <span className="text-slate-400">Laya Defense Decision:</span>{' '}
+                                <span className={`font-bold ${activePass.threatStatus === 'CRITICAL' ? 'text-red-400' : activePass.threatStatus === 'MONITOR' ? 'text-orange-400' : 'text-emerald-400'}`}>
+                                    {activePass.threatStatus} ({activePass.laya_risk_tier})
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="md:col-span-4 flex flex-col items-center justify-center p-4 bg-black/40 rounded-xl border border-cyan-500/30">
-                        <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                    <div className="md:col-span-4 flex flex-col items-center justify-center p-6 bg-slate-900/70 backdrop-blur-md rounded-2xl border border-orange-500/30 shadow-inner">
+                        <div className="text-xs font-mono text-orange-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
                             <Clock className="w-3.5 h-3.5" /> Remaining Pass Time
                         </div>
-                        <div className="text-4xl sm:text-5xl font-mono font-bold text-white tracking-wider text-cyan-300">
+                        <div className="text-4xl sm:text-5xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500 tracking-wider">
                             {formatTimer(secondsLeft)}
                         </div>
-                        <div className="text-[11px] text-slate-400 font-mono mt-2 text-center">
-                            AOS: 13:28:10 • LOS in {Math.ceil(secondsLeft / 60)} mins
+                        <div className="text-[11px] text-slate-400 font-mono mt-2.5 text-center">
+                            AOS: {activePass.aos} • LOS in {Math.ceil(secondsLeft / 60)} mins
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Critical Doctrine Callout */}
-            <div className="p-4 rounded-xl bg-orange-950/20 border border-orange-500/30 flex items-start gap-4">
+            <div className="p-5 rounded-2xl bg-orange-950/20 backdrop-blur-md border border-orange-500/30 flex items-start gap-4">
                 <AlertTriangle className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
-                <div className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                <div className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
                     <strong className="text-orange-400 font-semibold font-orbitron">
                         Operational Pass Window Policy:
                     </strong>{' '}
                     During satellite orbital passes (typically 8–12 minutes), False Positive blocks directly cause{' '}
-                    <span className="text-orange-300 font-mono">Loss of Signal (LOS)</span> and can abort scheduled telecommand burns.
+                    <span className="text-orange-300 font-mono font-bold">Loss of Signal (LOS)</span> and can abort scheduled telecommand burns.
                     The online adaptive bandit dynamically relaxes auto-block probability thresholds to preserve link continuity.
                 </div>
             </div>
 
-            {/* Upcoming Pass Schedule Table */}
-            <div className="rounded-xl border border-slate-800 bg-[#0a1022] overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-[#0e1733]">
+            {/* Ground Station Tracking Windows with Real ESA OPS-SAT Data */}
+            <div className="rounded-2xl border border-slate-800/80 bg-[#0a1022]/80 backdrop-blur-xl overflow-hidden shadow-sm">
+                <div className="px-6 py-4 border-b border-slate-800/80 flex items-center justify-between bg-[#0e1733]/50">
                     <h3 className="font-orbitron font-bold text-base text-white flex items-center gap-2">
-                        <Globe className="w-4 h-4 text-cyan-400" />
-                        Scheduled Ground Station Tracking Windows (Next 12 Hours)
+                        <Globe className="w-4 h-4 text-orange-400" />
+                        <span>Scheduled Ground Station Tracking Windows & Real Sensor Provenance</span>
                     </h3>
-                    <span className="text-xs font-mono text-slate-400">
-                        ISTRAC Ground Network Schedule v4.8
+                    <span className="text-xs font-mono text-orange-400 flex items-center gap-1.5">
+                        <Database className="w-3.5 h-3.5" />
+                        ESA OPS-SAT (2,123 Segments Evaluated)
                     </span>
                 </div>
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm font-sans">
-                        <thead className="bg-[#080d1e] text-[11px] font-mono uppercase text-slate-400 tracking-wider border-b border-slate-800">
+                        <thead className="bg-[#080d1e]/90 text-[11px] font-mono uppercase text-slate-400 tracking-wider border-b border-slate-800">
                             <tr>
-                                <th className="px-6 py-3">Spacecraft</th>
-                                <th className="px-6 py-3">Orbit Regime</th>
-                                <th className="px-6 py-3">Ground Station</th>
-                                <th className="px-6 py-3">Window (AOS - LOS)</th>
-                                <th className="px-6 py-3">Max El.</th>
-                                <th className="px-6 py-3">Frequency</th>
-                                <th className="px-6 py-3">Pass Status</th>
-                                <th className="px-6 py-3 text-right">Defense Status</th>
+                                <th className="px-6 py-3.5">Spacecraft</th>
+                                <th className="px-6 py-3.5">Channel</th>
+                                <th className="px-6 py-3.5">Orbit Regime</th>
+                                <th className="px-6 py-3.5">Ground Station</th>
+                                <th className="px-6 py-3.5">Window (AOS - LOS)</th>
+                                <th className="px-6 py-3.5">Segments</th>
+                                <th className="px-6 py-3.5">Anomaly Rate</th>
+                                <th className="px-6 py-3.5">Pass Status</th>
+                                <th className="px-6 py-3.5 text-right">Defense Status</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-800/60 font-mono text-xs">
-                            {PASS_DATA.map((pass, i) => (
-                                <tr key={i} className="hover:bg-cyan-950/20 transition-colors">
+                            {passes.map((pass, i) => (
+                                <tr key={i} className="hover:bg-slate-800/40 transition-colors">
                                     <td className="px-6 py-4 font-bold text-white flex items-center gap-2">
-                                        <Satellite className="w-4 h-4 text-cyan-400" />
+                                        <Satellite className="w-4 h-4 text-orange-400" />
                                         {pass.satellite}
                                     </td>
+                                    <td className="px-6 py-4 text-orange-300 font-bold">
+                                        <span className="px-2 py-0.5 rounded bg-black/40 border border-orange-500/30 text-[10px]">
+                                            {pass.channel}
+                                        </span>
+                                    </td>
                                     <td className="px-6 py-4 text-slate-300">{pass.orbit}</td>
-                                    <td className="px-6 py-4 text-cyan-300">{pass.station}</td>
+                                    <td className="px-6 py-4 text-orange-300 font-semibold">{pass.station}</td>
                                     <td className="px-6 py-4 text-slate-400">
                                         {pass.aos} → {pass.los}
                                     </td>
-                                    <td className="px-6 py-4 text-slate-300 font-bold">{pass.maxElevation}</td>
-                                    <td className="px-6 py-4 text-slate-400">{pass.frequency}</td>
+                                    <td className="px-6 py-4 text-slate-300">
+                                        {pass.anomalous_segments} / {pass.total_segments}
+                                    </td>
+                                    <td className="px-6 py-4 font-bold">
+                                        <span className={pass.anomaly_rate > 0.3 ? 'text-red-400' : pass.anomaly_rate > 0.15 ? 'text-orange-400' : 'text-emerald-400'}>
+                                            {(pass.anomaly_rate * 100).toFixed(1)}%
+                                        </span>
+                                    </td>
                                     <td className="px-6 py-4">
                                         <span
-                                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                                                 pass.status === 'ACTIVE'
                                                     ? 'bg-red-500/20 text-red-400 border border-red-500/30'
                                                     : 'bg-slate-800 text-slate-400 border border-slate-700'
@@ -264,10 +383,12 @@ export const PassWindowStatus = () => {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <span
-                                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${
+                                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                                                 pass.threatStatus === 'SECURE'
                                                     ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                                                    : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/30'
+                                                    : pass.threatStatus === 'MONITOR'
+                                                    ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/30'
+                                                    : 'bg-red-500/10 text-red-400 border border-red-500/30'
                                             }`}
                                         >
                                             <CheckCircle2 className="w-3 h-3" />

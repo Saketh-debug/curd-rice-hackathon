@@ -35,14 +35,14 @@ const ISRO_GROUND_STATIONS: GroundStation[] = [
         name: "Indian Deep Space Network",
         location: "Byalalu, India",
         coords: [12.8711, 77.3789],
-        role: "Chandrayaan / Aditya-L1 TT&C"
+        role: "Deep Space Tracking (Chandrayaan/Aditya)"
     },
     {
         code: "SDSC-SHAR",
         name: "Satish Dhawan Space Centre",
         location: "Sriharikota, India",
         coords: [13.7199, 80.2305],
-        role: "Launch Ground & Telemetry Tracking"
+        role: "Launch Telemetry & Ground Radar"
     },
     {
         code: "ISTRAC-PBL",
@@ -52,34 +52,34 @@ const ISRO_GROUND_STATIONS: GroundStation[] = [
         role: "Downrange Launch & Orbit Injection"
     },
     {
-        code: "ISTRAC-MAU",
-        name: "Indian Ocean Ground Station",
-        location: "Port Louis, Mauritius",
-        coords: [-20.1609, 57.5012],
-        role: "LEO Contact & Geostationary Transfer"
+        code: "NRSC-HYD",
+        name: "National Remote Sensing Centre",
+        location: "Hyderabad, India",
+        coords: [17.3850, 78.4867],
+        role: "Earth Observation Data Receiving"
     },
     {
-        code: "ISTRAC-BIK",
-        name: "Equatorial Tracking Station",
-        location: "Biak, Indonesia",
-        coords: [-1.1764, 136.0847],
-        role: "Equatorial Orbit Pass Monitoring"
+        code: "SAC-AHM",
+        name: "Space Applications Centre",
+        location: "Ahmedabad, India",
+        coords: [23.0225, 72.5714],
+        role: "Communication & Payload Ops"
     },
     {
-        code: "SVALSAT",
-        name: "Polar Orbit Earth Obs. Station",
-        location: "Svalbard, Norway (Arctic)",
-        coords: [78.2298, 15.4078],
-        role: "Polar SSO EOS Satellite Pass Support"
+        code: "VSSC-TRV",
+        name: "Vikram Sarabhai Space Centre",
+        location: "Thiruvananthapuram, India",
+        coords: [8.5241, 76.9366],
+        role: "Avionics & Launch Vehicle Telemetry"
     }
 ];
 
 /* ================= Attack Colors ================= */
 const attackColors: Record<string, string> = {
     ddos: "#ff2244",    // TT&C Saturation
-    dos: "#ff6b1a",     // Gateway Flood
-    brute: "#00d4ff",   // TC Auth Bypass
-    bot: "#d946ef",     // RTU Sensor Hijack
+    dos: "#ea580c",     // Gateway Flood
+    brute: "#f97316",   // TC Auth Bypass
+    bot: "#f59e0b",     // RTU Sensor Hijack
 };
 
 const getAttackColor = (type: string = "") => {
@@ -88,7 +88,7 @@ const getAttackColor = (type: string = "") => {
     if (lowerType.includes('dos')) return attackColors.dos;
     if (lowerType.includes('brute')) return attackColors.brute;
     if (lowerType.includes('bot')) return attackColors.bot;
-    return "#ff2244";
+    return "#f97316";
 };
 
 /* ================= Curve Generator ================= */
@@ -201,21 +201,23 @@ export const ThreatMap = () => {
     ];
 
     return (
-        <div className="relative h-full w-full bg-[#050814] overflow-hidden flex flex-col font-sans">
+        <div className="relative h-[calc(100vh-12rem)] min-h-[600px] w-full rounded-2xl overflow-hidden border border-orange-500/30 shadow-[0_8px_40px_rgba(0,0,0,0.8)] flex flex-col font-sans">
 
             {/* ================= MAP ================= */}
             <div className="absolute inset-0">
                 <MapContainer
-                    center={[15, 78]} // Centered on India and the Indian Ocean
-                    zoom={3}
-                    minZoom={2}
-                    maxBounds={[[-90, -180], [90, 180]]}
+                    center={[20.5937, 78.9629]} // Centered on India
+                    zoom={5}
+                    minZoom={4}
+                    maxBounds={[[6.0, 68.0], [36.0, 98.0]]}
                     className="h-full w-full"
                     style={{ height: "100%", width: "100%", background: "#050814" }}
                     zoomControl={false}
                 >
                     <TileLayer
-                        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        className="map-tiles-dark"
                         noWrap={true}
                     />
                     <ZoomControl position="bottomleft" />
@@ -228,8 +230,8 @@ export const ThreatMap = () => {
                                 center={station.coords}
                                 radius={14}
                                 pathOptions={{
-                                    color: "#00d4ff",
-                                    fillColor: "#00d4ff",
+                                    color: "#f97316",
+                                    fillColor: "#f97316",
                                     fillOpacity: 0.15,
                                     weight: 1,
                                     dashArray: "3, 3",
@@ -241,13 +243,13 @@ export const ThreatMap = () => {
                                 radius={5}
                                 pathOptions={{
                                     color: "#ffffff",
-                                    fillColor: "#00d4ff",
+                                    fillColor: "#f97316",
                                     fillOpacity: 1,
                                     weight: 2,
                                 }}
                             >
                                 <Tooltip permanent direction="top" offset={[0, -8]} className="custom-station-tooltip">
-                                    <span className="font-mono text-[10px] font-bold text-cyan-300 bg-[#080d1e] px-1.5 py-0.5 rounded border border-cyan-500/40">
+                                    <span className="font-mono text-[10px] font-bold text-orange-300 bg-[#080d1e] px-1.5 py-0.5 rounded border border-orange-500/40">
                                         🛰️ {station.code}
                                     </span>
                                 </Tooltip>
@@ -257,9 +259,23 @@ export const ThreatMap = () => {
 
                     {/* Threat Trajectories mapped into ISRO Ground Stations */}
                     {threats.map((threat, index) => {
-                        const from: [number, number] = [threat.lat, threat.lon];
-                        // Distribute target to real ISRO ground stations
-                        const targetStation = ISRO_GROUND_STATIONS[index % ISRO_GROUND_STATIONS.length];
+                        // Regional Indian node coordinates fallback (11°N to 28°N, 72°E to 88°E)
+                        const fallbackLat = 11.0 + ((index * 13) % 17);
+                        const fallbackLon = 72.0 + ((index * 17) % 16);
+                        const isInsideIndia = (lat: number, lon: number) =>
+                            lat >= 6.0 && lat <= 36.0 && lon >= 68.0 && lon <= 98.0;
+
+                        const threatLat = typeof threat.lat === 'number' && !isNaN(threat.lat) && isInsideIndia(threat.lat, threat.lon)
+                            ? threat.lat
+                            : fallbackLat;
+                        const threatLon = typeof threat.lon === 'number' && !isNaN(threat.lon) && isInsideIndia(threat.lat, threat.lon)
+                            ? threat.lon
+                            : fallbackLon;
+
+                        const from: [number, number] = [threatLat, threatLon];
+                        // Distribute target to real ISRO ground stations matching packet's assigned station
+                        const targetStation = (threat.station && ISRO_GROUND_STATIONS.find(s => s.code === threat.station))
+                            || ISRO_GROUND_STATIONS[index % ISRO_GROUND_STATIONS.length];
                         const to: [number, number] = targetStation.coords;
 
                         const curvePath = generateCurve(from, to);
@@ -300,20 +316,20 @@ export const ThreatMap = () => {
                 </MapContainer>
             </div>
 
-            {/* ================= HEADER ================= */}
-            <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-start z-[500] pointer-events-none">
-                <div className="pointer-events-auto bg-[#080d1e]/85 backdrop-blur-md border border-cyan-500/30 p-4 rounded-2xl shadow-xl">
-                    <div className="text-[10px] uppercase tracking-[0.25em] text-cyan-400 font-mono mb-1">
+            {/* ================= HEADER OVERLAY ================= */}
+            <div className="absolute top-0 left-0 right-0 p-5 flex justify-between items-start z-[500] pointer-events-none">
+                <div className="pointer-events-auto bg-[#080d1e]/85 backdrop-blur-md border border-orange-500/30 p-4 rounded-2xl shadow-xl">
+                    <div className="text-[10px] uppercase tracking-[0.25em] text-orange-400 font-mono mb-1">
                         ISTRAC Defense Network
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <h2 className="text-lg font-bold font-orbitron text-white tracking-wide">
+                        <h2 className="text-base font-bold font-orbitron text-white tracking-wide">
                             Ground Station Cyber Attack Vector Map
                         </h2>
                     </div>
                     <p className="text-xs text-slate-400 font-mono mt-1">
-                        Tracking 7 Global ISRO Ground Nodes • Active Pass Vectors
+                        Tracking 7 National ISRO Ground & Tracking Centers • India Network
                     </p>
                 </div>
 
@@ -327,11 +343,11 @@ export const ThreatMap = () => {
                         </span>
                     </div>
 
-                    <div className="bg-[#080d1e]/85 backdrop-blur-md border border-cyan-500/40 px-4 py-2.5 rounded-xl flex flex-col items-center min-w-[130px] border-l-4 border-l-cyan-400 shadow-lg">
+                    <div className="bg-[#080d1e]/85 backdrop-blur-md border border-orange-500/40 px-4 py-2.5 rounded-xl flex flex-col items-center min-w-[130px] border-l-4 border-l-orange-400 shadow-lg">
                         <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">
                             Auto-Neutralized
                         </span>
-                        <span className="text-lg font-bold text-cyan-400 font-mono">
+                        <span className="text-lg font-bold text-orange-400 font-mono">
                             {health?.automation_rate || '99.4%'}
                         </span>
                     </div>
@@ -339,10 +355,10 @@ export const ThreatMap = () => {
             </div>
 
             {/* ================= ATTACK FILTER ================= */}
-            <div className="absolute bottom-6 right-6 w-72 bg-[#080d1e]/90 backdrop-blur-xl border border-cyan-500/30 rounded-2xl p-4 z-[500] shadow-2xl">
+            <div className="absolute bottom-6 right-6 w-72 bg-[#080d1e]/90 backdrop-blur-xl border border-orange-500/30 rounded-2xl p-4 z-[500] shadow-2xl">
                 <h3 className="text-xs font-orbitron font-semibold text-white mb-3 flex items-center justify-between">
                     <span>Space Threat Vector Filter</span>
-                    <span className="text-[10px] font-mono bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded border border-cyan-500/30">
+                    <span className="text-[10px] font-mono bg-orange-500/20 text-orange-300 px-2.5 py-0.5 rounded-full border border-orange-500/30">
                         {threats.length} ACTIVE
                     </span>
                 </h3>
@@ -354,7 +370,7 @@ export const ThreatMap = () => {
                             onClick={() => setSelectedFilter(f.id)}
                             className={`w-full flex items-center justify-between p-2 rounded-xl transition-all duration-200 border text-[11px] ${
                                 selectedFilter === f.id
-                                    ? "bg-cyan-500/15 border-cyan-500/40 text-cyan-200 font-bold"
+                                    ? "bg-orange-500/15 border-orange-500/40 text-orange-200 font-bold"
                                     : "bg-transparent border-transparent text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
                             }`}
                         >
@@ -366,7 +382,7 @@ export const ThreatMap = () => {
                                 <span className="truncate">{f.label}</span>
                             </div>
                             {selectedFilter === f.id && (
-                                <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
                             )}
                         </button>
                     ))}

@@ -50,7 +50,7 @@ function App() {
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="benchmark" element={<ModelBenchmark />} />
               <Route path="incidents/review/:id" element={<IncidentReview />} />
-              <Route path="incidents" element={<IncidentReview />} />
+              <Route path="incidents" element={<Navigate to="/admin/dashboard" replace />} />
               <Route path="compliance" element={<ComplianceReports />} />
               <Route path="policy" element={<PolicyConfig />} />
               <Route path="settings" element={<PolicyConfig />} />

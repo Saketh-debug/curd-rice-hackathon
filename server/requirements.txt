@@ -24,7 +24,8 @@ typing_extensions==4.15.0
 tzdata==2025.3
 uvicorn==0.40.0
 xgboost==3.2.0
-sentence-transformers
+# Optional for local RAG embeddings:
+# sentence-transformers
 requests
 sqlalchemy
 psycopg2-binary

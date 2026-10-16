@@ -128,8 +128,8 @@ def main():
     # Confusion Matrix display
     print("\n" + "-" * 80)
     print(" 2. CONFUSION MATRIX")
-    print("-" * 80)
-    print(f"{'Actual \\ Predicted':<20} | {'Nominal (0)':>14} | {'Anomaly (1)':>14}")
+    header_row = "Actual \\ Predicted"
+    print(f"{header_row:<20} | {'Nominal (0)':>14} | {'Anomaly (1)':>14}")
     print("-" * 54)
     print(f"{'Nominal Telemetry':<20} | {tn_test:>14d} | {fp_test:>14d} (FP Rate: {fpr_test*100:.2f}%)")
     print(f"{'Space Anomaly':<20} | {fn_test:>14d} | {tp_test:>14d} (Detection: {rec_test*100:.2f}%)")
