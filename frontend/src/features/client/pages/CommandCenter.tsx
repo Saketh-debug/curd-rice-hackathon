@@ -1,6 +1,7 @@
 import { Radar, ShieldBan, Wand2, Timer, AlertOctagon, AlertTriangle, Satellite, Radio } from 'lucide-react';
 import { useSystemHealth } from '../../../hooks/useSystemHealth';
 import { useLiveTraffic } from '../../../hooks/useLiveTraffic';
+import { AttackSimulatorTrigger } from '../../../components/AttackSimulator/AttackSimulatorTrigger';
 import clsx from 'clsx';
 
 const mapSpaceThreatName = (type: string) => {
@@ -23,7 +24,7 @@ export const CommandCenter = () => {
 
     // Compute dynamic threat breakdowns from real traffic stream
     const threatFlows = traffic.filter(p => p.type !== 'Normal Traffic');
-    const totalThreatCount = health?.threats_detected ?? (threatFlows.length > 0 ? threatFlows.length : 128);
+    const totalThreatCount = health?.threats_detected ?? threatFlows.length;
     const criticalThreats = threatFlows.length > 0 
         ? threatFlows.filter(p => (p.confidence ?? 0.8) >= 0.90).length
         : Math.round(totalThreatCount * 0.15);
@@ -53,10 +54,13 @@ export const CommandCenter = () => {
                         Threat Command Bridge
                     </h1>
                 </div>
-                <div className="flex items-center gap-2 font-mono text-xs">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span className="text-slate-300">DEFENSE STATUS: </span>
-                    <span className="text-emerald-400 font-bold">ALL LINKS SECURED</span>
+                <div className="flex items-center gap-4">
+                    <AttackSimulatorTrigger variant="header" />
+                    <div className="flex items-center gap-2 font-mono text-xs">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span className="text-slate-300">DEFENSE STATUS: </span>
+                        <span className="text-emerald-400 font-bold">ALL LINKS SECURED</span>
+                    </div>
                 </div>
             </div>
 

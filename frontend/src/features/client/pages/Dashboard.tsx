@@ -11,6 +11,7 @@ import {
     Cpu
 } from 'lucide-react';
 import { useSystemHealth } from '../../../hooks/useSystemHealth';
+import { AttackSimulatorTrigger } from '../../../components/AttackSimulator/AttackSimulatorTrigger';
 
 const Dashboard = () => {
     const { health } = useSystemHealth();
@@ -24,7 +25,7 @@ const Dashboard = () => {
     ];
 
     const sparklineData = health?.sparkline_24h || [30, 45, 55, 65, 50, 40, 75, 60, 45, 55, 35, 50];
-    const linkIntegrity = health?.link_integrity_score ?? 98.4;
+    const linkIntegrity = health?.link_integrity_score ?? 96.0;
 
     return (
         <div className="space-y-12">
@@ -71,6 +72,11 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* 1-Click Attack Simulator Trigger for Live Judging */}
+                <div className="pt-2 flex justify-center">
+                    <AttackSimulatorTrigger variant="prominent" />
+                </div>
             </section>
 
             {/* ================= GROUND STATIONS STRIP ================= */}
@@ -114,7 +120,7 @@ const Dashboard = () => {
                             </h3>
                             <div className="flex items-baseline mt-2 space-x-2">
                                 <span className="text-3xl sm:text-4xl font-bold font-orbitron text-white">
-                                    {health ? health.traffic_processed : '142,850'}
+                                    {health ? health.traffic_processed : '688'}
                                 </span>
                                 <span className="text-xs font-mono font-bold text-orange-400">
                                     Flows
@@ -170,7 +176,7 @@ const Dashboard = () => {
                             </h3>
                             <div className="flex items-baseline mt-2 space-x-2">
                                 <span className="text-3xl sm:text-4xl font-bold font-orbitron text-white">
-                                    {health ? health.automation_rate : '99.4%'}
+                                    {health ? health.automation_rate : '100.0%'}
                                 </span>
                             </div>
                             <p className="text-xs text-slate-400 mt-2 max-w-[160px] leading-relaxed">

@@ -196,6 +196,35 @@ def _build_explanation(action: str, risk_tier: str, pred_class: str,
     )
 
 
+# ── Threat Name Alias Normalization ────────────────────────────────────────
+
+def normalize_threat_class(pred_class: str) -> str:
+    """
+    Normalizes aerospace threat aliases, acronyms, and singular/plural variations
+    to canonical classes used for class prior scoring.
+    """
+    if not pred_class:
+        return "Normal Traffic"
+    pc = pred_class.strip().lower()
+    if any(k in pc for k in ["ddos", "saturation", "uplink"]):
+        return "DDoS"
+    if any(k in pc for k in ["dos", "flood", "gateway flood"]):
+        return "DoS"
+    if any(k in pc for k in ["brute", "bypass", "auth", "patator"]):
+        return "Brute Force"
+    if any(k in pc for k in ["port", "recon", "scan", "sle service"]):
+        return "Port Scanning"
+    if any(k in pc for k in ["bot", "hijack", "rtu"]):
+        return "Bots"
+    if any(k in pc for k in ["web", "exploit", "sql", "xss"]):
+        return "Web Attacks"
+    if any(k in pc for k in ["normal", "nominal", "housekeeping"]):
+        return "Normal Traffic"
+    if any(k in pc for k in ["anomaly"]):
+        return "anomaly"
+    return pred_class
+
+
 # ── Deterministic Laya Decision Engine ────────────────────────────────────
 
 def laya_decide(
@@ -249,7 +278,8 @@ def laya_decide(
         weighted_sum / max(total_weight, 1e-9), 0.0, 1.0
     ))
 
-    # 2. Class-level prior (some attack types are inherently higher-risk)
+    # 2. Canonical Threat Normalization (Upgrade 2) & Class-level Prior
+    canonical_class = normalize_threat_class(pred_class)
     CLASS_PRIORS: Dict[str, float] = {
         "DDoS":            0.98,
         "DoS":             0.90,
@@ -262,19 +292,19 @@ def laya_decide(
         "anomaly":         0.80,
         "nominal":         0.05,
     }
-    class_prior = CLASS_PRIORS.get(pred_class, 0.50)
+    class_prior = CLASS_PRIORS.get(canonical_class, 0.50)
 
-    # 3. Calibrated confidence: weighted geometric mean of feature score
-    #    and class prior — ensures neither alone dominates.
-    if pred_class in ("Normal Traffic", "nominal"):
+    # 3. Calibrated confidence (Upgrade 1):
+    #    Features meaningfully modulate confidence (35% weight) rather than a static 3%
+    if canonical_class in ("Normal Traffic", "nominal"):
         # For normal traffic, low confidence means "confident it is normal"
         calibrated_confidence = float(np.clip(
-            0.3 * feature_score + 0.7 * class_prior, 0.01, 0.35
+            0.70 * class_prior + 0.30 * feature_score, 0.01, 0.35
         ))
     else:
-        # For threats, class prior gives the grounded threat baseline, modulated by real features
+        # For threats, balanced blend of grounded class prior and real feature intensity
         calibrated_confidence = float(np.clip(
-            class_prior * (0.97 + 0.03 * feature_score), 0.50, 0.99
+            0.65 * class_prior + 0.35 * feature_score, 0.40, 0.99
         ))
 
     # 4. Risk tier
@@ -292,7 +322,7 @@ def laya_decide(
         action    = "MONITOR"
 
     # Override: Normal Traffic / nominal never auto-blocks
-    if pred_class in ("Normal Traffic", "nominal") and action == "AUTO_BLOCK":
+    if canonical_class in ("Normal Traffic", "nominal") and action == "AUTO_BLOCK":
         action    = "MONITOR"
         risk_tier = "LOW"
 
