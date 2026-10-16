@@ -53,29 +53,49 @@ def _fallback_generate(prompt):
     for i, word in enumerate(words):
         yield word + (" " if i < len(words) - 1 else "")
 
+def get_installed_ollama_model() -> str:
+    """Detects available model from local Ollama instance, defaulting to installed qwen3.5:4b."""
+    try:
+        r = requests.get("http://127.0.0.1:11434/api/tags", timeout=2.0)
+        if r.status_code == 200:
+            models = r.json().get("models", [])
+            if models:
+                names = [m.get("name", "") for m in models]
+                for n in names:
+                    if "qwen" in n.lower():
+                        return n
+                return names[0]
+    except Exception:
+        pass
+    return "qwen3.5:4b"
+
 def generate_response(prompt):
+    model = get_installed_ollama_model()
     try:
         response = requests.post(
-            "http://localhost:11434/api/generate",
+            "http://127.0.0.1:11434/api/generate",
             json={
-                "model": "llama3",
+                "model": model,
                 "prompt": prompt,
-                "temperature": 0.1,
+                "temperature": 0.2,
                 "stream": True
             },
             stream=True,
-            timeout=2.5
+            timeout=30.0
         )
         if response.status_code == 200:
+            has_tokens = False
             for line in response.iter_lines():
                 if line:
                     json_response = json.loads(line)
                     if "response" in json_response:
-                        yield json_response["response"]
-            return
-    except Exception:
-        # Fallback gracefully to SOC heuristic stream
-        pass
+                        token = json_response["response"]
+                        has_tokens = True
+                        yield token
+            if has_tokens:
+                return
+    except Exception as e:
+        print(f"Ollama generation fallback triggered: {e}")
 
     for chunk in _fallback_generate(prompt):
         yield chunk

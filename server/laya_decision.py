@@ -348,8 +348,8 @@ def laya_decide(
 
 def laya_enrich_via_ollama(
     decision: LayaDecision,
-    model: str = "llama3",
-    base_url: str = "http://localhost:11434",
+    model: str = "qwen3.5:4b",
+    base_url: str = "http://127.0.0.1:11434",
     timeout: float = 3.0,
 ) -> LayaDecision:
     """

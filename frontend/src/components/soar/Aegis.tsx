@@ -49,9 +49,10 @@ function Rich({ text }: { text: string }) {
 export function Aegis() {
   const { aegisOpen: open, setAegisOpen: setOpen } = useUI();
   const [max, setMax] = useState(false);
-  const [msgs, setMsgs] = useState<Msg[]>([{ role: "ai", text: "AEGIS online. I'm your cyber copilot for the ISRO ground segment — ask anything or tap a quick query." }]);
+  const [msgs, setMsgs] = useState<Msg[]>([{ role: "ai", text: "AEGIS online (powered by local Ollama Qwen3.5:4B). I'm your aerospace cyber copilot for the ISRO ground segment — ask about threat telemetry, station posture, or policy thresholds." }]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [sessionId, setSessionId] = useState<number | null>(null);
   const scroller = useRef<HTMLDivElement>(null);
   const pending = useSim((s) => s.incidents.filter((i) => i.status === "PENDING").length);
   const [session] = useState(() => Math.floor(Math.random() * 9000 + 1000));
@@ -66,14 +67,46 @@ export function Aegis() {
     setInput("");
     setBusy(true);
     setMsgs((m) => [...m, { role: "user", text }, { role: "ai", text: "" }]);
-    await new Promise((r) => setTimeout(r, 450));
-    const full = answer(text);
-    for (let i = 0; i <= full.length; i += 4) {
-      await new Promise((r) => setTimeout(r, 12));
-      setMsgs((m) => [...m.slice(0, -1), { role: "ai", text: full.slice(0, i) }]);
+
+    try {
+      const response = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: text, session_id: sessionId }),
+      });
+
+      if (!response.body) throw new Error("No response stream");
+
+      const newSessionId = response.headers.get("X-Session-Id");
+      if (newSessionId) setSessionId(parseInt(newSessionId));
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let aiText = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        aiText += chunk;
+        setMsgs((m) => [...m.slice(0, -1), { role: "ai", text: aiText }]);
+      }
+
+      if (!aiText.trim()) {
+        const fallback = answer(text);
+        setMsgs((m) => [...m.slice(0, -1), { role: "ai", text: fallback }]);
+      }
+    } catch (err) {
+      console.warn("Aegis streaming fallback:", err);
+      const fallback = answer(text);
+      for (let i = 0; i <= fallback.length; i += 4) {
+        await new Promise((r) => setTimeout(r, 10));
+        setMsgs((m) => [...m.slice(0, -1), { role: "ai", text: fallback.slice(0, i) }]);
+      }
+      setMsgs((m) => [...m.slice(0, -1), { role: "ai", text: fallback }]);
+    } finally {
+      setBusy(false);
     }
-    setMsgs((m) => [...m.slice(0, -1), { role: "ai", text: full }]);
-    setBusy(false);
   };
 
   return (
@@ -92,8 +125,11 @@ export function Aegis() {
           <div className="flex items-center gap-3 border-b px-5 py-4">
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-signal/15 text-signal"><Bot className="h-4 w-4" /></span>
             <div className="min-w-0 flex-1">
-              <p className="truncate font-display text-sm">AEGIS Cyber Copilot</p>
-              <p className="flex items-center gap-1.5 truncate font-mono text-[10px] text-muted-foreground"><Dot pulse /> ISRO MOX link · session #{session}</p>
+              <div className="flex items-center gap-2">
+                <p className="truncate font-display text-sm">AEGIS Cyber Copilot</p>
+                <span className="rounded bg-signal/15 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-signal uppercase tracking-wider">Ollama Qwen3.5</span>
+              </div>
+              <p className="flex items-center gap-1.5 truncate font-mono text-[10px] text-muted-foreground"><Dot pulse tone="grove" /> Live RAG Telemetry · Session #{session}</p>
             </div>
             <button className="rounded-full p-2 text-muted-foreground hover:bg-accent hover:text-foreground" onClick={() => setMax((m) => !m)} aria-label={max ? "Minimize" : "Maximize"}>
               {max ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
