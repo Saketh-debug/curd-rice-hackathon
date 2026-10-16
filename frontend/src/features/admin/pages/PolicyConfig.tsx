@@ -52,32 +52,32 @@ export const PolicyConfig = () => {
     };
 
     return (
-        <div className="p-6 md:p-8 max-w-6xl mx-auto space-y-8 bg-[#050814] text-slate-100 font-sans min-h-screen">
+        <div className="space-y-10 max-w-5xl mx-auto font-sans">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-800/80 gap-3">
                 <div>
-                    <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-widest mb-1">
+                    <div className="flex items-center gap-2 text-orange-400 font-mono text-xs uppercase tracking-widest mb-1.5">
                         <Satellite className="w-4 h-4" />
-                        Online Contextual Bandit Tuning
+                        <span>Online Contextual Bandit Tuning</span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-bold font-orbitron text-white flex items-center gap-2">
-                        <Gavel className="text-cyan-400 w-6 h-6" />
-                        Adaptive Policy Governance & Decision Boundaries
+                    <h1 className="text-2xl sm:text-3xl font-bold font-orbitron text-white flex items-center gap-2.5">
+                        <Gavel className="text-orange-400 w-6 h-6" />
+                        <span>Adaptive Policy Governance & Decision Boundaries</span>
                     </h1>
                 </div>
 
                 <div className="flex items-center gap-3 font-mono text-xs">
-                    <span className="px-3 py-1 rounded-full bg-cyan-950/60 text-cyan-300 border border-cyan-800 font-bold">
+                    <span className="px-3.5 py-1.5 rounded-full bg-orange-950/60 text-orange-300 border border-orange-800 font-bold">
                         Learning Rate: η = 0.01
                     </span>
                 </div>
             </div>
 
             {/* Pass Window Mode Selector Banner */}
-            <div className="p-5 rounded-2xl bg-[#0a1022] border border-cyan-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="p-6 rounded-2xl bg-[#0a1022]/80 backdrop-blur-xl border border-orange-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
                 <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                        <Zap className="w-4 h-4 text-cyan-400" />
+                        <Zap className="w-4 h-4 text-orange-400" />
                         <h3 className="font-orbitron font-bold text-sm text-white">
                             Operational Mode: {passWindowMode ? '⚡ Active Pass Window Mode' : '🔒 Standby Air-Gap Mode'}
                         </h3>
@@ -91,7 +91,7 @@ export const PolicyConfig = () => {
 
                 <button
                     onClick={() => setPassWindowMode(!passWindowMode)}
-                    className="px-4 py-2 rounded-xl bg-[#0e1733] hover:bg-[#15234d] border border-cyan-500/40 text-cyan-300 font-mono text-xs font-bold transition-all shrink-0 cursor-pointer"
+                    className="px-4 py-2 rounded-xl bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/40 text-orange-300 font-mono text-xs font-bold transition-all shrink-0 cursor-pointer shadow-sm"
                 >
                     Switch to {passWindowMode ? 'Standby Mode' : 'Pass Window Mode'}
                 </button>
@@ -99,13 +99,13 @@ export const PolicyConfig = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* AI Thresholds */}
-                <div className="bg-[#0a1022] rounded-2xl border border-slate-800 p-6 shadow-sm">
+                <div className="bg-[#0a1022]/80 backdrop-blur-xl rounded-2xl border border-slate-800/80 p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
                         <div>
                             <h2 className="text-base font-bold font-orbitron text-white">Class-Specific Decision Boundaries</h2>
                             <p className="text-xs text-slate-400 font-mono mt-0.5">Dynamically updated via SGDClassifier feedback loop</p>
                         </div>
-                        <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded text-[10px] font-bold border border-emerald-500/20 font-mono">
+                        <span className="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-400 rounded-full text-[10px] font-bold border border-emerald-500/20 font-mono">
                             WARM-START
                         </span>
                     </div>
@@ -115,14 +115,14 @@ export const PolicyConfig = () => {
                             <div key={cls} className="relative">
                                 <div className="flex justify-between mb-1.5">
                                     <label className="font-bold text-slate-200">{mapSpaceThreatName(cls)}</label>
-                                    <span className={`font-bold ${val > 0.8 ? 'text-emerald-400' : val < 0.3 ? 'text-red-400' : 'text-cyan-400'}`}>
+                                    <span className={`font-bold ${val > 0.8 ? 'text-emerald-400' : val < 0.3 ? 'text-red-400' : 'text-orange-400'}`}>
                                         {Math.round(val * 100)}%
                                     </span>
                                 </div>
 
                                 <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
                                     <div
-                                        className={`h-full transition-all duration-500 ease-out ${val > 0.8 ? 'bg-emerald-400' : val < 0.3 ? 'bg-red-400' : 'bg-cyan-400'}`}
+                                        className={`h-full transition-all duration-500 ease-out ${val > 0.8 ? 'bg-emerald-400' : val < 0.3 ? 'bg-red-400' : 'bg-gradient-to-r from-orange-500 to-amber-400'}`}
                                         style={{ width: `${val * 100}%` }}
                                     />
                                 </div>
@@ -155,29 +155,29 @@ export const PolicyConfig = () => {
 
                 {/* Doctrine Explanations */}
                 <div className="space-y-6">
-                    <div className="bg-[#0a1022] rounded-2xl border border-slate-800 p-6 text-xs font-mono space-y-4">
+                    <div className="bg-[#0a1022]/80 backdrop-blur-xl rounded-2xl border border-slate-800/80 p-6 text-xs font-mono space-y-4 shadow-sm">
                         <h3 className="font-orbitron font-bold text-sm text-white">How Threshold Adaptation Works</h3>
                         <p className="text-slate-400 font-sans leading-relaxed">
-                            When an ISTRAC mission controller flags a record as a <span className="text-orange-300 font-mono">False Alarm</span>, the contextual bandit adjusts its SGD learning rate to raise the auto-block probability cutoff for that threat class.
+                            When an ISTRAC mission controller flags a record as a <span className="text-orange-300 font-mono font-bold">False Alarm</span>, the contextual bandit adjusts its SGD learning rate to raise the auto-block probability cutoff for that threat class.
                         </p>
                         <p className="text-slate-400 font-sans leading-relaxed">
                             This guarantees that subsequent borderline flows are routed to the human investigation queue rather than abruptly cutting live spacecraft telemetry links.
                         </p>
                     </div>
 
-                    <div className="bg-[#0a1022] border border-cyan-500/20 rounded-2xl p-6 text-xs font-mono space-y-3">
-                        <div className="text-cyan-400 font-bold font-orbitron">Ground Interface Protocols Regulated</div>
+                    <div className="bg-[#0a1022]/80 backdrop-blur-xl border border-orange-500/20 rounded-2xl p-6 text-xs font-mono space-y-3.5 shadow-sm">
+                        <div className="text-orange-400 font-bold font-orbitron">Ground Interface Protocols Regulated</div>
                         <ul className="space-y-2 text-slate-400 font-sans">
                             <li className="flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
                                 <strong>CCSDS COP-1:</strong> Frame sequence counter boundary verification.
                             </li>
                             <li className="flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
                                 <strong>SLE Service:</strong> Space Link Extension over TCP/IP ports 5100-5102.
                             </li>
                             <li className="flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
                                 <strong>TT&C S-Band/X-Band:</strong> Transceiver rate-limiting thresholds.
                             </li>
                         </ul>

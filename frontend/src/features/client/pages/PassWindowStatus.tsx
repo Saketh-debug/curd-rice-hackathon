@@ -3,15 +3,11 @@ import {
     Satellite,
     Radio,
     Clock,
-    ShieldCheck,
     AlertTriangle,
-    Wifi,
     CheckCircle2,
-    Compass,
     Signal,
     Globe,
     Database,
-    Cpu,
     RefreshCw
 } from 'lucide-react';
 import { apiClient } from '../../../api/client';
@@ -193,15 +189,15 @@ export const PassWindowStatus = () => {
     const activePass = passes.find(p => p.status === 'ACTIVE') || passes[0];
 
     return (
-        <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8 bg-[#050814] text-slate-100 min-h-screen">
+        <div className="space-y-10">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
                 <div>
-                    <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-widest mb-1">
+                    <div className="flex items-center gap-2 text-orange-400 font-mono text-xs uppercase tracking-widest mb-1.5">
                         <Satellite className="w-4 h-4" />
-                        ISTRAC / IDSN Mission Schedule • ESA OPS-SAT Space Data
+                        <span>ISTRAC / IDSN Mission Schedule • ESA OPS-SAT Space Data</span>
                     </div>
-                    <h1 className="text-3xl font-bold font-orbitron text-white">
+                    <h1 className="text-2xl sm:text-3xl font-bold font-orbitron text-white">
                         Orbital Pass Windows & TT&C Link Defense
                     </h1>
                     <p className="text-slate-400 text-sm mt-1">
@@ -213,12 +209,12 @@ export const PassWindowStatus = () => {
                     <button
                         onClick={fetchTelemetryPasses}
                         disabled={isLoading}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0e1733] hover:bg-[#15244d] border border-cyan-500/30 text-cyan-300 font-mono text-xs transition-all"
+                        className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0e1733] hover:bg-[#15244d] border border-orange-500/30 text-orange-300 font-mono text-xs transition-all"
                     >
                         <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
                         Sync Real Dataset
                     </button>
-                    <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold">
+                    <span className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold shadow-[0_0_15px_rgba(16,185,129,0.1)]">
                         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                         PASS WINDOW DEFENSE: ACTIVE
                     </span>
@@ -226,24 +222,24 @@ export const PassWindowStatus = () => {
             </div>
 
             {/* Active Contact Banner */}
-            <div className="relative rounded-2xl bg-gradient-to-r from-[#0c1836] via-[#0e224d] to-[#0a142e] border border-cyan-500/40 p-6 md:p-8 overflow-hidden shadow-[0_0_40px_rgba(0,212,255,0.15)]">
-                <div className="absolute -right-10 -bottom-10 w-64 h-64 opacity-10 text-cyan-400 pointer-events-none">
+            <div className="relative rounded-2xl bg-[#0a1022]/80 backdrop-blur-xl border border-orange-500/30 p-6 md:p-8 overflow-hidden shadow-[0_4px_35px_rgba(249,115,22,0.08)]">
+                <div className="absolute -right-10 -bottom-10 w-64 h-64 opacity-5 text-orange-400 pointer-events-none">
                     <Radio className="w-full h-full" />
                 </div>
 
                 <div className="grid md:grid-cols-12 gap-6 items-center relative z-10">
-                    <div className="md:col-span-8 space-y-4">
-                        <div className="flex flex-wrap items-center gap-2">
-                            <span className="px-2.5 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/40 font-mono text-xs font-bold animate-pulse">
+                    <div className="md:col-span-8 space-y-5">
+                        <div className="flex flex-wrap items-center gap-2.5">
+                            <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 border border-red-500/40 font-mono text-xs font-bold animate-pulse">
                                 ● LIVE CONTACT IN PROGRESS
                             </span>
-                            <span className="px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 font-mono text-xs">
+                            <span className="px-3 py-1 rounded-full bg-orange-500/10 text-orange-300 border border-orange-500/30 font-mono text-xs">
                                 Spacecraft: {activePass.satellite} ({activePass.orbit})
                             </span>
-                            <span className="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-mono text-xs">
+                            <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-300 font-mono text-xs">
                                 Ground Station: {activePass.station}
                             </span>
-                            <span className="px-2.5 py-1 rounded bg-purple-950/40 text-purple-300 border border-purple-700/50 font-mono text-xs">
+                            <span className="px-3 py-1 rounded-full bg-purple-950/40 text-purple-300 border border-purple-700/50 font-mono text-xs">
                                 Dataset Channel: {activePass.channel}
                             </span>
                         </div>
@@ -251,39 +247,39 @@ export const PassWindowStatus = () => {
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
                             <div>
                                 <div className="text-xs text-slate-400 font-mono">Carrier Status</div>
-                                <div className="text-emerald-400 font-bold font-mono text-base flex items-center gap-1.5">
+                                <div className="text-emerald-400 font-bold font-mono text-base flex items-center gap-1.5 mt-0.5">
                                     <Signal className="w-4 h-4" /> LOCKED
                                 </div>
                             </div>
                             <div>
                                 <div className="text-xs text-slate-400 font-mono">Uplink Frequency</div>
-                                <div className="text-white font-bold font-mono text-base">{activePass.frequency}</div>
+                                <div className="text-white font-bold font-mono text-base mt-0.5">{activePass.frequency}</div>
                             </div>
                             <div>
                                 <div className="text-xs text-slate-400 font-mono">Max Elevation</div>
-                                <div className="text-cyan-400 font-bold font-mono text-base">{activePass.maxElevation} (Zenith)</div>
+                                <div className="text-orange-400 font-bold font-mono text-base mt-0.5">{activePass.maxElevation} (Zenith)</div>
                             </div>
                             <div>
                                 <div className="text-xs text-slate-400 font-mono">Channel Anomaly Rate</div>
-                                <div className={`font-bold font-mono text-base ${activePass.anomaly_rate > 0.25 ? 'text-red-400' : activePass.anomaly_rate > 0.15 ? 'text-orange-400' : 'text-emerald-400'}`}>
+                                <div className={`font-bold font-mono text-base mt-0.5 ${activePass.anomaly_rate > 0.25 ? 'text-red-400' : activePass.anomaly_rate > 0.15 ? 'text-orange-400' : 'text-emerald-400'}`}>
                                     {(activePass.anomaly_rate * 100).toFixed(1)}% ({activePass.anomalous_segments}/{activePass.total_segments})
                                 </div>
                             </div>
                         </div>
 
                         {/* Real Telemetry Signal Metrics from dataset */}
-                        <div className="p-3 rounded-xl bg-black/30 border border-cyan-500/20 text-xs font-mono text-slate-300 flex flex-wrap gap-4">
+                        <div className="p-3.5 rounded-xl bg-black/40 border border-orange-500/20 text-xs font-mono text-slate-300 flex flex-wrap gap-4">
                             <div>
                                 <span className="text-slate-400">Signal Length:</span>{' '}
-                                <span className="text-cyan-300 font-bold">{activePass.mean_signal_length} samples</span>
+                                <span className="text-orange-300 font-bold">{activePass.mean_signal_length} samples</span>
                             </div>
                             <div>
                                 <span className="text-slate-400">Telemetry Variance:</span>{' '}
-                                <span className="text-cyan-300 font-bold">{activePass.signal_variance.toExponential(2)}</span>
+                                <span className="text-orange-300 font-bold">{activePass.signal_variance.toExponential(2)}</span>
                             </div>
                             <div>
                                 <span className="text-slate-400">Mean Wave Peaks:</span>{' '}
-                                <span className="text-cyan-300 font-bold">{activePass.peak_count} peaks</span>
+                                <span className="text-orange-300 font-bold">{activePass.peak_count} peaks</span>
                             </div>
                             <div>
                                 <span className="text-slate-400">Laya Defense Decision:</span>{' '}
@@ -294,14 +290,14 @@ export const PassWindowStatus = () => {
                         </div>
                     </div>
 
-                    <div className="md:col-span-4 flex flex-col items-center justify-center p-4 bg-black/40 rounded-xl border border-cyan-500/30">
-                        <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                    <div className="md:col-span-4 flex flex-col items-center justify-center p-6 bg-slate-900/70 backdrop-blur-md rounded-2xl border border-orange-500/30 shadow-inner">
+                        <div className="text-xs font-mono text-orange-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
                             <Clock className="w-3.5 h-3.5" /> Remaining Pass Time
                         </div>
-                        <div className="text-4xl sm:text-5xl font-mono font-bold text-white tracking-wider text-cyan-300">
+                        <div className="text-4xl sm:text-5xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500 tracking-wider">
                             {formatTimer(secondsLeft)}
                         </div>
-                        <div className="text-[11px] text-slate-400 font-mono mt-2 text-center">
+                        <div className="text-[11px] text-slate-400 font-mono mt-2.5 text-center">
                             AOS: {activePass.aos} • LOS in {Math.ceil(secondsLeft / 60)} mins
                         </div>
                     </div>
@@ -309,26 +305,26 @@ export const PassWindowStatus = () => {
             </div>
 
             {/* Critical Doctrine Callout */}
-            <div className="p-4 rounded-xl bg-orange-950/20 border border-orange-500/30 flex items-start gap-4">
+            <div className="p-5 rounded-2xl bg-orange-950/20 backdrop-blur-md border border-orange-500/30 flex items-start gap-4">
                 <AlertTriangle className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
-                <div className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                <div className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
                     <strong className="text-orange-400 font-semibold font-orbitron">
                         Operational Pass Window Policy:
                     </strong>{' '}
                     During satellite orbital passes (typically 8–12 minutes), False Positive blocks directly cause{' '}
-                    <span className="text-orange-300 font-mono">Loss of Signal (LOS)</span> and can abort scheduled telecommand burns.
+                    <span className="text-orange-300 font-mono font-bold">Loss of Signal (LOS)</span> and can abort scheduled telecommand burns.
                     The online adaptive bandit dynamically relaxes auto-block probability thresholds to preserve link continuity.
                 </div>
             </div>
 
             {/* Ground Station Tracking Windows with Real ESA OPS-SAT Data */}
-            <div className="rounded-xl border border-slate-800 bg-[#0a1022] overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-[#0e1733]">
+            <div className="rounded-2xl border border-slate-800/80 bg-[#0a1022]/80 backdrop-blur-xl overflow-hidden shadow-sm">
+                <div className="px-6 py-4 border-b border-slate-800/80 flex items-center justify-between bg-[#0e1733]/50">
                     <h3 className="font-orbitron font-bold text-base text-white flex items-center gap-2">
-                        <Globe className="w-4 h-4 text-cyan-400" />
-                        Scheduled Ground Station Tracking Windows & Real Sensor Provenance
+                        <Globe className="w-4 h-4 text-orange-400" />
+                        <span>Scheduled Ground Station Tracking Windows & Real Sensor Provenance</span>
                     </h3>
-                    <span className="text-xs font-mono text-cyan-400 flex items-center gap-1.5">
+                    <span className="text-xs font-mono text-orange-400 flex items-center gap-1.5">
                         <Database className="w-3.5 h-3.5" />
                         ESA OPS-SAT (2,123 Segments Evaluated)
                     </span>
@@ -336,33 +332,33 @@ export const PassWindowStatus = () => {
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm font-sans">
-                        <thead className="bg-[#080d1e] text-[11px] font-mono uppercase text-slate-400 tracking-wider border-b border-slate-800">
+                        <thead className="bg-[#080d1e]/90 text-[11px] font-mono uppercase text-slate-400 tracking-wider border-b border-slate-800">
                             <tr>
-                                <th className="px-6 py-3">Spacecraft</th>
-                                <th className="px-6 py-3">Channel</th>
-                                <th className="px-6 py-3">Orbit Regime</th>
-                                <th className="px-6 py-3">Ground Station</th>
-                                <th className="px-6 py-3">Window (AOS - LOS)</th>
-                                <th className="px-6 py-3">Segments</th>
-                                <th className="px-6 py-3">Anomaly Rate</th>
-                                <th className="px-6 py-3">Pass Status</th>
-                                <th className="px-6 py-3 text-right">Defense Status</th>
+                                <th className="px-6 py-3.5">Spacecraft</th>
+                                <th className="px-6 py-3.5">Channel</th>
+                                <th className="px-6 py-3.5">Orbit Regime</th>
+                                <th className="px-6 py-3.5">Ground Station</th>
+                                <th className="px-6 py-3.5">Window (AOS - LOS)</th>
+                                <th className="px-6 py-3.5">Segments</th>
+                                <th className="px-6 py-3.5">Anomaly Rate</th>
+                                <th className="px-6 py-3.5">Pass Status</th>
+                                <th className="px-6 py-3.5 text-right">Defense Status</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-800/60 font-mono text-xs">
                             {passes.map((pass, i) => (
-                                <tr key={i} className="hover:bg-cyan-950/20 transition-colors">
+                                <tr key={i} className="hover:bg-slate-800/40 transition-colors">
                                     <td className="px-6 py-4 font-bold text-white flex items-center gap-2">
-                                        <Satellite className="w-4 h-4 text-cyan-400" />
+                                        <Satellite className="w-4 h-4 text-orange-400" />
                                         {pass.satellite}
                                     </td>
-                                    <td className="px-6 py-4 text-cyan-300 font-bold">
-                                        <span className="px-2 py-0.5 rounded bg-black/40 border border-cyan-800 text-[10px]">
+                                    <td className="px-6 py-4 text-orange-300 font-bold">
+                                        <span className="px-2 py-0.5 rounded bg-black/40 border border-orange-500/30 text-[10px]">
                                             {pass.channel}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-slate-300">{pass.orbit}</td>
-                                    <td className="px-6 py-4 text-slate-300">{pass.station}</td>
+                                    <td className="px-6 py-4 text-orange-300 font-semibold">{pass.station}</td>
                                     <td className="px-6 py-4 text-slate-400">
                                         {pass.aos} → {pass.los}
                                     </td>
@@ -376,7 +372,7 @@ export const PassWindowStatus = () => {
                                     </td>
                                     <td className="px-6 py-4">
                                         <span
-                                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                                                 pass.status === 'ACTIVE'
                                                     ? 'bg-red-500/20 text-red-400 border border-red-500/30'
                                                     : 'bg-slate-800 text-slate-400 border border-slate-700'
@@ -387,7 +383,7 @@ export const PassWindowStatus = () => {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <span
-                                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${
+                                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                                                 pass.threatStatus === 'SECURE'
                                                     ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
                                                     : pass.threatStatus === 'MONITOR'
