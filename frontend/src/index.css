@@ -293,7 +293,21 @@
 .star-border::before { content: ""; position: absolute; inset: -150%; z-index: -2;
   background: conic-gradient(from 0deg, transparent 0 70%, oklch(0.85 0.15 85) 85%, transparent 100%);
   animation: spin-slow 4s linear infinite; }
-.star-border::after { content: ""; position: absolute; inset: 1px; z-index: -1; border-radius: inherit; background: var(--glass-strong); }
+.star-border::after { 
+  content: ""; 
+  position: absolute; 
+  inset: var(--star-border-thickness, 1px); 
+  z-index: -1; 
+  border-radius: inherit; 
+  background: var(--star-border-surface, var(--glass-strong)); 
+  transition: background-color 0.15s ease;
+}
+.star-border:hover:not(:disabled)::after {
+  background: var(--star-border-hover, var(--star-border-surface, var(--glass-strong)));
+}
+.star-border:active:not(:disabled)::after {
+  background: var(--star-border-active, #ff9933) !important;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .aurora span, .ticker, .pulse-ring, .star-border::before { animation: none; }

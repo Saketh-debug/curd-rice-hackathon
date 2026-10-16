@@ -13,12 +13,17 @@ import json
 
 router = APIRouter(prefix="/api/ai", tags=["AI Assistant"])
 
-# Initialize RAG (lazy load or global)
-try:
-    rag = RAGSystem([], None) 
-except Exception as e:
-    print(f"Warning: RAG System failed to initialize: {e}")
-    rag = None
+# Lazy-load RAG when needed
+_rag_instance = None
+def get_rag():
+    global _rag_instance
+    if _rag_instance is None:
+        try:
+            _rag_instance = RAGSystem([], None)
+        except Exception as e:
+            print(f"Warning: RAG System failed to initialize: {e}")
+            _rag_instance = False
+    return _rag_instance if _rag_instance is not False else None
 
 class ChatRequest(BaseModel):
     query: str
@@ -90,83 +95,71 @@ def chat(req: ChatRequest, db: Session = Depends(get_db)):
     db.add(user_msg)
     db.commit()
 
+    # Pre-fetch database context while the db session is open
+    query_lower = req.query.lower()
+    recent_incidents = None
+    if "latest incidents" in query_lower or "recent attacks" in query_lower:
+        recent_incidents = db.query(ManualReview).order_by(ManualReview.timestamp.desc()).limit(5).all()
+
+    db_context = get_db_context(db, req.query)
+
     # Generator function for streaming
     def stream_logic():
         full_response = ""
         
         # Simple Logic Keywords
-        query_lower = req.query.lower()
-        if "latest incidents" in query_lower or "recent attacks" in query_lower:
-            incidents = db.query(ManualReview).order_by(ManualReview.timestamp.desc()).limit(5).all()
-            if not incidents:
-               chunk = "I couldn't find any recent incidents."
+        if recent_incidents is not None:
+            if not recent_incidents:
+               chunk = "No pending or recent incidents recorded in the ground telemetry queue."
                full_response += chunk
                yield chunk
             else:
-                chunk = "Here are the latest incidents:\n"
+                chunk = "### Latest Incident Telemetry:\n\n"
                 full_response += chunk
                 yield chunk
-                for i in incidents:
-                    line = f"- **{i.type}** from {i.country} (IP: {i.src_ip}) - Confidence: {int(i.confidence*100)}%\n"
+                for i in recent_incidents:
+                    line = f"- **{i.type}** from {i.country} (`{i.src_ip}`) - Confidence: {int(i.confidence*100)}% ({i.status})\n"
                     full_response += line
                     yield line
 
         elif "block" in query_lower and "ip" in query_lower:
-             chunk = "To block an IP, please use the 'Review Now' button on the dashboard. I can't execute blocks directly yet, but I can help you analyze the threat."
+             chunk = "To block an IP, use the **Review Now** action in the SecOps queue or Policy Configuration. Autonomous containment automatically auto-blocks threats above the 95% threshold."
              full_response += chunk
              yield chunk
 
         else:
-            # LLM Streaming
+            # LLM Streaming with Qwen 3.5:4B
             try:
-                db_context = get_db_context(db, req.query)
-                full_prompt = f"""
-                You are a Security Operations Center (SOC) Master AI Assistant.
-                {db_context}
-                User Query: {req.query}
-                Instructions:
-                - Analyze the provided System Data to answer the query.
-                - If specific country data is shown, use it.
-                - If the user asks about "logs from [Country]", look at the [Specific Query Match] section.
-                - BE EXTREMELY CONCISE. Provide short, direct answers.
-                - Do not use conversational filler (e.g., "Based on the data...", "Here is the information...").
-                - Limit your response to 1-2 sentences unless a list is required.
-                """
-                
+                full_prompt = f"""You are AEGIS, the Autonomous Cyber Copilot and SOC Master AI Assistant for the SOAR aerospace ground segment operations center.
+{db_context}
+
+User Query: {req.query}
+
+Instructions:
+- If the user asks about live threat posture, statistics, incidents, or network logs, use the telemetry context above to provide factual metrics and status.
+- If the user asks technical questions (e.g. SLE protocol exploit, TT&C link saturation, satellite communication security, DDoS, injection, port scanning, security policies), provide an expert, concise aerospace cybersecurity answer.
+- Always structure responses cleanly in valid Markdown with standard headers (e.g. '### Threat Posture Summary'), bold labels, and bullet points ('- **Active Incidents**: ...').
+- Never output space-separated hashes like '# # #' (always use '###').
+- Keep responses direct, informative, and professional. Limit to 2-4 bullet points or concise paragraphs. Avoid conversational filler.
+"""
                 for chunk in generate_response(full_prompt):
                     full_response += chunk
                     yield chunk
                     
             except Exception as e:
-                err = f"Error: {str(e)}"
+                err = f"Error generating response: {str(e)}"
                 full_response += err
                 yield err
 
-        # 4. Save AI Response (After stream completes)
-        # We need a new DB session because the generator runs outside the request context scope optionally
-        # But here we are yielding, so we can likely use the same DB if careful, or just create a new one.
-        # For simplicity in this generator, we'll try to re-use or just accept we might need to fix DB closure.
-        # Ideally, we save *after* the yield loop.
-        
+        # Save AI Response using fresh session
         try:
-            # Re-acquire session for saving final message if needed, or use the existing one if still valid.
-            # Ideally depends sets up session closing. 
-            # We'll assume db is still open or we open a new one.
             from database import SessionLocal
-            db_save = SessionLocal()
-            ai_msg = ChatMessage(session_id=session_id, role="ai", content=full_response)
-            db_save.add(ai_msg)
-            db_save.commit()
-            db_save.close()
+            with SessionLocal() as db_save:
+                ai_msg = ChatMessage(session_id=session_id, role="ai", content=full_response)
+                db_save.add(ai_msg)
+                db_save.commit()
         except Exception as e:
             print(f"Failed to save chat history: {e}")
-
-        # Send Session ID as a final meta-event or just assume client has it?
-        # A common customized SSE pattern is JSON chunks. 
-        # But to keep it simple text stream, we won't send JSON unless we wrap everything.
-        # Let's send a special delimiter or just rely on client knowing the session ID if it was passed.
-        # If new session, we need to tell client.
-        # Hack: Send session ID in a header? FastAPI StreamingResponse supports headers.
 
     return StreamingResponse(stream_logic(), media_type="text/plain", headers={"X-Session-Id": str(session_id)})
 

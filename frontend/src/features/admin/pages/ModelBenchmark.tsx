@@ -134,6 +134,7 @@ export const ModelBenchmark = () => {
     const [selectedCell, setSelectedCell] = useState<{ r: number; c: number; val: number } | null>(null);
     const [flowCellDetail, setFlowCellDetail] = useState<FlowCellSampleResponse | null>(null);
     const [isLoadingFlowDetail, setIsLoadingFlowDetail] = useState(false);
+    const [isExported, setIsExported] = useState(false);
 
     // XAI Telemetry Drill-Down States
     const [activeDrilldownCell, setActiveDrilldownCell] = useState<'TP' | 'FP' | 'FN' | 'TN' | null>('FP');
@@ -254,6 +255,8 @@ export const ModelBenchmark = () => {
     };
 
     const exportEvaluationReport = () => {
+        setIsExported(true);
+        setTimeout(() => setIsExported(false), 2500);
         const reportData = {
             timestamp: new Date().toISOString(),
             dataset_evaluation: metrics,
@@ -290,22 +293,29 @@ export const ModelBenchmark = () => {
                     <StarBorder
                         onClick={() => fetchMetrics(true)}
                         disabled={isRecomputing || isLoading}
-backgroundColor="#f1efea"
+                        backgroundColor={isRecomputing ? "#ff9933" : "#f1efea"}
                         textColor="#161513"
                         borderColor="transparent"
-                        className="px-3.5 py-1.5 font-sans font-medium text-xs tracking-tight flex items-center gap-2 cursor-pointer shadow-xs hover:bg-[#e2dfd7] disabled:opacity-50"
+                        hoverBackgroundColor={isRecomputing ? "#ff9933" : "#e4e1d8"}
+                        activeBackgroundColor="#ff9933"
+                        className="px-3.5 py-1.5 font-sans font-semibold text-xs tracking-tight flex items-center gap-2 cursor-pointer shadow-xs hover:bg-[#e4e1d8] active:bg-signal active:text-[#161513] disabled:opacity-80"
                     >
-                        <RefreshCw className={`w-3.5 h-3.5 ${isRecomputing ? 'animate-spin' : ''}`} />
-                        {isRecomputing ? 'Recomputing...' : 'Re-Evaluate on Test Split'}
+                        <RefreshCw className={`w-3.5 h-3.5 text-[#161513] ${isRecomputing ? 'animate-spin' : ''}`} />
+                        <span className="font-semibold text-[#161513]">{isRecomputing ? 'Recomputing...' : 'Re-Evaluate on Test Split'}</span>
                     </StarBorder>
                     <StarBorder
                         onClick={exportEvaluationReport}
-backgroundColor="#1f1e1b"
-                        textColor="#f1efea"
-                        borderColor="#34322d"
-                        className="px-3.5 py-1.5 font-sans font-medium text-xs tracking-tight flex items-center gap-2 cursor-pointer hover:bg-muted"
+                        backgroundColor={isExported ? "#8abf84" : "#1f1e1b"}
+                        textColor={isExported ? "#161513" : "#f1efea"}
+                        borderColor={isExported ? "#8abf84" : "#34322d"}
+                        hoverBackgroundColor={isExported ? "#78af72" : "#292825"}
+                        activeBackgroundColor="#ff9933"
+                        className="px-3.5 py-1.5 font-sans font-medium text-xs tracking-tight flex items-center gap-2 cursor-pointer hover:bg-muted active:bg-signal active:text-[#161513]"
                     >
-                        <Download className="w-3.5 h-3.5" /> Export Report JSON
+                        {isExported ? <Check className="w-3.5 h-3.5 text-[#161513]" /> : <Download className="w-3.5 h-3.5 text-[#f1efea]" />}
+                        <span className={isExported ? "text-[#161513] font-semibold" : "text-[#f1efea]"}>
+                            {isExported ? 'Report Exported ✓' : 'Export Report JSON'}
+                        </span>
                     </StarBorder>
                 </div>
             </div>
@@ -484,10 +494,10 @@ backgroundColor="#1f1e1b"
                 <button
                     onClick={() => setActiveTab('real_dataset')}
                     className={clsx(
-                        'pb-2.5 font-medium transition-all border-b-2 flex items-center gap-2 px-3.5 py-2 cursor-pointer',
+                        'pb-2.5 font-medium transition-all border-b-2 flex items-center gap-2 px-3.5 py-2 cursor-pointer active:scale-95',
                         activeTab === 'real_dataset'
-                            ? 'text-foreground border-foreground bg-muted/60 rounded-t-lg'
-                            : 'text-muted-foreground border-transparent hover:text-foreground'
+                            ? 'text-signal border-signal bg-signal/15 rounded-t-lg font-semibold shadow-xs'
+                            : 'text-muted-foreground border-transparent hover:text-foreground hover:bg-muted/40 active:bg-signal/20'
                     )}
                 >
                     <Satellite className="w-4 h-4 text-signal" />
@@ -496,10 +506,10 @@ backgroundColor="#1f1e1b"
                 <button
                     onClick={() => setActiveTab('flow_matrix')}
                     className={clsx(
-                        'pb-2.5 font-medium transition-all border-b-2 flex items-center gap-2 px-3.5 py-2 cursor-pointer',
+                        'pb-2.5 font-medium transition-all border-b-2 flex items-center gap-2 px-3.5 py-2 cursor-pointer active:scale-95',
                         activeTab === 'flow_matrix'
-                            ? 'text-foreground border-foreground bg-muted/60 rounded-t-lg'
-                            : 'text-muted-foreground border-transparent hover:text-foreground'
+                            ? 'text-signal border-signal bg-signal/15 rounded-t-lg font-semibold shadow-xs'
+                            : 'text-muted-foreground border-transparent hover:text-foreground hover:bg-muted/40 active:bg-signal/20'
                     )}
                 >
                     <Layers className="w-4 h-4 text-signal" />
@@ -628,10 +638,10 @@ backgroundColor="#1f1e1b"
                                             key={c}
                                             onClick={() => fetchTelemetrySamples(c)}
                                             className={clsx(
-                                                'px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer',
+                                                'px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer active:scale-95',
                                                 activeDrilldownCell === c
-                                                    ? 'bg-signal text-signal-foreground shadow-sm'
-                                                    : 'text-muted-foreground hover:text-foreground'
+                                                    ? 'bg-signal text-[#161513] shadow-sm scale-105'
+                                                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/60 active:bg-signal/40'
                                             )}
                                         >
                                             {c}
@@ -679,10 +689,10 @@ backgroundColor="#1f1e1b"
                                             key={ch}
                                             onClick={() => setChannelFilter(ch)}
                                             className={clsx(
-                                                'px-2.5 py-1 rounded-lg border text-xs font-bold transition-all cursor-pointer',
+                                                'px-2.5 py-1 rounded-lg border text-xs font-bold transition-all cursor-pointer active:scale-95',
                                                 channelFilter === ch
-                                                    ? 'bg-signal/15 border-signal text-signal'
-                                                    : 'bg-background border-border text-muted-foreground hover:text-foreground'
+                                                    ? 'bg-signal text-[#161513] border-signal shadow-sm'
+                                                    : 'bg-background border-border text-muted-foreground hover:text-foreground hover:border-signal/50 active:bg-signal/20'
                                             )}
                                         >
                                             {ch} ({ch === 'ALL' ? telemetrySamplesData.samples.length : telemetrySamplesData.samples.filter(s => s.channel === ch).length})

@@ -1,7 +1,6 @@
 import React from 'react';
 import { FloatingNav } from '@/components/soar/FloatingNav';
 import { AttackSimulatorModal } from '@/components/soar/AttackSimulator';
-import { Aegis } from '@/components/soar/Aegis';
 import { Toaster } from '@/components/ui/sonner';
 
 export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
@@ -34,9 +33,8 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                 </div>
             </footer>
 
-            {/* Modals & AI Agents */}
+            {/* Modals */}
             <AttackSimulatorModal />
-            <Aegis />
             <Toaster position="top-center" offset={88} />
         </div>
     );

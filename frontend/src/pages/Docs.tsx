@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { PageIntro, Chapter } from "@/components/soar/ui";
 import { FloatingNav } from "@/components/soar/FloatingNav";
 import { AttackSimulatorModal } from "@/components/soar/AttackSimulator";
-import { Aegis } from "@/components/soar/Aegis";
 import { Toaster } from "@/components/ui/sonner";
 
 const SECTIONS = [
@@ -37,7 +36,6 @@ export default function Docs() {
         </div>
       </main>
       <AttackSimulatorModal />
-      <Aegis />
       <Toaster position="top-center" offset={88} />
     </div>
   );

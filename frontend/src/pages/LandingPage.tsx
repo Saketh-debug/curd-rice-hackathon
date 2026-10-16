@@ -21,7 +21,6 @@ import type { SatellitePassData, SatelliteMissionTelemetry } from "../types";
 import StarBorder from "../components/StarBorder";
 import { FloatingNav } from "@/components/soar/FloatingNav";
 import { AttackSimulatorModal } from "@/components/soar/AttackSimulator";
-import { Aegis } from "@/components/soar/Aegis";
 import { Toaster } from "@/components/ui/sonner";
 import { Dot } from "@/components/soar/ui";
 
@@ -329,9 +328,8 @@ const LandingPage = () => {
                 </div>
             </footer>
 
-            {/* Modals & AI Copilot */}
+            {/* Modals */}
             <AttackSimulatorModal />
-            <Aegis />
             <Toaster position="top-center" offset={88} />
         </div>
     );

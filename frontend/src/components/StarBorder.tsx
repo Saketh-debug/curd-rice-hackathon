@@ -21,6 +21,9 @@ export interface StarBorderProps extends React.ButtonHTMLAttributes<HTMLButtonEl
   backgroundColor?: string;
   textColor?: string;
   borderColor?: string;
+  hoverBackgroundColor?: string;
+  activeBackgroundColor?: string;
+  activeTextColor?: string;
   to?: string;
   [key: string]: any;
 }
@@ -44,10 +47,20 @@ export const StarBorder: React.FC<StarBorderProps> = ({
   backgroundColor,
   textColor,
   borderColor,
+  hoverBackgroundColor,
+  activeBackgroundColor,
+  activeTextColor,
   style,
   children,
   ...rest
 }) => {
+  const isLight = backgroundColor === '#f1efea' || textColor === '#161513';
+  const defaultHoverBg = isLight ? '#e4e1d8' : '#292825';
+  const computedHoverBg = hoverBackgroundColor ?? defaultHoverBg;
+  const resolvedTextColor = textColor ?? (isLight ? '#161513' : '#f1efea');
+  const computedActiveBg = activeBackgroundColor ?? '#ff9933';
+  const computedActiveText = activeTextColor ?? '#161513';
+
   return (
     <Component
       className={`star-border${className ? ` ${className}` : ''}`}
@@ -55,8 +68,13 @@ export const StarBorder: React.FC<StarBorderProps> = ({
         '--star-border-radius': `${radius}px`,
         '--star-border-thickness': `${thickness}px`,
         '--star-border-surface': backgroundColor ?? '#1f1e1b',
-        '--star-border-text': textColor ?? '#f1efea',
+        '--star-border-hover': computedHoverBg,
+        '--star-border-active': computedActiveBg,
+        '--star-border-active-text': computedActiveText,
+        '--star-border-active-track': computedActiveBg,
+        '--star-border-text': resolvedTextColor,
         '--star-border-track': borderColor ?? '#34322d',
+        color: resolvedTextColor,
         ...style
       }}
       {...(Component === 'button' && (rest as any).type === undefined ? { type: 'button' } : null)}

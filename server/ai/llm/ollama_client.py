@@ -53,29 +53,67 @@ def _fallback_generate(prompt):
     for i, word in enumerate(words):
         yield word + (" " if i < len(words) - 1 else "")
 
+PREFERRED_MODEL = "qwen3.5:4b"
+
+def get_installed_ollama_model() -> str:
+    """Detects available model from local Ollama instance, prioritizing qwen3.5:4b."""
+    try:
+        r = requests.get("http://127.0.0.1:11434/api/tags", timeout=2.0)
+        if r.status_code == 200:
+            models = r.json().get("models", [])
+            if models:
+                names = [m.get("name", "") for m in models]
+                # 1. Exact match for qwen3.5:4b
+                for n in names:
+                    if n == PREFERRED_MODEL or n.startswith(f"{PREFERRED_MODEL}:") or n == "qwen3.5:4b":
+                        return n
+                # 2. Any 4b qwen model
+                for n in names:
+                    if "4b" in n.lower() and "qwen" in n.lower():
+                        return n
+                # 3. Any qwen model
+                for n in names:
+                    if "qwen" in n.lower():
+                        return n
+                return names[0]
+    except Exception:
+        pass
+    return PREFERRED_MODEL
+
 def generate_response(prompt):
+    model = get_installed_ollama_model()
     try:
         response = requests.post(
-            "http://localhost:11434/api/generate",
+            "http://127.0.0.1:11434/api/generate",
             json={
-                "model": "llama3",
+                "model": model,
                 "prompt": prompt,
-                "temperature": 0.1,
-                "stream": True
+                "stream": True,
+                "think": False,
+                "options": {
+                    "num_predict": 512,
+                    "temperature": 0.2
+                }
             },
             stream=True,
-            timeout=2.5
+            timeout=30.0
         )
         if response.status_code == 200:
+            has_tokens = False
             for line in response.iter_lines():
                 if line:
                     json_response = json.loads(line)
-                    if "response" in json_response:
-                        yield json_response["response"]
-            return
-    except Exception:
-        # Fallback gracefully to SOC heuristic stream
-        pass
+                    if "error" in json_response:
+                        print(f"Ollama error during generation: {json_response['error']}")
+                        break
+                    token = json_response.get("response", "")
+                    if token:
+                        has_tokens = True
+                        yield token
+            if has_tokens:
+                return
+    except Exception as e:
+        print(f"Ollama generation fallback triggered: {e}")
 
     for chunk in _fallback_generate(prompt):
         yield chunk

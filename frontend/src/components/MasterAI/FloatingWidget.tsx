@@ -38,16 +38,22 @@ export const FloatingWidget = () => {
         }]);
 
         try {
-            const response = await fetch('http://localhost:8000/api/ai/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    query: queryText,
-                    session_id: sessionId
-                }),
-            });
+            let response: Response;
+            try {
+                response = await fetch('/api/ai/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: queryText, session_id: sessionId }),
+                });
+                if (!response.ok) throw new Error(`Proxy status: ${response.status}`);
+            } catch {
+                response = await fetch('http://localhost:8000/api/ai/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: queryText, session_id: sessionId }),
+                });
+                if (!response.ok) throw new Error(`Direct backend status: ${response.status}`);
+            }
 
             if (!response.body) throw new Error('No response body');
 
