@@ -7,9 +7,13 @@ import {
     Terminal,
     Satellite
 } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import PortalNavbar, { type NavItem } from '../../../components/Navbar/PortalNavbar';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+    const location = useLocation();
+    const isMapPage = location.pathname.startsWith('/client/map');
+
     const navItems: NavItem[] = [
         { icon: LayoutDashboard, label: 'Mission Overview', path: '/client/dashboard' },
         { icon: Shield, label: 'Threat Bridge', path: '/client/command-center' },
@@ -18,6 +22,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         { icon: Terminal, label: 'Telemetry Stream', path: '/client/events' },
         { icon: Zap, label: 'Defense Automation', path: '/client/automation' },
     ];
+
+    if (isMapPage) {
+        return (
+            <div className="w-screen h-screen overflow-hidden bg-[#030712] text-slate-100 font-sans selection:bg-orange-500 selection:text-black relative flex flex-col">
+                {/* Floating Glassmorphic Navbar */}
+                <PortalNavbar portalType="client" navItems={navItems} isFloating />
+
+                {/* Edge-to-Edge Main Map View */}
+                <main className="w-full h-full flex-1 overflow-hidden relative">
+                    {children}
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-[#050814] text-slate-100 font-sans selection:bg-orange-500 selection:text-black flex flex-col">

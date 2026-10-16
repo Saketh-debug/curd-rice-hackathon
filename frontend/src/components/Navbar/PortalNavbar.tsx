@@ -22,9 +22,10 @@ export interface NavItem {
 interface PortalNavbarProps {
     portalType: 'client' | 'admin';
     navItems: NavItem[];
+    isFloating?: boolean;
 }
 
-export const PortalNavbar: React.FC<PortalNavbarProps> = ({ portalType, navItems }) => {
+export const PortalNavbar: React.FC<PortalNavbarProps> = ({ portalType, navItems, isFloating = false }) => {
     const location = useLocation();
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -33,9 +34,19 @@ export const PortalNavbar: React.FC<PortalNavbarProps> = ({ portalType, navItems
     const switchLabel = isAdmin ? 'MOC Operations' : 'Sec Console';
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <header className={clsx(
+            "z-[1500] transition-all duration-300",
+            isFloating
+                ? "fixed top-3 left-3 right-3 sm:left-6 sm:right-6 max-w-7xl mx-auto pointer-events-auto"
+                : "fixed top-0 left-0 right-0"
+        )}>
             {/* Glassmorphic Container */}
-            <div className="bg-[#050814]/80 backdrop-blur-xl border-b border-orange-500/15 shadow-[0_4px_30px_rgba(249,115,22,0.05)]">
+            <div className={clsx(
+                "transition-all duration-300",
+                isFloating
+                    ? "bg-[#080d1e]/85 backdrop-blur-2xl border border-orange-500/30 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.7)]"
+                    : "bg-[#050814]/80 backdrop-blur-xl border-b border-orange-500/15 shadow-[0_4px_30px_rgba(249,115,22,0.05)]"
+            )}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
                     
                     {/* Brand / Logo */}
