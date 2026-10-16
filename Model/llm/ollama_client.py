@@ -5,12 +5,14 @@ def generate_response(prompt):
         response = requests.post(
             "http://localhost:11434/api/generate",
             json={
-                "model": "llama3",
+                "model": "qwen3.5:4b",
                 "prompt": prompt,
                 "temperature": 0.1,
-                "stream": False
+                "stream": False,
+                "think": False,
+                "options": {"num_predict": 256, "temperature": 0.2}
             },
-            timeout=2.5
+            timeout=15.0
         )
         if response.status_code == 200:
             return response.json().get("response", "No response generated.")

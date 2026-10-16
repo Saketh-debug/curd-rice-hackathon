@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SOAR Platform Analysis & ISRO Aerospace Defense Extension Report</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       --bg-dark: #070b14;
@@ -41,13 +44,15 @@
       line-height: 1.6;
       padding-bottom: 60px;
       overflow-x: hidden;
-      background-image: 
+      background-image:
         radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
         radial-gradient(circle at 85% 30%, rgba(6, 182, 212, 0.08) 0%, transparent 45%),
         radial-gradient(circle at 50% 80%, rgba(99, 102, 241, 0.06) 0%, transparent 50%);
     }
 
-    code, pre, .font-mono {
+    code,
+    pre,
+    .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
 
@@ -209,7 +214,8 @@
       border: 1px solid transparent;
     }
 
-    .toc-item:hover, .toc-item.active {
+    .toc-item:hover,
+    .toc-item.active {
       color: #ffffff;
       background: var(--bg-surface-elevated);
       border-color: var(--border-subtle);
@@ -374,7 +380,8 @@
       font-size: 0.82rem;
     }
 
-    ul, ol {
+    ul,
+    ol {
       padding-left: 24px;
       margin-bottom: 18px;
       color: var(--text-muted);
@@ -456,12 +463,21 @@
     }
 
     @media (max-width: 768px) {
-      h1 { font-size: 1.85rem; }
-      .grid-2col { grid-template-columns: 1fr; }
-      .table-container { font-size: 0.85rem; }
+      h1 {
+        font-size: 1.85rem;
+      }
+
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+
+      .table-container {
+        font-size: 0.85rem;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- HEADER -->
@@ -475,7 +491,8 @@
       </div>
       <h1>SOAR Platform Comprehensive Analysis & ISRO Aerospace Defense Extension</h1>
       <p class="subtitle">
-        An exhaustive technical evaluation of the current SOAR repository against the offline network-flow problem statement, accompanied by an actionable blueprint to pivot the system for an ISRO scientist evaluator.
+        An exhaustive technical evaluation of the current SOAR repository against the offline network-flow problem
+        statement, accompanied by an actionable blueprint to pivot the system for an ISRO scientist evaluator.
       </p>
     </div>
   </header>
@@ -486,23 +503,31 @@
     <div class="highlights-grid">
       <div class="highlight-card">
         <div class="highlight-title">Current Compliance</div>
-        <div class="highlight-value" style="color: #38bdf8;">~80% <span style="font-size: 1rem; color: #94a3b8;">Direct Match</span></div>
-        <div class="highlight-desc">Pre-trained ML, offline simulator, triage SOAR, and dual-portal dashboard already operational.</div>
+        <div class="highlight-value" style="color: #38bdf8;">~80% <span style="font-size: 1rem; color: #94a3b8;">Direct
+            Match</span></div>
+        <div class="highlight-desc">Pre-trained ML, offline simulator, triage SOAR, and dual-portal dashboard already
+          operational.</div>
       </div>
       <div class="highlight-card">
         <div class="highlight-title">Feature Engineering</div>
-        <div class="highlight-value" style="color: #a7f3d0;">52 <span style="font-size: 1rem; color: #94a3b8;">Flow Features</span></div>
-        <div class="highlight-desc">Standard CIC-IDS network flow attributes mapped to multiclass XGBoost detection.</div>
+        <div class="highlight-value" style="color: #a7f3d0;">52 <span style="font-size: 1rem; color: #94a3b8;">Flow
+            Features</span></div>
+        <div class="highlight-desc">Standard CIC-IDS network flow attributes mapped to multiclass XGBoost detection.
+        </div>
       </div>
       <div class="highlight-card">
         <div class="highlight-title">Operational Air-Gap</div>
-        <div class="highlight-value" style="color: #34d399;">100% <span style="font-size: 1rem; color: #94a3b8;">Safe Offline</span></div>
-        <div class="highlight-desc">Zero live packet capture or network probing; operates strictly on offline records.</div>
+        <div class="highlight-value" style="color: #34d399;">100% <span style="font-size: 1rem; color: #94a3b8;">Safe
+            Offline</span></div>
+        <div class="highlight-desc">Zero live packet capture or network probing; operates strictly on offline records.
+        </div>
       </div>
       <div class="highlight-card">
         <div class="highlight-title">ISRO Domain Alignment</div>
-        <div class="highlight-value" style="color: #fb923c;">High <span style="font-size: 1rem; color: #94a3b8;">Pivots to TT&C</span></div>
-        <div class="highlight-desc">Directly applicable to ISTRAC ground stations, pass windows, and SLE over TCP/IP telemetry.</div>
+        <div class="highlight-value" style="color: #fb923c;">High <span style="font-size: 1rem; color: #94a3b8;">Pivots
+            to TT&C</span></div>
+        <div class="highlight-desc">Directly applicable to ISTRAC ground stations, pass windows, and SLE over TCP/IP
+          telemetry.</div>
       </div>
     </div>
 
@@ -527,13 +552,21 @@
       <div class="panel panel-accent-cyan">
         <div class="panel-header">Can the current project satisfy the problem statement?</div>
         <p>
-          <strong>Yes, absolutely.</strong> The current repository is already fundamentally designed as an offline defensive security orchestration and machine-learning intrusion detection platform. It uses <strong>offline, labelled network-flow records</strong> (specifically the 52 features from standard datasets like CIC-IDS2017) to classify threats and automate response.
+          <strong>Yes, absolutely.</strong> The current repository is already fundamentally designed as an offline
+          defensive security orchestration and machine-learning intrusion detection platform. It uses <strong>offline,
+            labelled network-flow records</strong> (specifically the 52 features from standard datasets like
+          CIC-IDS2017) to classify threats and automate response.
         </p>
         <p>
-          The architecture matches the defensive criteria: it does <strong>not scan or connect to real networks</strong>, provides an <strong>offline interactive alert dashboard</strong>, implements <strong>adaptive threshold tuning</strong> via an online contextual bandit, and triages alerts into Auto-Block, Manual Review, and Monitor modes to mitigate analyst fatigue.
+          The architecture matches the defensive criteria: it does <strong>not scan or connect to real
+            networks</strong>, provides an <strong>offline interactive alert dashboard</strong>, implements
+          <strong>adaptive threshold tuning</strong> via an online contextual bandit, and triages alerts into
+          Auto-Block, Manual Review, and Monitor modes to mitigate analyst fatigue.
         </p>
         <p>
-          To reach <strong>100% formal compliance</strong>, two primary additions are required: generating a formal <strong>Confusion Matrix (Precision, Recall, F1, False-Positive Rate)</strong> on a held-out test split, and providing <strong>feature-level explainability (SHAP / top feature contributions)</strong> for flagged flows.
+          To reach <strong>100% formal compliance</strong>, two primary additions are required: generating a formal
+          <strong>Confusion Matrix (Precision, Recall, F1, False-Positive Rate)</strong> on a held-out test split, and
+          providing <strong>feature-level explainability (SHAP / top feature contributions)</strong> for flagged flows.
         </p>
       </div>
     </section>
@@ -545,66 +578,74 @@
         <h2>Complete Codebase & System Architecture</h2>
       </div>
 
-      <p>The codebase is partitioned into three decoupled tiers: the Machine Learning & Decision Core, the FastAPI Backend with PostgreSQL persistence, and a modern React Vite frontend.</p>
+      <p>The codebase is partitioned into three decoupled tiers: the Machine Learning & Decision Core, the FastAPI
+        Backend with PostgreSQL persistence, and a modern React Vite frontend.</p>
 
       <div class="diagram-box">
-┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                 CURRENT SYSTEM TOPOLOGY                                     │
-└─────────────────────────────────────────────────────────────────────────────────────────────┘
-  [ Offline Flow Records: large_simulation_log.csv ] (52 Features: Flow Duration, IAT, Bytes/s)
-                               │
-                               ▼
-  [ Background Simulation Thread: server/main.py ]
-          │
-          ├──► [ Primary ML Classifier: multiclass_xgboost_ids.joblib ]
-          │      └─ Predicts: Bots | Brute Force | DDoS | DoS | Normal | Port Scan | Web Attack
-          │
-          ├──► [ Online Adaptive Bandit: bandit_model.joblib (SGDClassifier) ]
-          │      └─ Dynamically calculates per-class probability thresholds for Auto-Block vs Review
-          │
-          └──► [ Storage Engine: PostgreSQL via SQLAlchemy (server/database.py) ]
-                 └─ Tables: traffic_logs, auto_blocked, manual_review, chat_sessions
-                               │
-                               ▼
-  [ High-Performance FastAPI Layer: server/main.py & server/ai/router.py ]
-          │
-          ├──► REST Endpoints: /api/traffic/live, /api/threats/map, /api/thresholds, /api/reports
-          └──► SOC Master AI Assistant: Ollama LLM + RAG System (server/ai/Rag/)
-                               │
-                               ▼
-  [ React + TypeScript + Tailwind Dual-Portal Frontend ]
-          │
-          ├──► PORTAL A (Client / SOC Operations Monitoring)
-          │      ├─ Dashboard.tsx (KPIs, Automation Ratio, System Health)
-          │      ├─ CommandCenter.tsx (Active Threats, MTTR, Severity Breakdown)
-          │      ├─ ThreatMap.tsx (Leaflet Animated Curved Attack Trajectories)
-          │      ├─ EventStream.tsx (Live Flow Telemetry Stream)
-          │      └─ AutomationStatus.tsx (Decision Velocity & False Positive Tracking)
-          │
-          └──► PORTAL B (Admin / SOC Analyst Governance)
-                 ├─ AdminDashboard.tsx (Pending Priority Queue)
-                 ├─ IncidentReview.tsx (Context, Burst Score, Block vs False-Positive Override)
-                 ├─ PolicyConfig.tsx (Visual Decision Boundaries & Reset Controls)
-                 ├─ DecisionTimeline.tsx (Full Audit Trail of AI & Analyst Actions)
-                 └─ ComplianceReports.tsx (Audit Export & Neutralization Metrics)
+        ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+        │ CURRENT SYSTEM TOPOLOGY │
+        └─────────────────────────────────────────────────────────────────────────────────────────────┘
+        [ Offline Flow Records: large_simulation_log.csv ] (52 Features: Flow Duration, IAT, Bytes/s)
+        │
+        ▼
+        [ Background Simulation Thread: server/main.py ]
+        │
+        ├──► [ Primary ML Classifier: multiclass_xgboost_ids.joblib ]
+        │ └─ Predicts: Bots | Brute Force | DDoS | DoS | Normal | Port Scan | Web Attack
+        │
+        ├──► [ Online Adaptive Bandit: bandit_model.joblib (SGDClassifier) ]
+        │ └─ Dynamically calculates per-class probability thresholds for Auto-Block vs Review
+        │
+        └──► [ Storage Engine: PostgreSQL via SQLAlchemy (server/database.py) ]
+        └─ Tables: traffic_logs, auto_blocked, manual_review, chat_sessions
+        │
+        ▼
+        [ High-Performance FastAPI Layer: server/main.py & server/ai/router.py ]
+        │
+        ├──► REST Endpoints: /api/traffic/live, /api/threats/map, /api/thresholds, /api/reports
+        └──► SOC Master AI Assistant: Ollama LLM + RAG System (server/ai/Rag/)
+        │
+        ▼
+        [ React + TypeScript + Tailwind Dual-Portal Frontend ]
+        │
+        ├──► PORTAL A (Client / SOC Operations Monitoring)
+        │ ├─ Dashboard.tsx (KPIs, Automation Ratio, System Health)
+        │ ├─ CommandCenter.tsx (Active Threats, MTTR, Severity Breakdown)
+        │ ├─ ThreatMap.tsx (Leaflet Animated Curved Attack Trajectories)
+        │ ├─ EventStream.tsx (Live Flow Telemetry Stream)
+        │ └─ AutomationStatus.tsx (Decision Velocity & False Positive Tracking)
+        │
+        └──► PORTAL B (Admin / SOC Analyst Governance)
+        ├─ AdminDashboard.tsx (Pending Priority Queue)
+        ├─ IncidentReview.tsx (Context, Burst Score, Block vs False-Positive Override)
+        ├─ PolicyConfig.tsx (Visual Decision Boundaries & Reset Controls)
+        ├─ DecisionTimeline.tsx (Full Audit Trail of AI & Analyst Actions)
+        └─ ComplianceReports.tsx (Audit Export & Neutralization Metrics)
       </div>
 
       <div class="grid-2col">
         <div class="panel">
           <div class="panel-header">Core Machine Learning Assets</div>
           <ul>
-            <li><span class="file-tag">server/multiclass_xgboost_ids.joblib</span>: 4.4 MB pre-trained XGBoost model trained on 52 network flow features.</li>
-            <li><span class="file-tag">server/feature_columns.json</span>: Canonical 52-feature schema (Destination Port, Flow Packets/s, Flow Bytes/s, Fwd/Bwd IAT, TCP Flags).</li>
-            <li><span class="file-tag">server/bandit_model.joblib</span>: Online SGDClassifier with warm-start learning rate that adjusts decision thresholds when analysts flag false positives.</li>
-            <li><span class="file-tag">server/label_encoder.joblib</span>: Maps integer labels back to text attack categories.</li>
+            <li><span class="file-tag">server/multiclass_xgboost_ids.joblib</span>: 4.4 MB pre-trained XGBoost model
+              trained on 52 network flow features.</li>
+            <li><span class="file-tag">server/feature_columns.json</span>: Canonical 52-feature schema (Destination
+              Port, Flow Packets/s, Flow Bytes/s, Fwd/Bwd IAT, TCP Flags).</li>
+            <li><span class="file-tag">server/bandit_model.joblib</span>: Online SGDClassifier with warm-start learning
+              rate that adjusts decision thresholds when analysts flag false positives.</li>
+            <li><span class="file-tag">server/label_encoder.joblib</span>: Maps integer labels back to text attack
+              categories.</li>
           </ul>
         </div>
         <div class="panel">
           <div class="panel-header">GenAI & RAG Assistant</div>
           <ul>
-            <li><span class="file-tag">server/ai/router.py</span>: RAG router querying historical traffic logs and manual review queues with streaming SSE responses.</li>
-            <li><span class="file-tag">Model/Rag/preprocess.py</span>: Serializes raw flow attributes into readable natural language network telemetry reports.</li>
-            <li><span class="file-tag">frontend/src/components/MasterAI/FloatingWidget.tsx</span>: Analyst chat widget for asking questions regarding recent attacks and IP reputations.</li>
+            <li><span class="file-tag">server/ai/router.py</span>: RAG router querying historical traffic logs and
+              manual review queues with streaming SSE responses.</li>
+            <li><span class="file-tag">Model/Rag/preprocess.py</span>: Serializes raw flow attributes into readable
+              natural language network telemetry reports.</li>
+            <li><span class="file-tag">frontend/src/components/MasterAI/FloatingWidget.tsx</span>: Analyst chat widget
+              for asking questions regarding recent attacks and IP reputations.</li>
           </ul>
         </div>
       </div>
@@ -629,51 +670,67 @@
           </thead>
           <tbody>
             <tr>
-              <td><strong>Offline, Labelled Network-Flow Analysis</strong><br><small>Safe analysis of flow records</small></td>
+              <td><strong>Offline, Labelled Network-Flow Analysis</strong><br><small>Safe analysis of flow
+                  records</small></td>
               <td><span class="status-pill status-pass">Satisfied</span></td>
-              <td>Evaluates 52 standard flow metrics matching CIC-IDS2017 using a multiclass XGBoost model across 7 distinct classes.</td>
+              <td>Evaluates 52 standard flow metrics matching CIC-IDS2017 using a multiclass XGBoost model across 7
+                distinct classes.</td>
               <td>Ensure the test dataset CSV is provided in the workspace.</td>
             </tr>
             <tr>
-              <td><strong>No Live Network Scanning / Connecting</strong><br><small>Safe isolated environment</small></td>
+              <td><strong>No Live Network Scanning / Connecting</strong><br><small>Safe isolated environment</small>
+              </td>
               <td><span class="status-pill status-pass">Satisfied</span></td>
-              <td>The simulation thread in <span class="file-tag">server/main.py</span> reads pre-recorded CSV rows. No raw socket sniffing or active network probes exist.</td>
+              <td>The simulation thread in <span class="file-tag">server/main.py</span> reads pre-recorded CSV rows. No
+                raw socket sniffing or active network probes exist.</td>
               <td>None. 100% compliant.</td>
             </tr>
             <tr>
-              <td><strong>Mitigate Analyst Fatigue / False Alarms</strong><br><small>Prevent overwhelming analysts</small></td>
+              <td><strong>Mitigate Analyst Fatigue / False Alarms</strong><br><small>Prevent overwhelming
+                  analysts</small></td>
               <td><span class="status-pill status-pass">Satisfied</span></td>
-              <td>Triages into Auto-Block (for high confidence >95%), Manual Review queue (borderline), and Monitor (normal). Reduces manual workload.</td>
+              <td>Triages into Auto-Block (for high confidence >95%), Manual Review queue (borderline), and Monitor
+                (normal). Reduces manual workload.</td>
               <td>None. Core architectural feature.</td>
             </tr>
             <tr>
               <td><strong>Offline Alert Dashboard / Tool</strong><br><small>Minimum required deliverable</small></td>
               <td><span class="status-pill status-pass">Satisfied</span></td>
-              <td>Extensive dual-portal React application with Event Stream, Threat Map, Priority Queue, and Decision Timeline.</td>
+              <td>Extensive dual-portal React application with Event Stream, Threat Map, Priority Queue, and Decision
+                Timeline.</td>
               <td>Exceeds minimum criteria.</td>
             </tr>
             <tr>
-              <td><strong>Show Why Each Record Was Flagged</strong><br><small>Explainability / Interpretability</small></td>
+              <td><strong>Show Why Each Record Was Flagged</strong><br><small>Explainability / Interpretability</small>
+              </td>
               <td><span class="status-pill status-partial">Partially Satisfied</span></td>
-              <td><span class="file-tag">IncidentReview.tsx</span> displays confidence, attack type, traffic volume, burst score, failed attempts, and destination port.</td>
-              <td>Compute and display specific tree feature attributions (e.g., top flow features or SHAP values from XGBoost).</td>
+              <td><span class="file-tag">IncidentReview.tsx</span> displays confidence, attack type, traffic volume,
+                burst score, failed attempts, and destination port.</td>
+              <td>Compute and display specific tree feature attributions (e.g., top flow features or SHAP values from
+                XGBoost).</td>
             </tr>
             <tr>
-              <td><strong>Evaluation on Held-Out Labelled Data</strong><br><small>Confusion matrix, Precision/Recall, F1, FPR</small></td>
+              <td><strong>Evaluation on Held-Out Labelled Data</strong><br><small>Confusion matrix, Precision/Recall,
+                  F1, FPR</small></td>
               <td><span class="status-pill status-missing">Missing</span></td>
-              <td>The UI currently displays hardcoded mock metrics ("0.04% FPR"). No script computes the actual matrix on held-out test splits.</td>
-              <td><strong>Must Add:</strong> Evaluation script generating confusion matrix and classification metrics on test data.</td>
+              <td>The UI currently displays hardcoded mock metrics ("0.04% FPR"). No script computes the actual matrix
+                on held-out test splits.</td>
+              <td><strong>Must Add:</strong> Evaluation script generating confusion matrix and classification metrics on
+                test data.</td>
             </tr>
             <tr>
               <td><strong>Threshold Tuning</strong><br><small>Optional feature</small></td>
               <td><span class="status-pill status-pass">Satisfied</span></td>
-              <td>Implemented in <span class="file-tag">PolicyConfig.tsx</span> and <span class="file-tag">tune_learning.py</span>. Reinforcement learning bandit updates decision boundaries dynamically.</td>
+              <td>Implemented in <span class="file-tag">PolicyConfig.tsx</span> and <span
+                  class="file-tag">tune_learning.py</span>. Reinforcement learning bandit updates decision boundaries
+                dynamically.</td>
               <td>None. Fully functional.</td>
             </tr>
             <tr>
               <td><strong>Live Network Disclaimer</strong><br><small>Benchmark disclaimer notice</small></td>
               <td><span class="status-pill status-missing">Missing</span></td>
-              <td>Explicit text stating benchmark results do not guarantee live-network performance is not yet displayed.</td>
+              <td>Explicit text stating benchmark results do not guarantee live-network performance is not yet
+                displayed.</td>
               <td>Add the disclaimer banner to the dashboard footer and compliance reports.</td>
             </tr>
           </tbody>
@@ -693,7 +750,9 @@
         <div>
           <strong>Primary Missing Deliverable: Formal Model Evaluation</strong>
           <p style="margin: 4px 0 0 0; color: inherit;">
-            The problem statement explicitly specifies a <em>"confusion matrix with precision/recall, F1, or false-positive rate on held-out labelled data"</em> as a minimum outcome. The repository currently has the model artifact and frontend, but lacks the evaluation harness script.
+            The problem statement explicitly specifies a <em>"confusion matrix with precision/recall, F1, or
+              false-positive rate on held-out labelled data"</em> as a minimum outcome. The repository currently has the
+            model artifact and frontend, but lacks the evaluation harness script.
           </p>
         </div>
       </div>
@@ -701,7 +760,9 @@
       <div class="grid-2col">
         <div class="panel">
           <div class="panel-header">1. Evaluation Harness (<span class="file-tag">server/evaluate_model.py</span>)</div>
-          <p>Create a standalone evaluation script that loads <span class="file-tag">multiclass_xgboost_ids.joblib</span> and evaluates against a held-out test CSV partition:</p>
+          <p>Create a standalone evaluation script that loads <span
+              class="file-tag">multiclass_xgboost_ids.joblib</span> and evaluates against a held-out test CSV partition:
+          </p>
           <ul>
             <li>Generates 7x7 Multi-Class Confusion Matrix</li>
             <li>Calculates Per-Class and Weighted Precision, Recall, and F1-Scores</li>
@@ -711,10 +772,12 @@
         </div>
         <div class="panel">
           <div class="panel-header">2. Feature-Level Explainability (SHAP / Feature Attribution)</div>
-          <p>Enhance <span class="file-tag">IncidentReview.tsx</span> so that instead of only showing synthetic burst scores, it displays the actual model reasons:</p>
+          <p>Enhance <span class="file-tag">IncidentReview.tsx</span> so that instead of only showing synthetic burst
+            scores, it displays the actual model reasons:</p>
           <ul>
             <li>Extract XGBoost feature importances or compute SHAP values for the record</li>
-            <li>Highlight top 3 contributing flow attributes (e.g., <code>Flow Packets/s > 42,000</code>, <code>Fwd IAT Mean < 12ms</code>, <code>SYN Flag Count = 1</code>)</li>
+            <li>Highlight top 3 contributing flow attributes (e.g., <code>Flow Packets/s > 42,000</code>,
+              <code>Fwd IAT Mean < 12ms</code>, <code>SYN Flag Count = 1</code>)</li>
             <li>Directly satisfies the requirement: <em>"Show why each record was flagged"</em></li>
           </ul>
         </div>
@@ -731,14 +794,19 @@
       <div class="panel panel-accent-orange">
         <div class="panel-header">Why This Theme Resonates Deeply with an ISRO Evaluator</div>
         <p>
-          ISRO operates the <strong>ISTRAC (ISRO Telemetry, Tracking and Command Network)</strong> headquartered in Bengaluru, with mission complexes at MOX and deep space dishes at Byalalu (IDSN). During Low Earth Orbit (LEO) satellite passes, a ground station has an orbital pass window of only <strong>8 to 12 minutes</strong> to establish contact, downlink high-rate payload telemetry, and upload telecommands (TC).
+          ISRO operates the <strong>ISTRAC (ISRO Telemetry, Tracking and Command Network)</strong> headquartered in
+          Bengaluru, with mission complexes at MOX and deep space dishes at Byalalu (IDSN). During Low Earth Orbit (LEO)
+          satellite passes, a ground station has an orbital pass window of only <strong>8 to 12 minutes</strong> to
+          establish contact, downlink high-rate payload telemetry, and upload telecommands (TC).
         </p>
         <p>
           In space mission operations:
         </p>
         <ul>
-          <li><strong>A False Alarm is Catastrophic:</strong> An automated IDS that falsely flags and blocks a ground telemetry link during an 8-minute pass causes Loss of Signal (LOS) and can jeopardize an orbital burn.</li>
-          <li><strong>A Missed Intrusion is Fatal:</strong> An undetected command injection attack can result in unauthorized thruster firings or payload de-pointing.</li>
+          <li><strong>A False Alarm is Catastrophic:</strong> An automated IDS that falsely flags and blocks a ground
+            telemetry link during an 8-minute pass causes Loss of Signal (LOS) and can jeopardize an orbital burn.</li>
+          <li><strong>A Missed Intrusion is Fatal:</strong> An undetected command injection attack can result in
+            unauthorized thruster firings or payload de-pointing.</li>
         </ul>
       </div>
 
@@ -758,7 +826,8 @@
             <tr>
               <td><strong>DoS / DDoS</strong></td>
               <td><strong>TT&C Uplink Saturation / Contact Window Denial</strong></td>
-              <td>Flooding the ground transceiver gateway during an active satellite pass window, preventing command uplinks.</td>
+              <td>Flooding the ground transceiver gateway during an active satellite pass window, preventing command
+                uplinks.</td>
             </tr>
             <tr>
               <td><strong>Brute Force</strong></td>
@@ -768,7 +837,8 @@
             <tr>
               <td><strong>Port Scanning</strong></td>
               <td><strong>Space Link Extension (SLE) Service Reconnaissance</strong></td>
-              <td>Probing open ground station SLE ports (standard TCP ports 5100/5101) or antenna motor control APIs.</td>
+              <td>Probing open ground station SLE ports (standard TCP ports 5100/5101) or antenna motor control APIs.
+              </td>
             </tr>
             <tr>
               <td><strong>Bots</strong></td>
@@ -778,19 +848,23 @@
             <tr>
               <td><strong>Web Attacks</strong></td>
               <td><strong>Bhuvan / EOS Mission Data Distribution Exploit</strong></td>
-              <td>SQL/Injection attacks targeting earth observation satellite imagery portals and public API gateways.</td>
+              <td>SQL/Injection attacks targeting earth observation satellite imagery portals and public API gateways.
+              </td>
             </tr>
             <tr>
               <td><strong>Normal Traffic</strong></td>
               <td><strong>Routine Spacecraft Housekeeping Telemetry</strong></td>
-              <td>Standard telemetry frames (battery voltage, reaction wheel RPM, star tracker attitude coordinates).</td>
+              <td>Standard telemetry frames (battery voltage, reaction wheel RPM, star tracker attitude coordinates).
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <h3>Ground Station Geolocation Mapping</h3>
-      <p>Replace generic country coordinates in <span class="file-tag">server/main.py</span> and <span class="file-tag">ThreatMap.tsx</span> with <strong>real ISRO Ground and Deep Space Tracking Stations</strong>:</p>
+      <p>Replace generic country coordinates in <span class="file-tag">server/main.py</span> and <span
+          class="file-tag">ThreatMap.tsx</span> with <strong>real ISRO Ground and Deep Space Tracking Stations</strong>:
+      </p>
 
       <div class="table-container">
         <table>
@@ -857,13 +931,16 @@
         <h2>Real-World Space & Defence Datasets</h2>
       </div>
 
-      <p>When presenting to the ISRO scientist, cite these genuine, publicly documented space cybersecurity datasets to substantiate your model training and validation:</p>
+      <p>When presenting to the ISRO scientist, cite these genuine, publicly documented space cybersecurity datasets to
+        substantiate your model training and validation:</p>
 
       <div class="grid-2col">
         <div class="panel panel-accent-cyan">
           <div class="panel-header">1. Hack-A-Sat (US Space Force & AFRL)</div>
           <p>
-            Published challenge packet captures (PCAP) and network traces capturing satellite TT&C communications, COSMOS mission control protocols, CCSDS telemetry injection, and radio-link exploits from the world's premier space CTF.
+            Published challenge packet captures (PCAP) and network traces capturing satellite TT&C communications,
+            COSMOS mission control protocols, CCSDS telemetry injection, and radio-link exploits from the world's
+            premier space CTF.
           </p>
           <span class="file-tag">Source: hackasat.com / Open Archive</span>
         </div>
@@ -871,7 +948,9 @@
         <div class="panel panel-accent-orange">
           <div class="panel-header">2. ESA OPS-SAT Cyber Benchmark Dataset</div>
           <p>
-            European Space Agency (ESA) open operational nanosatellite laboratory. Contains real on-orbit telemetry, ground station interaction traces, and injected anomalous cyber operations executed against an active satellite flight computer.
+            European Space Agency (ESA) open operational nanosatellite laboratory. Contains real on-orbit telemetry,
+            ground station interaction traces, and injected anomalous cyber operations executed against an active
+            satellite flight computer.
           </p>
           <span class="file-tag">Source: European Space Operations Centre (ESOC)</span>
         </div>
@@ -879,7 +958,9 @@
         <div class="panel panel-accent-blue">
           <div class="panel-header">3. NASA SMAP & MSL Spacecraft Incident Datasets</div>
           <p>
-            NASA Jet Propulsion Laboratory (JPL) telemetry anomaly logs from the Soil Moisture Active Passive (SMAP) spacecraft and Mars Science Laboratory (MSL Curiosity Rover), featuring genuine multi-channel telemetry telemetry deviations.
+            NASA Jet Propulsion Laboratory (JPL) telemetry anomaly logs from the Soil Moisture Active Passive (SMAP)
+            spacecraft and Mars Science Laboratory (MSL Curiosity Rover), featuring genuine multi-channel telemetry
+            telemetry deviations.
           </p>
           <span class="file-tag">Source: NASA Expert Data Repository</span>
         </div>
@@ -887,7 +968,9 @@
         <div class="panel">
           <div class="panel-header">4. SatCom Network Flow & SLE Over IP Benchmarks</div>
           <p>
-            Standard network flow datasets (e.g. CIC-IDS, UNSW-NB15) partitioned to represent Ground Terminal IP Gateways (Space Link Extension / SLE over TCP/IP ports 5100-5102, DVB-S2 encapsulation, and Satellite Performance Enhancing Proxies).
+            Standard network flow datasets (e.g. CIC-IDS, UNSW-NB15) partitioned to represent Ground Terminal IP
+            Gateways (Space Link Extension / SLE over TCP/IP ports 5100-5102, DVB-S2 encapsulation, and Satellite
+            Performance Enhancing Proxies).
           </p>
           <span class="file-tag">Matches Current 52 Flow Features</span>
         </div>
@@ -906,23 +989,31 @@
         <ol>
           <li>
             <strong>Add the Evaluation Script (<span class="file-tag">server/evaluate_model.py</span>):</strong>
-            <p>Load <span class="file-tag">multiclass_xgboost_ids.joblib</span> on a held-out test split of the flow dataset. Output confusion matrix, Precision, Recall, F1, and False-Positive Rate to satisfy the mandatory problem outcome.</p>
+            <p>Load <span class="file-tag">multiclass_xgboost_ids.joblib</span> on a held-out test split of the flow
+              dataset. Output confusion matrix, Precision, Recall, F1, and False-Positive Rate to satisfy the mandatory
+              problem outcome.</p>
           </li>
           <li>
             <strong>Render Evaluation Metrics in the Admin Portal:</strong>
-            <p>Add a dedicated <em>"Model Benchmark & Evaluation"</em> view in the frontend showing the 7x7 confusion matrix heatmap and class-specific metrics.</p>
+            <p>Add a dedicated <em>"Model Benchmark & Evaluation"</em> view in the frontend showing the 7x7 confusion
+              matrix heatmap and class-specific metrics.</p>
           </li>
           <li>
             <strong>Rebrand Geolocation & Context for Space Domain:</strong>
-            <p>Replace generic country keys in <span class="file-tag">server/main.py</span> with ISRO Ground Stations (Bengaluru, Byalalu, Sriharikota, Biak, Mauritius). The curved map animations in <span class="file-tag">ThreatMap.tsx</span> will instantly look like orbital satellite pass trajectories.</p>
+            <p>Replace generic country keys in <span class="file-tag">server/main.py</span> with ISRO Ground Stations
+              (Bengaluru, Byalalu, Sriharikota, Biak, Mauritius). The curved map animations in <span
+                class="file-tag">ThreatMap.tsx</span> will instantly look like orbital satellite pass trajectories.</p>
           </li>
           <li>
             <strong>Incorporate Feature Importance (SHAP Explainability):</strong>
-            <p>In <span class="file-tag">IncidentReview.tsx</span>, show the top 3 contributing flow attributes (e.g. high Flow Bytes/s, packet length variance, IAT) that prompted the model to flag the record.</p>
+            <p>In <span class="file-tag">IncidentReview.tsx</span>, show the top 3 contributing flow attributes (e.g.
+              high Flow Bytes/s, packet length variance, IAT) that prompted the model to flag the record.</p>
           </li>
           <li>
             <strong>Add the Required Benchmark Disclaimer:</strong>
-            <p>Display the mandatory notice across report headers: <em>"Notice: Benchmark results evaluated on offline ground-station flow datasets do not guarantee equivalent performance on live operational spacecraft TT&C networks without Hardware-in-the-Loop (HIL) qualification."</em></p>
+            <p>Display the mandatory notice across report headers: <em>"Notice: Benchmark results evaluated on offline
+                ground-station flow datasets do not guarantee equivalent performance on live operational spacecraft TT&C
+                networks without Hardware-in-the-Loop (HIL) qualification."</em></p>
           </li>
         </ol>
       </div>
@@ -932,7 +1023,9 @@
         <div>
           <strong>Final Takeaway for Hackathon Presentation</strong>
           <p style="margin: 4px 0 0 0; color: inherit;">
-            You have a production-grade, highly responsive SOAR application. Presenting it as a <strong>Space Ground Station & TT&C Link Defensive Platform</strong> transforms a standard intrusion detection project into a specialized, mission-critical aerospace solution that directly speaks the language of an ISRO scientist.
+            You have a production-grade, highly responsive SOAR application. Presenting it as a <strong>Space Ground
+              Station & TT&C Link Defensive Platform</strong> transforms a standard intrusion detection project into a
+            specialized, mission-critical aerospace solution that directly speaks the language of an ISRO scientist.
           </p>
         </div>
       </div>
@@ -947,4 +1040,5 @@
   </div>
 
 </body>
+
 </html>

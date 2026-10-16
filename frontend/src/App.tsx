@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useSim } from '@/lib/sim/store';
+import { Aegis } from '@/components/soar/Aegis';
 
 // Landing Page
 import LandingPage from './pages/LandingPage';
@@ -75,6 +76,7 @@ function App() {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <Aegis />
     </BrowserRouter>
   );
 }

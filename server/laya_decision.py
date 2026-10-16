@@ -369,7 +369,13 @@ def laya_enrich_via_ollama(
         )
         resp = requests.post(
             f"{base_url}/api/generate",
-            json={"model": model, "prompt": prompt, "stream": False},
+            json={
+                "model": model,
+                "prompt": prompt,
+                "stream": False,
+                "think": False,
+                "options": {"num_predict": 128, "temperature": 0.2}
+            },
             timeout=timeout,
         )
         if resp.status_code == 200:
