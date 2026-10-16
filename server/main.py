@@ -854,4 +854,14 @@ def get_stations_status(db: Session = Depends(get_db)):
         {"code": "VSSC-TRV", "name": "Thiruvananthapuram VSSC", "status": "ONLINE", "ping": "7ms", "coords": [8.5241, 76.9366], "role": "Avionics & Launch Telemetry"}
     ]
     return stations_info
+
+
+# --- SRIKAR'S TELEMETRY BENCHMARK ROUTER ---
+try:
+    from evaluation.router import router as benchmark_router
+    app.include_router(benchmark_router)
+    print("Mounted Srikar's /api/benchmark router.")
+except Exception as e:
+    print(f"Error mounting benchmark router: {e}")
+
 

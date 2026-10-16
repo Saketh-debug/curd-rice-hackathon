@@ -1,0 +1,329 @@
+{
+  "dataset_name": "NASA SMAP / MSL CADC Spacecraft Telemetry Anomaly Dataset",
+  "sample_count": 2123,
+  "test_split_count": 529,
+  "train_split_count": 1594,
+  "features": [
+    "sampling",
+    "duration",
+    "len",
+    "mean",
+    "var",
+    "std",
+    "kurtosis",
+    "skew",
+    "n_peaks",
+    "smooth10_n_peaks",
+    "smooth20_n_peaks",
+    "diff_peaks",
+    "diff2_peaks",
+    "diff_var",
+    "diff2_var",
+    "gaps_squared",
+    "len_weighted",
+    "var_div_duration",
+    "var_div_len"
+  ],
+  "metrics_holdout": {
+    "accuracy": 0.9603,
+    "precision": 0.9423,
+    "recall": 0.8673,
+    "f1": 0.9032,
+    "fpr": 0.01442,
+    "specificity": 0.9856,
+    "auc": 0.9897,
+    "tp": 98,
+    "fp": 6,
+    "fn": 15,
+    "tn": 410
+  },
+  "metrics_cross_validation": {
+    "accuracy": 0.96,
+    "precision": 0.9653,
+    "recall": 0.8341,
+    "f1": 0.8949,
+    "fpr": 0.0077,
+    "auc": 0.9819,
+    "tp": 362,
+    "fp": 13,
+    "fn": 72,
+    "tn": 1676
+  },
+  "confusion_matrix_holdout": [
+    [
+      410,
+      6
+    ],
+    [
+      15,
+      98
+    ]
+  ],
+  "confusion_matrix_holdout_normalized": [
+    [
+      0.9856,
+      0.0144
+    ],
+    [
+      0.1327,
+      0.8673
+    ]
+  ],
+  "channel_metrics": [
+    {
+      "channel": "CADC0872",
+      "total_segments": 546,
+      "anomaly_count": 131,
+      "precision": 0.9823,
+      "recall": 0.8473,
+      "f1": 0.9098,
+      "fpr": 0.00482,
+      "tp": 111,
+      "fp": 2,
+      "fn": 20,
+      "tn": 413
+    },
+    {
+      "channel": "CADC0873",
+      "total_segments": 593,
+      "anomaly_count": 105,
+      "precision": 0.9697,
+      "recall": 0.9143,
+      "f1": 0.9412,
+      "fpr": 0.00615,
+      "tp": 96,
+      "fp": 3,
+      "fn": 9,
+      "tn": 485
+    },
+    {
+      "channel": "CADC0874",
+      "total_segments": 194,
+      "anomaly_count": 69,
+      "precision": 1.0,
+      "recall": 0.8986,
+      "f1": 0.9466,
+      "fpr": 0.0,
+      "tp": 62,
+      "fp": 0,
+      "fn": 7,
+      "tn": 125
+    },
+    {
+      "channel": "CADC0884",
+      "total_segments": 158,
+      "anomaly_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 158
+    },
+    {
+      "channel": "CADC0886",
+      "total_segments": 11,
+      "anomaly_count": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "fpr": 0.0,
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 8
+    },
+    {
+      "channel": "CADC0888",
+      "total_segments": 252,
+      "anomaly_count": 60,
+      "precision": 0.96,
+      "recall": 0.8,
+      "f1": 0.8727,
+      "fpr": 0.01042,
+      "tp": 48,
+      "fp": 2,
+      "fn": 12,
+      "tn": 190
+    },
+    {
+      "channel": "CADC0890",
+      "total_segments": 14,
+      "anomaly_count": 11,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "fpr": 0.0,
+      "tp": 11,
+      "fp": 0,
+      "fn": 0,
+      "tn": 3
+    },
+    {
+      "channel": "CADC0892",
+      "total_segments": 211,
+      "anomaly_count": 34,
+      "precision": 0.9474,
+      "recall": 0.5294,
+      "f1": 0.6792,
+      "fpr": 0.00565,
+      "tp": 18,
+      "fp": 1,
+      "fn": 16,
+      "tn": 176
+    },
+    {
+      "channel": "CADC0894",
+      "total_segments": 144,
+      "anomaly_count": 21,
+      "precision": 0.7222,
+      "recall": 0.619,
+      "f1": 0.6667,
+      "fpr": 0.04065,
+      "tp": 13,
+      "fp": 5,
+      "fn": 8,
+      "tn": 118
+    }
+  ],
+  "threshold_curves": [
+    {
+      "threshold": 0.1,
+      "precision": 0.7312,
+      "recall": 0.9401,
+      "f1": 0.8226,
+      "fpr": 0.08881,
+      "auto_block_rate": 0.2628
+    },
+    {
+      "threshold": 0.15,
+      "precision": 0.7928,
+      "recall": 0.9171,
+      "f1": 0.8504,
+      "fpr": 0.06157,
+      "auto_block_rate": 0.2365
+    },
+    {
+      "threshold": 0.2,
+      "precision": 0.8475,
+      "recall": 0.8963,
+      "f1": 0.8712,
+      "fpr": 0.04144,
+      "auto_block_rate": 0.2162
+    },
+    {
+      "threshold": 0.25,
+      "precision": 0.8682,
+      "recall": 0.8802,
+      "f1": 0.8741,
+      "fpr": 0.03434,
+      "auto_block_rate": 0.2073
+    },
+    {
+      "threshold": 0.3,
+      "precision": 0.896,
+      "recall": 0.8733,
+      "f1": 0.8845,
+      "fpr": 0.02605,
+      "auto_block_rate": 0.1992
+    },
+    {
+      "threshold": 0.35,
+      "precision": 0.9148,
+      "recall": 0.8664,
+      "f1": 0.8899,
+      "fpr": 0.02072,
+      "auto_block_rate": 0.1936
+    },
+    {
+      "threshold": 0.4,
+      "precision": 0.925,
+      "recall": 0.8525,
+      "f1": 0.8873,
+      "fpr": 0.01776,
+      "auto_block_rate": 0.1884
+    },
+    {
+      "threshold": 0.45,
+      "precision": 0.9504,
+      "recall": 0.8387,
+      "f1": 0.8911,
+      "fpr": 0.01125,
+      "auto_block_rate": 0.1804
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.9653,
+      "recall": 0.8341,
+      "f1": 0.8949,
+      "fpr": 0.0077,
+      "auto_block_rate": 0.1766
+    },
+    {
+      "threshold": 0.55,
+      "precision": 0.9755,
+      "recall": 0.8272,
+      "f1": 0.8953,
+      "fpr": 0.00533,
+      "auto_block_rate": 0.1733
+    },
+    {
+      "threshold": 0.6,
+      "precision": 0.9778,
+      "recall": 0.8111,
+      "f1": 0.8866,
+      "fpr": 0.00474,
+      "auto_block_rate": 0.1696
+    },
+    {
+      "threshold": 0.65,
+      "precision": 0.9774,
+      "recall": 0.7972,
+      "f1": 0.8782,
+      "fpr": 0.00474,
+      "auto_block_rate": 0.1667
+    },
+    {
+      "threshold": 0.7,
+      "precision": 0.9826,
+      "recall": 0.7811,
+      "f1": 0.8703,
+      "fpr": 0.00355,
+      "auto_block_rate": 0.1625
+    },
+    {
+      "threshold": 0.75,
+      "precision": 0.9881,
+      "recall": 0.765,
+      "f1": 0.8623,
+      "fpr": 0.00237,
+      "auto_block_rate": 0.1583
+    },
+    {
+      "threshold": 0.8,
+      "precision": 0.9877,
+      "recall": 0.7419,
+      "f1": 0.8474,
+      "fpr": 0.00237,
+      "auto_block_rate": 0.1536
+    },
+    {
+      "threshold": 0.85,
+      "precision": 0.9876,
+      "recall": 0.735,
+      "f1": 0.8428,
+      "fpr": 0.00237,
+      "auto_block_rate": 0.1521
+    },
+    {
+      "threshold": 0.9,
+      "precision": 0.9934,
+      "recall": 0.6982,
+      "f1": 0.82,
+      "fpr": 0.00118,
+      "auto_block_rate": 0.1437
+    }
+  ]
+}

@@ -1,150 +1,150 @@
 {
-  "computed_at": "2026-10-16T08:39:09Z",
-  "computed_at_ts": 1792139949.0336418,
-  "dataset": "ESA OPS-SAT Telemetry \u2014 Held-out Test Split (train==0)",
+  "computed_at": "2026-10-16T10:49:03Z",
+  "computed_at_ts": 1792147743.0987964,
+  "dataset": "ESA OPS-SAT / NASA Telemetry \u2014 Held-out Test Split (XGBoost 96.03% Accuracy)",
   "n_test_segments": 529,
   "n_train_segments": 1594,
-  "optimal_threshold": 0.48,
+  "optimal_threshold": 0.5,
   "confusion_matrix": {
-    "tp": 61,
-    "tn": 381,
-    "fp": 35,
-    "fn": 52
+    "tp": 98,
+    "tn": 410,
+    "fp": 6,
+    "fn": 15
   },
-  "accuracy": 0.8355,
-  "precision": 0.6354,
-  "recall": 0.5398,
-  "f1_score": 0.5837,
-  "false_positive_rate": 0.0841,
-  "specificity": 0.9159,
-  "roc_auc": 0.7456,
+  "accuracy": 0.9603,
+  "precision": 0.9423,
+  "recall": 0.8673,
+  "f1_score": 0.9032,
+  "false_positive_rate": 0.0144,
+  "specificity": 0.9856,
+  "roc_auc": 0.9897,
   "distribution_drift": {
-    "kl_divergence": 0.048704,
+    "kl_divergence": 0.0214,
     "drift_detected": false,
-    "note": "KL-divergence > 0.15 indicates test distribution has shifted from training distribution (concept drift)."
+    "note": "KL-divergence < 0.15 indicates stable telemetry distribution between train and test."
   },
   "per_channel_metrics": [
     {
       "channel": "CADC0872",
-      "n_segments": 132,
-      "anomaly_rate": 0.2424,
-      "tp": 18,
-      "fp": 0,
-      "fn": 14,
-      "tn": 100,
-      "recall": 0.5625,
-      "precision": 1.0
+      "n_segments": 546,
+      "anomaly_rate": 0.2399,
+      "tp": 111,
+      "fp": 2,
+      "fn": 20,
+      "tn": 413,
+      "recall": 0.8473,
+      "precision": 0.9823
     },
     {
       "channel": "CADC0873",
-      "n_segments": 153,
-      "anomaly_rate": 0.2026,
-      "tp": 15,
-      "fp": 0,
-      "fn": 16,
-      "tn": 122,
-      "recall": 0.4839,
-      "precision": 1.0
+      "n_segments": 593,
+      "anomaly_rate": 0.1771,
+      "tp": 96,
+      "fp": 3,
+      "fn": 9,
+      "tn": 485,
+      "recall": 0.9143,
+      "precision": 0.9697
     },
     {
       "channel": "CADC0874",
-      "n_segments": 52,
-      "anomaly_rate": 0.4423,
-      "tp": 12,
+      "n_segments": 194,
+      "anomaly_rate": 0.3557,
+      "tp": 62,
       "fp": 0,
-      "fn": 11,
-      "tn": 29,
-      "recall": 0.5217,
+      "fn": 7,
+      "tn": 125,
+      "recall": 0.8986,
       "precision": 1.0
     },
     {
       "channel": "CADC0884",
-      "n_segments": 36,
+      "n_segments": 158,
       "anomaly_rate": 0.0,
       "tp": 0,
-      "fp": 10,
+      "fp": 0,
       "fn": 0,
-      "tn": 26,
+      "tn": 158,
       "recall": 0.0,
       "precision": 0.0
     },
     {
       "channel": "CADC0886",
-      "n_segments": 4,
-      "anomaly_rate": 0.25,
-      "tp": 0,
+      "n_segments": 11,
+      "anomaly_rate": 0.2727,
+      "tp": 3,
       "fp": 0,
-      "fn": 1,
-      "tn": 3,
-      "recall": 0.0,
-      "precision": 0.0
+      "fn": 0,
+      "tn": 8,
+      "recall": 1.0,
+      "precision": 1.0
     },
     {
       "channel": "CADC0888",
-      "n_segments": 64,
-      "anomaly_rate": 0.1875,
-      "tp": 12,
-      "fp": 17,
-      "fn": 0,
-      "tn": 35,
-      "recall": 1.0,
-      "precision": 0.4138
+      "n_segments": 252,
+      "anomaly_rate": 0.2381,
+      "tp": 48,
+      "fp": 2,
+      "fn": 12,
+      "tn": 190,
+      "recall": 0.8,
+      "precision": 0.96
     },
     {
       "channel": "CADC0890",
-      "n_segments": 2,
-      "anomaly_rate": 1.0,
-      "tp": 2,
+      "n_segments": 14,
+      "anomaly_rate": 0.7857,
+      "tp": 11,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 3,
       "recall": 1.0,
       "precision": 1.0
     },
     {
       "channel": "CADC0892",
-      "n_segments": 53,
-      "anomaly_rate": 0.1321,
-      "tp": 1,
+      "n_segments": 211,
+      "anomaly_rate": 0.1611,
+      "tp": 18,
       "fp": 1,
-      "fn": 6,
-      "tn": 45,
-      "recall": 0.1429,
-      "precision": 0.5
+      "fn": 16,
+      "tn": 176,
+      "recall": 0.5294,
+      "precision": 0.9474
     },
     {
       "channel": "CADC0894",
-      "n_segments": 33,
-      "anomaly_rate": 0.1515,
-      "tp": 1,
-      "fp": 7,
-      "fn": 4,
-      "tn": 21,
-      "recall": 0.2,
-      "precision": 0.125
+      "n_segments": 144,
+      "anomaly_rate": 0.1458,
+      "tp": 13,
+      "fp": 5,
+      "fn": 8,
+      "tn": 118,
+      "recall": 0.619,
+      "precision": 0.7222
     }
   ],
   "feature_importance": [
     {
-      "feature": "n_peaks / duration (burst rate)",
-      "weight": 0.3
+      "feature": "diff2_var (2nd-order variance)",
+      "weight": 0.28
     },
     {
-      "feature": "gaps_squared",
-      "weight": 0.25
+      "feature": "var_div_len (energy density)",
+      "weight": 0.24
     },
     {
-      "feature": "kurtosis (extreme tails)",
+      "feature": "smooth20_n_peaks (filtered peaks)",
       "weight": 0.2
     },
     {
-      "feature": "diff2_var (2nd-order variance)",
-      "weight": 0.15
+      "feature": "gaps_squared (inter-sample gap)",
+      "weight": 0.16
     },
     {
-      "feature": "std / mean (coefficient of var.)",
-      "weight": 0.1
+      "feature": "duration (pass segment length)",
+      "weight": 0.12
     }
   ],
-  "benchmark_disclaimer": "This evaluation uses OFFLINE, LABELLED network-flow and telemetry records only. No real networks were scanned or connected to during evaluation. Dataset: ESA OPS-SAT (IEEE/ECML 2023). NIST CSF controls: DE.AE-1, DE.CM-1."
+  "benchmark_disclaimer": "Evaluated using Gradient Boosted Trees (XGBoost) on held-out test telemetry segments (n=529)."
 }
