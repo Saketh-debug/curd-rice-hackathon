@@ -3,12 +3,48 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 
-# --- CONFIGURATION ---
-# Update with your actual PostgreSQL credentials if different
-# Format: postgresql://username:password@localhost:5432/database_name
-DATABASE_URL = "postgresql://postgres:saketh123@localhost:5432/idsdashboard"
+import os
 
-engine = create_engine(DATABASE_URL)
+import socket
+
+# --- CONFIGURATION ---
+# Supports PostgreSQL or SQLite fallback
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+def is_postgres_available(host="localhost", port=5432, timeout=0.3):
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except (socket.timeout, ConnectionRefusedError, OSError):
+        return False
+
+def create_db_engine():
+    global DATABASE_URL
+    # 1. If explicit DATABASE_URL is set in environment, use it
+    if DATABASE_URL:
+        connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+        return create_engine(DATABASE_URL, connect_args=connect_args)
+
+    # 2. Check if PostgreSQL is available on localhost:5432
+    default_pg = "postgresql://postgres:saketh123@localhost:5432/idsdashboard"
+    if is_postgres_available("localhost", 5432):
+        try:
+            pg_engine = create_engine(default_pg, pool_pre_ping=True)
+            with pg_engine.connect():
+                DATABASE_URL = default_pg
+                print(f"[DB] Connected to PostgreSQL at {default_pg}")
+                return pg_engine
+        except Exception:
+            pass
+
+    # 3. Fallback to SQLite database file
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    sqlite_path = os.path.join(base_dir, "idsdashboard.db")
+    DATABASE_URL = f"sqlite:///{sqlite_path}"
+    print(f"[DB] PostgreSQL not available on localhost:5432. Using SQLite: {sqlite_path}")
+    return create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+
+engine = create_db_engine()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -28,6 +64,7 @@ class TrafficLog(Base):
     confidence = Column(Float)
     destination_port = Column(Integer)
     action = Column(String) # "MONITOR"
+    station = Column(String, nullable=True, default="ISTRAC-BLR")
     
     # Context Data Enhancements
     target_username = Column(String, nullable=True)
@@ -48,6 +85,7 @@ class AutoBlocked(Base):
     confidence = Column(Float)
     type = Column(String)
     action = Column(String, default="AUTO_BLOCKED")
+    station = Column(String, nullable=True, default="ISTRAC-BLR")
 
 class ManualReview(Base):
     """Stores incidents sent to Admin Portal for manual review"""
@@ -61,6 +99,8 @@ class ManualReview(Base):
     confidence = Column(Float)
     destination_port = Column(Integer)
     status = Column(String, default="PENDING") # PENDING, RESOLVED
+    station = Column(String, nullable=True, default="ISTRAC-BLR")
+
     
     # Outcome
     action_taken = Column(String, nullable=True) # "MANUAL_BLOCK", "FALSE_POSITIVE"

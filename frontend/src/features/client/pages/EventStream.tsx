@@ -1,92 +1,131 @@
 import { useRef } from 'react';
 import { useLiveTraffic } from '../../../hooks/useLiveTraffic';
 import clsx from 'clsx';
-import { Search } from 'lucide-react';
+import { Satellite, Radio, Terminal, Shield, CheckCircle2 } from 'lucide-react';
 
-const EventStream = () => {
+const mapSpaceThreatName = (type: string) => {
+    if (type.includes('DDoS')) return 'TT&C Uplink Saturation';
+    if (type.includes('DoS')) return 'TT&C Gateway Flood';
+    if (type.includes('Brute')) return 'TC Authentication Bypass';
+    if (type.includes('Port')) return 'SLE Service Reconnaissance';
+    if (type.includes('Bot')) return 'Ground RTU / Sensor Hijack';
+    if (type.includes('Web')) return 'Mission Data Distribution Exploit';
+    if (type.includes('Normal')) return 'Routine Housekeeping Telemetry';
+    return type;
+};
+
+export const EventStream = () => {
     const { traffic } = useLiveTraffic();
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Auto-scroll to top when new traffic comes in (since we display newest on top)
-    // Actually typically terminals scroll to bottom, but the design had newest on top?
-    // Let's stick to the design: "Row 1 (Recent)". So standard list rendering.
-
     return (
-        <div className="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark relative font-mono h-full">
+        <div className="flex-1 flex flex-col min-w-0 bg-[#050814] relative font-mono h-full text-slate-200">
             {/* Toolbar */}
-            <div className="h-14 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-surface-dark flex items-center justify-between px-6 flex-shrink-0 z-10">
-                <div className="flex items-center gap-4">
-
-                </div>
+            <div className="h-14 border-b border-slate-800 bg-[#080d1e] flex items-center justify-between px-6 flex-shrink-0 z-10">
                 <div className="flex items-center gap-3">
-                    <span className="text-xs text-slate-400 dark:text-slate-500 font-mono animate-pulse">RECEIVING DATA...</span>
+                    <Satellite className="w-4 h-4 text-cyan-400" />
+                    <span className="text-xs font-bold font-orbitron text-white tracking-wide">
+                        Telemetry Event Stream — ISTRAC Ground Segment Engine
+                    </span>
+                    <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800">
+                        52 Features Offline Ingestion
+                    </span>
+                </div>
+                <div className="flex items-center gap-3 text-xs">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span className="text-[11px] text-emerald-400 font-bold">RECEIVING FLOW STREAM...</span>
                 </div>
             </div>
 
             {/* Terminal Window */}
             <div className="flex-1 p-4 sm:p-6 overflow-hidden flex flex-col">
-                <div className="flex-1 bg-[#0c1017] rounded-lg border border-slate-800 shadow-2xl overflow-hidden flex flex-col relative text-sm">
+                <div className="flex-1 bg-[#070b16] rounded-xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col relative text-xs">
                     {/* Header */}
-                    <div className="h-8 bg-[#1a202c] border-b border-slate-800 flex items-center px-4 justify-between select-none shrink-0">
-                        <div className="flex items-center gap-2">
-
+                    <div className="h-9 bg-[#0b1226] border-b border-slate-800 flex items-center px-4 justify-between select-none shrink-0">
+                        <div className="flex items-center gap-2 text-slate-400 text-[11px]">
+                            <Terminal className="w-3.5 h-3.5 text-cyan-400" />
+                            <span>istrac-stream-ids @ mox-console:~$</span>
                         </div>
-                        <div className="text-xs text-slate-500 font-medium">soar-stream-v1.4.2 @ root</div>
-                        <div className="w-10"></div>
+                        <div className="text-[10px] text-cyan-400 font-medium">
+                            Air-Gapped Flow Replay • Port 8000 Stream
+                        </div>
                     </div>
 
                     {/* Columns */}
-                    <div className="grid grid-cols-12 gap-4 px-4 py-2 bg-[#131720] border-b border-slate-800 text-xs font-bold text-slate-500 uppercase tracking-wider sticky top-0 z-10 shrink-0">
-                        <div className="col-span-2">Timestamp (UTC)</div>
-                        <div className="col-span-1">ID</div>
-                        <div className="col-span-3">Classification</div>
-                        <div className="col-span-3">Confidence</div>
-                        <div className="col-span-3 text-right">System Action</div>
+                    <div className="grid grid-cols-12 gap-4 px-4 py-2.5 bg-[#0d162e] border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider sticky top-0 z-10 shrink-0">
+                        <div className="col-span-2">MET / Time (UTC)</div>
+                        <div className="col-span-1">Flow ID</div>
+                        <div className="col-span-4">Space Threat Classification</div>
+                        <div className="col-span-2">ML Confidence</div>
+                        <div className="col-span-3 text-right">Mission Response</div>
                     </div>
 
                     {/* Stream Content */}
-                    <div className="flex-1 overflow-y-auto p-2 space-y-0.5 relative custom-scrollbar" ref={scrollRef}>
+                    <div className="flex-1 overflow-y-auto p-2 space-y-1 relative" ref={scrollRef}>
                         <div className="absolute inset-0 scanlines opacity-10 pointer-events-none z-0"></div>
 
-                        {traffic.map((packet, idx) => (
-                            <div key={packet.id} className={clsx(
-                                "grid grid-cols-12 gap-4 px-3 py-2.5 rounded border-l-2 transition-colors cursor-default group items-center relative z-10",
-                                idx === 0 ? "hover:bg-primary/5 border-primary" : "hover:bg-primary/5 border-transparent hover:border-slate-700",
-                                idx > 10 ? "opacity-60" : "opacity-100"
-                            )}>
-                                <div className="col-span-2 text-slate-500">{new Date(packet.timestamp).toTimeString().split(' ')[0]}</div>
-                                <div className="col-span-1 text-slate-600">#{packet.id}</div>
-                                <div className="col-span-3 flex items-center gap-2">
-                                    <span className={clsx("w-2 h-2 rounded-full", packet.type === 'Normal Traffic' ? "bg-emerald-500" : "bg-red-500 animate-pulse")}></span>
-                                    <span className={clsx("font-bold", packet.type === 'Normal Traffic' ? "text-emerald-400" : "text-red-400")}>{packet.type}</span>
-                                </div>
-                                <div className="col-span-3 flex items-center gap-3">
-                                    <div className="w-24 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                                        <div className={clsx("h-full w-[98%]", packet.confidence > 0.9 ? "bg-primary" : "bg-yellow-500")}></div>
-                                    </div>
-                                    <span className="text-primary font-bold">{Math.round(packet.confidence * 100)}%</span>
-                                </div>
-                                <div className="col-span-3 text-right">
-                                    <span className={clsx("px-2 py-1 rounded text-xs font-bold uppercase tracking-wide border",
-                                        packet.action === 'AUTO_BLOCKED' ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                                            packet.action === 'MONITOR' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
-                                                "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
-                                    )}>
-                                        {packet.action}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
+                        {traffic.map((packet, idx) => {
+                            const spaceName = mapSpaceThreatName(packet.type);
+                            const isNormal = packet.type === 'Normal Traffic';
 
-                        {traffic.length === 0 && <div className="text-slate-500 text-center py-10">Waiting for stream...</div>}
+                            return (
+                                <div key={packet.id} className={clsx(
+                                    "grid grid-cols-12 gap-4 px-3 py-2 rounded-lg border-l-2 transition-colors cursor-default group items-center relative z-10 text-[11px]",
+                                    idx === 0 ? "bg-cyan-500/5 border-cyan-400" : "hover:bg-slate-800/40 border-transparent hover:border-slate-700",
+                                    idx > 12 ? "opacity-60" : "opacity-100"
+                                )}>
+                                    <div className="col-span-2 text-slate-400">
+                                        {new Date(packet.timestamp).toTimeString().split(' ')[0]}
+                                    </div>
+                                    <div className="col-span-1 text-slate-500 font-bold">
+                                        #{packet.id}
+                                    </div>
+                                    <div className="col-span-4 flex items-center gap-2 truncate">
+                                        <span className={clsx("w-2 h-2 rounded-full shrink-0", isNormal ? "bg-emerald-400" : "bg-red-500 animate-pulse")}></span>
+                                        <span className={clsx("font-bold truncate", isNormal ? "text-emerald-300" : "text-red-400")}>
+                                            {spaceName}
+                                        </span>
+                                    </div>
+                                    <div className="col-span-2 flex items-center gap-2">
+                                        <div className="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                            <div
+                                                className={clsx("h-full", isNormal ? "bg-emerald-400" : packet.confidence > 0.9 ? "bg-red-400" : "bg-orange-400")}
+                                                style={{ width: `${Math.round(packet.confidence * 100)}%` }}
+                                            ></div>
+                                        </div>
+                                        <span className={clsx("font-bold", isNormal ? "text-emerald-400" : "text-white")}>
+                                            {Math.round(packet.confidence * 100)}%
+                                        </span>
+                                    </div>
+                                    <div className="col-span-3 text-right">
+                                        <span className={clsx("px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide border",
+                                            packet.action === 'AUTO_BLOCKED' ? "bg-red-500/10 text-red-400 border-red-500/30" :
+                                                packet.action === 'MONITOR' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" :
+                                                    "bg-orange-500/10 text-orange-400 border-orange-500/30"
+                                        )}>
+                                            {packet.action === 'AUTO_BLOCKED' ? 'AUTO-NEUTRALIZED' : packet.action === 'MONITOR' ? 'NOMINAL' : 'MISSION REVIEW'}
+                                        </span>
+                                    </div>
+                                </div>
+                            );
+                        })}
+
+                        {traffic.length === 0 && (
+                            <div className="text-slate-500 text-center py-10 font-mono">
+                                Synchronizing ground station telemetry stream...
+                            </div>
+                        )}
                     </div>
 
                     {/* Footer */}
-                    <div className="h-6 bg-[#131720] border-t border-slate-800 flex items-center justify-between px-3 text-[10px] text-slate-600 font-mono shrink-0">
+                    <div className="h-7 bg-[#0b1226] border-t border-slate-800 flex items-center justify-between px-3 text-[10px] text-slate-400 font-mono shrink-0">
                         <div className="flex gap-4">
-                            <span>PROCESS_ID: 8821</span>
-                            <span>MEM_USAGE: 24%</span>
-                            <span className="text-emerald-500">SOCKET_OPEN</span>
+                            <span>GROUND_NODE: ISTRAC-BLR</span>
+                            <span>FLOW_SCHEMA: 52_ATTRIBUTES</span>
+                            <span className="text-emerald-400">TELEMETRY_SYNC: LOCKED</span>
+                        </div>
+                        <div className="text-slate-500">
+                            ZERO LIVE PACKET PROBING
                         </div>
                     </div>
                 </div>

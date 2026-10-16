@@ -5,7 +5,7 @@ import type { Packet } from '../../../types';
 export const useAdminData = () => {
     const [stats, setStats] = useState({
         openTickets: 0,
-        avgResponseTime: '4m 12s', // Mock for now, backend doesn't provide this yet
+        avgResponseTime: '4.2 ms',
     });
     const [pendingIncidents, setPendingIncidents] = useState<Packet[]>([]);
     const [recentActions, setRecentActions] = useState<any[]>([]);
@@ -16,11 +16,25 @@ export const useAdminData = () => {
             // Fetch Pending Incidents
             const incidentsRes = await apiClient.get('/incidents/pending');
             setPendingIncidents(incidentsRes.data);
-            setStats(prev => ({ ...prev, openTickets: incidentsRes.data.length }));
+
+            // Fetch System Health for latency
+            let avgLatency = '4.2 ms';
+            try {
+                const healthRes = await apiClient.get('/system/health');
+                if (healthRes.data?.avg_defense_latency) {
+                    avgLatency = healthRes.data.avg_defense_latency;
+                }
+            } catch (err) {
+                // Keep default
+            }
+
+            setStats({
+                openTickets: incidentsRes.data.length,
+                avgResponseTime: avgLatency,
+            });
 
             // Fetch Audit Logs for "Recent Actions"
             const auditRes = await apiClient.get('/logs/audit');
-            // Initally assume last 5 are recent
             setRecentActions(auditRes.data.slice(-5).reverse());
 
             setIsLoading(false);

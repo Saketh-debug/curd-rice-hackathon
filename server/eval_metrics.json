@@ -1,0 +1,150 @@
+{
+  "computed_at": "2026-10-16T08:39:09Z",
+  "computed_at_ts": 1792139949.0336418,
+  "dataset": "ESA OPS-SAT Telemetry \u2014 Held-out Test Split (train==0)",
+  "n_test_segments": 529,
+  "n_train_segments": 1594,
+  "optimal_threshold": 0.48,
+  "confusion_matrix": {
+    "tp": 61,
+    "tn": 381,
+    "fp": 35,
+    "fn": 52
+  },
+  "accuracy": 0.8355,
+  "precision": 0.6354,
+  "recall": 0.5398,
+  "f1_score": 0.5837,
+  "false_positive_rate": 0.0841,
+  "specificity": 0.9159,
+  "roc_auc": 0.7456,
+  "distribution_drift": {
+    "kl_divergence": 0.048704,
+    "drift_detected": false,
+    "note": "KL-divergence > 0.15 indicates test distribution has shifted from training distribution (concept drift)."
+  },
+  "per_channel_metrics": [
+    {
+      "channel": "CADC0872",
+      "n_segments": 132,
+      "anomaly_rate": 0.2424,
+      "tp": 18,
+      "fp": 0,
+      "fn": 14,
+      "tn": 100,
+      "recall": 0.5625,
+      "precision": 1.0
+    },
+    {
+      "channel": "CADC0873",
+      "n_segments": 153,
+      "anomaly_rate": 0.2026,
+      "tp": 15,
+      "fp": 0,
+      "fn": 16,
+      "tn": 122,
+      "recall": 0.4839,
+      "precision": 1.0
+    },
+    {
+      "channel": "CADC0874",
+      "n_segments": 52,
+      "anomaly_rate": 0.4423,
+      "tp": 12,
+      "fp": 0,
+      "fn": 11,
+      "tn": 29,
+      "recall": 0.5217,
+      "precision": 1.0
+    },
+    {
+      "channel": "CADC0884",
+      "n_segments": 36,
+      "anomaly_rate": 0.0,
+      "tp": 0,
+      "fp": 10,
+      "fn": 0,
+      "tn": 26,
+      "recall": 0.0,
+      "precision": 0.0
+    },
+    {
+      "channel": "CADC0886",
+      "n_segments": 4,
+      "anomaly_rate": 0.25,
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "tn": 3,
+      "recall": 0.0,
+      "precision": 0.0
+    },
+    {
+      "channel": "CADC0888",
+      "n_segments": 64,
+      "anomaly_rate": 0.1875,
+      "tp": 12,
+      "fp": 17,
+      "fn": 0,
+      "tn": 35,
+      "recall": 1.0,
+      "precision": 0.4138
+    },
+    {
+      "channel": "CADC0890",
+      "n_segments": 2,
+      "anomaly_rate": 1.0,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0,
+      "recall": 1.0,
+      "precision": 1.0
+    },
+    {
+      "channel": "CADC0892",
+      "n_segments": 53,
+      "anomaly_rate": 0.1321,
+      "tp": 1,
+      "fp": 1,
+      "fn": 6,
+      "tn": 45,
+      "recall": 0.1429,
+      "precision": 0.5
+    },
+    {
+      "channel": "CADC0894",
+      "n_segments": 33,
+      "anomaly_rate": 0.1515,
+      "tp": 1,
+      "fp": 7,
+      "fn": 4,
+      "tn": 21,
+      "recall": 0.2,
+      "precision": 0.125
+    }
+  ],
+  "feature_importance": [
+    {
+      "feature": "n_peaks / duration (burst rate)",
+      "weight": 0.3
+    },
+    {
+      "feature": "gaps_squared",
+      "weight": 0.25
+    },
+    {
+      "feature": "kurtosis (extreme tails)",
+      "weight": 0.2
+    },
+    {
+      "feature": "diff2_var (2nd-order variance)",
+      "weight": 0.15
+    },
+    {
+      "feature": "std / mean (coefficient of var.)",
+      "weight": 0.1
+    }
+  ],
+  "benchmark_disclaimer": "This evaluation uses OFFLINE, LABELLED network-flow and telemetry records only. No real networks were scanned or connected to during evaluation. Dataset: ESA OPS-SAT (IEEE/ECML 2023). NIST CSF controls: DE.AE-1, DE.CM-1."
+}

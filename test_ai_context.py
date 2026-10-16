@@ -1,13 +1,15 @@
-from server.database import SessionLocal, TrafficLog, init_db
-from server.ai.router import get_db_context
-from datetime import datetime
 import sys
 import os
+from datetime import datetime
 
-# Add server directory to path so imports work
-sys.path.append(os.path.join(os.getcwd(), 'server'))
+# Add server directory to path so internal imports work
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'server'))
+
+from server.database import SessionLocal, TrafficLog, init_db
+from server.ai.router import get_db_context
 
 def test_context():
+    init_db()
     db = SessionLocal()
     try:
         # Check if we have data, if not verify logic handles it

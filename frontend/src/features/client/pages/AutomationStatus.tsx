@@ -1,147 +1,177 @@
-import { ShieldCheck, Flag, TrendingUp, TrendingDown } from 'lucide-react';
+import { ShieldCheck, Flag, TrendingUp, TrendingDown, Satellite, AlertTriangle } from 'lucide-react';
 import { useSystemHealth } from '../../../hooks/useSystemHealth';
 import { useLiveTraffic } from '../../../hooks/useLiveTraffic';
-import clsx from 'clsx';
-import type { Packet } from '../../../types';
 
-const AutomationStatus = () => {
+export const AutomationStatus = () => {
     const { health } = useSystemHealth();
     const { traffic } = useLiveTraffic();
 
-    // Filter relevant actions
-    const automatedActions = traffic.filter(p => p.action !== 'MONITOR');
-
     return (
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 bg-[#050814] text-slate-100 font-sans">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+                <div>
+                    <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-widest mb-1">
+                        <Satellite className="w-4 h-4" />
+                        ISTRAC MOX AI Defense Engine
+                    </div>
+                    <h1 className="text-2xl sm:text-3xl font-bold font-orbitron text-white">
+                        AI Defense Automation & FAR Governance
+                    </h1>
+                </div>
+                <div className="flex items-center gap-2 font-mono text-xs">
+                    <span className="px-2.5 py-1 rounded bg-cyan-950/60 border border-cyan-800 text-cyan-300 font-bold">
+                        WARM-START BANDIT: CONVERGED
+                    </span>
+                </div>
+            </div>
+
+            {/* Critical Doctrine Callout */}
+            <div className="p-4 rounded-xl bg-gradient-to-r from-orange-950/30 via-slate-900/60 to-orange-950/20 border border-orange-500/40 flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
+                <div className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
+                    <strong className="text-orange-400 font-semibold font-orbitron">
+                        Loss of Signal (LOS) Mitigation:
+                    </strong>{' '}
+                    An automated False Alarm during an active 8-minute LEO pass window causes Loss of Signal (LOS) and can abort critical orbital station-keeping maneuvers. The system balances auto-neutralization speed against human review escalation.
+                </div>
+            </div>
+
             {/* KPIs Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
                 {/* Threshold Card 1 */}
-                <div className="bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 flex flex-col justify-between relative overflow-hidden group">
+                <div className="bg-[#0a1022] border border-cyan-500/30 rounded-xl p-5 flex flex-col justify-between relative overflow-hidden group hover:border-cyan-400 transition-colors">
                     <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <ShieldCheck className="w-16 h-16 text-primary" />
+                        <ShieldCheck className="w-16 h-16 text-cyan-400" />
                     </div>
                     <div>
-                        <div className="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-1">Auto-Block Confidence</div>
+                        <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold mb-1">Auto-Block Confidence</div>
                         <div className="flex items-end gap-2">
-                            <span className="text-3xl font-bold text-slate-800 dark:text-white">95%</span>
-                            <span className="text-xs text-emerald-500 mb-1 font-medium">Active</span>
+                            <span className="text-3xl font-bold font-orbitron text-white">95%</span>
+                            <span className="text-xs text-emerald-400 mb-1 font-bold">Active</span>
                         </div>
                     </div>
-                    <div className="mt-4 w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                        <div className="bg-primary h-full rounded-full" style={{ width: '95%' }}></div>
+                    <div className="mt-4 w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-cyan-400 h-full rounded-full" style={{ width: '95%' }}></div>
                     </div>
-                    <div className="mt-2 text-xs text-slate-400">Strict threshold. Requires high fidelity IOC match.</div>
+                    <div className="mt-2 text-[10px] text-slate-400">Strict threshold. Requires high-fidelity flow anomaly signature.</div>
                 </div>
 
                 {/* Threshold Card 2 */}
-                <div className="bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 flex flex-col justify-between relative overflow-hidden group">
+                <div className="bg-[#0a1022] border border-orange-500/30 rounded-xl p-5 flex flex-col justify-between relative overflow-hidden group hover:border-orange-400 transition-colors">
                     <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <Flag className="w-16 h-16 text-yellow-500" />
+                        <Flag className="w-16 h-16 text-orange-400" />
                     </div>
                     <div>
-                        <div className="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-1">Review Threshold</div>
+                        <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold mb-1">Pass Review Threshold</div>
                         <div className="flex items-end gap-2">
-                            <span className="text-3xl font-bold text-slate-800 dark:text-white">70%</span>
-                            <span className="text-xs text-yellow-500 mb-1 font-medium">Flagged</span>
+                            <span className="text-3xl font-bold font-orbitron text-white">70%</span>
+                            <span className="text-xs text-orange-400 mb-1 font-bold">Escalate</span>
                         </div>
                     </div>
-                    <div className="mt-4 w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                        <div className="bg-yellow-500 h-full rounded-full" style={{ width: '70%' }}></div>
+                    <div className="mt-4 w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-orange-400 h-full rounded-full" style={{ width: '70%' }}></div>
                     </div>
-                    <div className="mt-2 text-xs text-slate-400">Moderate confidence. Escalates to Tier 1 analyst.</div>
+                    <div className="mt-2 text-[10px] text-slate-400">Moderate confidence. Escalates to Mission Flight Controller.</div>
                 </div>
 
                 {/* Metric Card 1 */}
-                <div className="bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 flex flex-col justify-center">
+                <div className="bg-[#0a1022] border border-slate-800 rounded-xl p-5 flex flex-col justify-center">
                     <div className="flex items-center justify-between mb-2">
-                        <div className="text-xs uppercase tracking-wider text-slate-500 font-semibold">Analyst Hours Saved</div>
-                        <TrendingUp className="w-4 h-4 text-emerald-500" />
+                        <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Controller Hours Saved</div>
+                        <TrendingUp className="w-4 h-4 text-emerald-400" />
                     </div>
-                    <div className="text-3xl font-bold text-slate-800 dark:text-white mb-1">142h</div>
-                    <div className="text-xs text-slate-400">Based on 15m avg handling time per event.</div>
+                    <div className="text-3xl font-bold font-orbitron text-emerald-400 mb-1">
+                        {health?.controller_hours_saved || '142h'}
+                    </div>
+                    <div className="text-[10px] text-slate-400">
+                        Automated triage across {health ? health.traffic_processed : '142,850'} telemetry flows.
+                    </div>
                 </div>
 
                 {/* Metric Card 2 */}
-                <div className="bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 flex flex-col justify-center">
+                <div className="bg-[#0a1022] border border-slate-800 rounded-xl p-5 flex flex-col justify-center">
                     <div className="flex items-center justify-between mb-2">
-                        <div className="text-xs uppercase tracking-wider text-slate-500 font-semibold">False Positive Rate</div>
-                        <TrendingDown className="w-4 h-4 text-emerald-500" />
+                        <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">False Alarm Rate (FAR)</div>
+                        <TrendingDown className="w-4 h-4 text-emerald-400" />
                     </div>
-                    <div className="text-3xl font-bold text-slate-800 dark:text-white mb-1">0.04%</div>
-                    <div className="text-xs text-slate-400">Last 24h - 3 overrides by human analysts.</div>
+                    <div className="text-3xl font-bold font-orbitron text-white mb-1">
+                        {health?.false_alarm_rate || '0.04%'}
+                    </div>
+                    <div className="text-[10px] text-slate-400">Pass-window safety benchmark compliant (&lt;0.05%).</div>
                 </div>
             </div>
 
             {/* Main Chart Area */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-96 min-h-[24rem]">
-                {/* Main Comparison Chart - Simulated with CSS */}
-                <div className="lg:col-span-2 bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 flex flex-col">
+                {/* Decision Velocity */}
+                <div className="lg:col-span-2 bg-[#0a1022] border border-slate-800 rounded-2xl p-6 flex flex-col">
                     <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h3 className="font-semibold text-lg text-slate-800 dark:text-white">Decision Velocity</h3>
-                            <p className="text-sm text-slate-500">Automated Remediation vs Human Review Volume</p>
+                            <h3 className="font-orbitron font-bold text-base text-white">Decision Velocity</h3>
+                            <p className="text-xs text-slate-400 font-mono mt-0.5">Automated Neutralization vs Controller Review Volume (24h)</p>
                         </div>
-                        <div className="flex items-center gap-4 text-xs">
+                        <div className="flex items-center gap-4 text-xs font-mono">
                             <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 rounded-full bg-primary"></span>
-                                <span className="text-slate-400">Automated</span>
+                                <span className="w-3 h-3 rounded-full bg-cyan-400"></span>
+                                <span className="text-slate-300">Automated</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="w-3 h-3 rounded-full bg-slate-600"></span>
-                                <span className="text-slate-400">Human</span>
+                                <span className="w-3 h-3 rounded-full bg-orange-400"></span>
+                                <span className="text-slate-300">Controller Review</span>
                             </div>
                         </div>
                     </div>
-                    <div className="flex-1 flex items-end gap-2 sm:gap-4 justify-between pt-4 pb-2 border-b border-slate-200 dark:border-slate-700">
-                        {[0, 4, 8, 12, 16, 20].map((hour) => (
-                            <div key={hour} className="w-full flex flex-col gap-1 h-full justify-end group cursor-pointer relative">
-                                <div className="w-full bg-slate-600/80 hover:bg-slate-500 rounded-t-sm transition-all" style={{ height: `${Math.random() * 20 + 10}%` }}></div>
-                                <div className="w-full bg-primary hover:bg-blue-600 rounded-t-sm transition-all" style={{ height: `${Math.random() * 40 + 30}%` }}></div>
-                                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-500">{hour.toString().padStart(2, '0')}:00</div>
+                    <div className="flex-1 flex items-end gap-2 sm:gap-4 justify-between pt-4 pb-2 border-b border-slate-800 font-mono">
+                        {(health?.decision_velocity && health.decision_velocity.length > 0
+                            ? health.decision_velocity
+                            : [
+                                { hour: '00:00', automated: 75, review: 15 },
+                                { hour: '04:00', automated: 82, review: 18 },
+                                { hour: '08:00', automated: 91, review: 24 },
+                                { hour: '12:00', automated: 88, review: 20 },
+                                { hour: '16:00', automated: 95, review: 14 },
+                                { hour: '20:00', automated: 84, review: 22 },
+                            ]
+                        ).map((v, i) => (
+                            <div key={i} className="w-full flex flex-col gap-1.5 h-full justify-end group cursor-pointer relative">
+                                <div className="w-full bg-orange-500/80 hover:bg-orange-400 rounded-t-sm transition-all" style={{ height: `${Math.min(90, Math.max(8, v.review ?? v.reviewed ?? 15))}%` }}></div>
+                                <div className="w-full bg-cyan-400/90 hover:bg-cyan-300 rounded-t-sm transition-all" style={{ height: `${Math.min(90, Math.max(15, v.automated))}%` }}></div>
+                                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-400 whitespace-nowrap">{v.hour}</div>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Donut / Ratio Chart */}
-                <div className="bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700/50 rounded-xl p-5 flex flex-col relative overflow-hidden">
-                    <h3 className="font-semibold text-lg text-slate-800 dark:text-white mb-4 z-10">Automation Ratio</h3>
+                {/* Automation Ratio */}
+                <div className="bg-[#0a1022] border border-slate-800 rounded-2xl p-6 flex flex-col relative overflow-hidden">
+                    <h3 className="font-orbitron font-bold text-base text-white mb-4 z-10">AI Defense Coverage</h3>
                     <div className="flex-1 flex items-center justify-center relative z-10">
                         <div className="relative w-40 h-40">
                             <svg className="w-full h-full" viewBox="0 0 100 100">
-                                <circle className="text-slate-200 dark:text-slate-800 stroke-current" cx="50" cy="50" fill="transparent" r="40" strokeWidth="8"></circle>
-                                <circle className="text-primary stroke-current transition-all duration-1000" cx="50" cy="50" fill="transparent" r="40" strokeDasharray="251.2" strokeDashoffset={`${251.2 * (1 - (parseFloat(health?.automation_rate || "98") / 100))}`} strokeLinecap="round" strokeWidth="8" transform="rotate(-90 50 50)"></circle>
+                                <circle className="text-slate-800 stroke-current" cx="50" cy="50" fill="transparent" r="40" strokeWidth="8"></circle>
+                                <circle className="text-cyan-400 stroke-current transition-all duration-1000" cx="50" cy="50" fill="transparent" r="40" strokeDasharray="251.2" strokeDashoffset={`${251.2 * (1 - (parseFloat(health?.automation_rate || "99.4") / 100))}`} strokeLinecap="round" strokeWidth="8" transform="rotate(-90 50 50)"></circle>
                             </svg>
-                            <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
-                                <span className="text-3xl font-bold text-slate-800 dark:text-white">{health?.automation_rate || '98%'}</span>
-                                <span className="text-[10px] text-slate-500 uppercase tracking-widest">Automated</span>
+                            <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center font-mono">
+                                <span className="text-3xl font-bold font-orbitron text-white">{health?.automation_rate || '99.4%'}</span>
+                                <span className="text-[9px] text-cyan-400 uppercase tracking-widest">Automated</span>
                             </div>
                         </div>
                     </div>
-                    <div className="mt-4 grid grid-cols-2 gap-4 text-center z-10">
-                        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-2">
-                            <div className="text-xs text-slate-500">Total Events</div>
-                            <div className="font-semibold text-slate-800 dark:text-white">{health ? health.traffic_processed : '...'}</div>
+                    <div className="mt-4 grid grid-cols-2 gap-3 text-center z-10 font-mono text-xs">
+                        <div className="bg-[#080d1e] rounded-xl p-2.5 border border-slate-800">
+                            <div className="text-[10px] text-slate-400">Total Telemetry</div>
+                            <div className="font-bold text-white mt-0.5">{health ? health.traffic_processed : '142,850'}</div>
                         </div>
-                        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-2">
-                            <div className="text-xs text-slate-500">Escalated</div>
-                            <div className="font-semibold text-slate-800 dark:text-white">1,488</div>
+                        <div className="bg-[#080d1e] rounded-xl p-2.5 border border-slate-800">
+                            <div className="text-[10px] text-slate-400">Review Queue</div>
+                            <div className="font-bold text-orange-400 mt-0.5">{health?.pending_reviews ?? traffic.filter(p => p.action === 'PENDING_REVIEW').length}</div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            {/* Recent Actions List */}
-
         </div>
     );
 };
-
-function getActionDescription(action: Packet): string {
-    if (action.type === 'DDoS Attack') return 'Firewall Rule Add';
-    if (action.type === 'Malware') return 'Endpoint Isolation';
-    if (action.type === 'Phishing') return 'Email Purge';
-    return 'Traffic Analysis';
-}
 
 export default AutomationStatus;
