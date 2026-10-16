@@ -111,18 +111,18 @@ export const IncidentReview = () => {
         if (t.includes('ddos') || t.includes('dos')) {
             return [
                 {
-                    title: "Extreme Packet Volume",
-                    description: "The connection sent traffic at an unusually high rate, typical of an automated flood attack.",
+                    title: "Unusually High Traffic",
+                    description: "This connection sent far more traffic than normal. This can be a sign of an automated flood attack.",
                     detail: "Traffic Volume: High Surge"
                 },
                 {
-                    title: "Abnormally Fast Request Interval",
-                    description: "Packets arrived within fractions of a millisecond, indicating a script rather than a standard user.",
+                    title: "Requests Arrived Too Quickly",
+                    description: "Packets arrived almost instantly, which is more typical of a script than a person.",
                     detail: "Packet Inter-Arrival: Near Zero (<1ms)"
                 },
                 {
-                    title: "Incomplete Handshakes (SYN Burst)",
-                    description: "Repeated connection attempts were started without being completed, exhausting server connection slots.",
+                    title: "Many Incomplete Connections",
+                    description: "Many connection requests were started but not finished. This can use up the server's available connections.",
                     detail: "Connection Pattern: Unfinished SYN requests"
                 }
             ];
@@ -134,67 +134,67 @@ export const IncidentReview = () => {
                     detail: incident.target_username ? `Targeted Account: '${incident.target_username}'` : "Target: Authentication Service"
                 },
                 {
-                    title: "Automated Credential Guessing",
-                    description: "Pattern matches automated dictionary attacks cycling through passwords.",
+                    title: "Automated Password Guessing",
+                    description: "The pattern looks like a program trying many passwords, not a person signing in.",
                     detail: `Target Port: ${incident.destination_port}`
                 },
                 {
-                    title: "Burst Activity Spike",
-                    description: "Login attempts occurred significantly faster than typical human interaction.",
+                    title: "Very Fast Login Attempts",
+                    description: "The login attempts happened much faster than a person would normally type.",
                     detail: `Burst Deviation Score: ${incident.burst_score || 3.4}x normal`
                 }
             ];
         } else if (t.includes('port') || t.includes('scan')) {
             return [
                 {
-                    title: "Port Reconnaissance Activity",
-                    description: "Sequential or rapid probes across network ports attempting to discover open services.",
+                    title: "Searching for Open Ports",
+                    description: "The traffic checked ports quickly to find services that may be open.",
                     detail: `Probed Port: ${incident.destination_port}`
                 },
                 {
-                    title: "Zero Data Payload",
-                    description: "Packets contained TCP header probe flags without any application data.",
+                    title: "Probe Packets With No Data",
+                    description: "These packets checked the connection but did not carry normal application data.",
                     detail: "Packet Type: Scanner Probe"
                 },
                 {
-                    title: "Short Duration Spikes",
-                    description: "Connection was terminated immediately after port response was evaluated.",
+                    title: "Very Short Connections",
+                    description: "Each connection ended right after the port responded, which is common during a scan.",
                     detail: "Duration: Rapid disconnect"
                 }
             ];
         } else if (t.includes('bot')) {
             return [
                 {
-                    title: "Automated Agent Pattern",
-                    description: "Traffic interval and flow characteristics match known automated botnet command-and-control behavior.",
+                    title: "Automated Traffic Pattern",
+                    description: "The timing and flow match traffic commonly sent by automated bots.",
                     detail: "Behavior: Automated Bot Pattern"
                 },
                 {
-                    title: "Periodic Beaconing Signals",
-                    description: "Packets were transmitted at rigid clock intervals unlike human browsing.",
+                    title: "Traffic Sent on a Fixed Schedule",
+                    description: "Packets were sent at very regular times, unlike normal human browsing.",
                     detail: "Timing: Periodic Intervals"
                 },
                 {
-                    title: "Suspicious Port Target",
-                    description: `Traffic targeted internal service port ${incident.destination_port}.`,
+                    title: "Targeted Internal Service Port",
+                    description: `The traffic targeted internal service port ${incident.destination_port}.`,
                     detail: `Port: ${incident.destination_port}`
                 }
             ];
         } else {
             return [
                 {
-                    title: "Anomalous Traffic Payload",
-                    description: "Packet payload structure deviates from standard request formats.",
+                    title: "Unusual Traffic Content",
+                    description: "The packet content did not look like a normal request.",
                     detail: "Pattern: Exploit Signature Match"
                 },
                 {
-                    title: "Elevated Flow Burst Score",
-                    description: "Connection activity exceeded standard baseline thresholds.",
+                    title: "Traffic Spike Detected",
+                    description: "This connection was much busier than the usual level.",
                     detail: `Deviation Score: ${incident.burst_score || 2.8}x baseline`
                 },
                 {
-                    title: "Suspicious Web Gateway Target",
-                    description: `Targeting service endpoint on port ${incident.destination_port}.`,
+                    title: "Targeted Service Port",
+                    description: `The traffic targeted a service on port ${incident.destination_port}.`,
                     detail: `Destination Port: ${incident.destination_port}`
                 }
             ];
@@ -336,7 +336,7 @@ export const IncidentReview = () => {
                                 Why Was This Traffic Flagged?
                             </h2>
                             <p className="text-sm text-muted-foreground leading-relaxed mt-0.5 font-sans">
-                                Analysis of the telemetry flow vectors that triggered classification as <strong className="text-foreground">{incident.type}</strong>.
+                                The system flagged this as <strong className="text-foreground">{incident.type}</strong> because it saw the signs below.
                             </p>
                         </div>
                         <span className="caps-label hidden sm:inline-block px-2.5 py-1 rounded-md bg-muted text-muted-foreground border border-border">
