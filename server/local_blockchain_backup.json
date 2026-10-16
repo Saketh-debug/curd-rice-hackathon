@@ -159,5 +159,22 @@
     "handledBy": "SYSTEM_AUTOMATION",
     "timestamp": 1792182864,
     "isZeroKnowledge": true
+  },
+  {
+    "onChain": false,
+    "txHash": "0x350de1ba1ba273115dc25b65b8626fd84e5c303d7f4b22bc7da20e144468ed63",
+    "blockNumber": 11,
+    "blockHash": "0xc8cacf4726ca81d835df3113ffef062cbb579ea5a199dbe922315d972e5d41e4",
+    "commitmentHash": "0x5e8f22add43bac0a656eea1a93242f3bbde7d569984399b092d89dd55cff6c95",
+    "gasUsed": 84210,
+    "contractAddress": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+    "threatType": "Ground RTU / Sensor Hijack",
+    "actionTaken": "MANUAL_BLOCK",
+    "station": "NRSC-HYD",
+    "srcIp": "198.51.101.128",
+    "confidence": 90,
+    "handledBy": "admin_user",
+    "timestamp": 1792187456,
+    "isZeroKnowledge": true
   }
 ]
