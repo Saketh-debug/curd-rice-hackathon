@@ -10,6 +10,7 @@ import CommandCenter from './features/client/pages/CommandCenter';
 import AutomationStatus from './features/client/pages/AutomationStatus';
 import ThreatMap from './features/client/pages/ThreatMap';
 import EventStream from './features/client/pages/EventStream';
+import PassWindowStatus from './features/client/pages/PassWindowStatus';
 
 // Admin Portal (Portal B)
 import AdminLayout from './features/admin/layouts/AdminLayout';
@@ -18,6 +19,7 @@ import IncidentReview from './features/admin/pages/IncidentReview';
 import PolicyConfig from './features/admin/pages/PolicyConfig';
 import DecisionTimeline from './features/admin/pages/DecisionTimeline';
 import ComplianceReports from './features/admin/pages/ComplianceReports';
+import ModelBenchmark from './features/admin/pages/ModelBenchmark';
 
 function App() {
   return (
@@ -32,6 +34,7 @@ function App() {
             <Routes>
               <Route path="dashboard" element={<ClientDashboard />} />
               <Route path="command-center" element={<CommandCenter />} />
+              <Route path="passes" element={<PassWindowStatus />} />
               <Route path="automation" element={<AutomationStatus />} />
               <Route path="map" element={<ThreatMap />} />
               <Route path="events" element={<EventStream />} />
@@ -45,6 +48,7 @@ function App() {
           <AdminLayout>
             <Routes>
               <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="benchmark" element={<ModelBenchmark />} />
               <Route path="incidents/review/:id" element={<IncidentReview />} />
               <Route path="incidents" element={<IncidentReview />} />
               <Route path="compliance" element={<ComplianceReports />} />
