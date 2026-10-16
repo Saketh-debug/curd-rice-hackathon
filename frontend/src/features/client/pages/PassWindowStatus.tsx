@@ -194,7 +194,7 @@ export const PassWindowStatus = () => {
     const activePass = passes.find(p => p.status === 'ACTIVE') || passes[0];
 
     return (
-        <div className="px-6 pb-6 md:px-8 md:pb-8 max-w-7xl mx-auto space-y-6 bg-background text-foreground min-h-screen font-sans">
+        <div className="space-y-6">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border">
                 <div>

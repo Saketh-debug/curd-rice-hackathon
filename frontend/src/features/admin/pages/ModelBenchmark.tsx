@@ -270,7 +270,7 @@ export const ModelBenchmark = () => {
     };
 
     return (
-        <div className="px-6 pb-6 md:px-8 md:pb-8 max-w-7xl mx-auto space-y-8 bg-background text-foreground min-h-screen">
+        <div className="space-y-8">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-border">
                 <div>

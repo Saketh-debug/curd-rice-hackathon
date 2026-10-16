@@ -34,7 +34,7 @@ export const Dashboard = () => {
     const peakVelocity = Math.max(...sparklineData, 1);
 
     return (
-        <div className="relative min-h-screen font-sans space-y-8">
+        <div className="space-y-8">
             {/* ================= HERO HEADER ================= */}
             <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 pb-6 border-b border-border/80">
                 <div className="space-y-3 max-w-2xl">

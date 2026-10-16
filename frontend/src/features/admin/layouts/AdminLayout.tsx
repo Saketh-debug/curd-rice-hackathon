@@ -15,7 +15,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <FloatingNav />
 
             {/* Main Content Area - Centered with balanced whitespace */}
-            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 relative flex flex-col min-h-screen z-10">
+            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 relative flex flex-col z-10">
                 {children}
             </main>
 

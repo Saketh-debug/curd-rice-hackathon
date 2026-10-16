@@ -19,27 +19,26 @@ export const EventStream = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div className="flex-1 flex flex-col min-w-0 bg-background relative font-mono text-foreground">
-            {/* Toolbar */}
-            <div className="h-14 border-b border-border bg-card flex items-center justify-between px-6 flex-shrink-0 z-10">
-                <div className="flex items-center gap-3">
-                    <Satellite className="w-4 h-4 text-signal" />
-                    <span className="text-xs font-semibold text-foreground tracking-wide">
-                        Telemetry Event Stream — ISTRAC Ground Segment Engine
-                    </span>
-                    <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[11px] bg-muted text-muted-foreground border border-border">
-                        52 Features Offline Ingestion
-                    </span>
+        <div className="flex-1 flex flex-col min-w-0 space-y-6 font-mono text-foreground">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-3">
+                <div>
+                    <div className="flex items-center gap-2 caps-label text-signal mb-1">
+                        <Satellite className="w-3.5 h-3.5" />
+                        ISTRAC Ground Segment Engine
+                    </div>
+                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground font-sans">
+                        Telemetry Event Stream
+                    </h1>
                 </div>
-                <div className="flex items-center gap-2.5 text-xs">
-                    <span className="w-2 h-2 rounded-full bg-grove"></span>
-                    <span className="text-[11px] text-grove font-semibold">RECEIVING FLOW STREAM...</span>
+                <div className="flex items-center gap-2.5 text-xs font-mono">
+                    <span className="w-2 h-2 rounded-full bg-grove animate-pulse"></span>
+                    <span className="text-xs text-grove font-semibold">RECEIVING FLOW STREAM...</span>
                 </div>
             </div>
 
             {/* Terminal Window */}
-            <div className="flex-1 p-4 sm:p-6 overflow-hidden flex flex-col">
-                <div className="flex-1 bg-card rounded-xl border border-border shadow-xl overflow-hidden flex flex-col relative text-xs">
+            <div className="flex-1 bg-card rounded-xl border border-border shadow-xl overflow-hidden flex flex-col relative text-xs">
                     {/* Header */}
                     <div className="h-9 bg-muted/60 border-b border-border flex items-center px-4 justify-between select-none shrink-0">
                         <div className="flex items-center gap-2 text-muted-foreground text-[11px]">
@@ -127,7 +126,6 @@ export const EventStream = () => {
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     );
 };
