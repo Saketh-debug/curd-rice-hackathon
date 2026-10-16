@@ -292,16 +292,16 @@ def get_flow_confusion_samples(
 
     if is_correct:
         rationale = f"Clean classification. Distinct behavioral signatures of '{act['alias']}' matched ground station defense models with >97% discriminatory confidence."
-        laya_action = "MONITOR" if actual == 6 else "AUTO_BLOCK"
-        mitigation = "Standard nominal telemetry clear" if actual == 6 else f"Engage automated perimeter drop on {act['port']}."
+        laya_action = "MONITOR" if actual_idx == 6 else "AUTO_BLOCK"
+        mitigation = "Standard nominal telemetry clear" if actual_idx == 6 else f"Engage automated perimeter drop on {act['port']}."
     else:
         rationale = f"Misclassification boundary: '{act['alias']}' was predicted as '{pred['alias']}'. Both vectors exhibit overlapping feature density in packet arrival delta and flag counts."
         laya_action = "ESCALATE_TO_ANALYST"
         mitigation = f"Cross-verify packet payload flags; initiate secondary heuristic inspect on port {act['port']}."
 
     return {
-        "actual_index": actual,
-        "predicted_index": predicted,
+        "actual_index": actual_idx,
+        "predicted_index": predicted_idx,
         "actual_class": act["name"],
         "actual_alias": act["alias"],
         "predicted_class": pred["name"],
