@@ -52,6 +52,7 @@ export interface Packet {
     failed_attempts?: number;
     traffic_volume?: string;
     login_behavior?: string;
+    total_fwd_packets?: number;
 }
 
 export interface ClassMetric {
