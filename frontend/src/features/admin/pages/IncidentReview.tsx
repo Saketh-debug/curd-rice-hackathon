@@ -177,8 +177,7 @@ export const IncidentReview = () => {
     const reasons = getSimpleReasons(incident.type);
 
     return (
-        <div className="min-h-screen bg-[#050814] text-slate-100 font-sans p-6 md:p-8">
-            <div className="max-w-5xl mx-auto space-y-6">
+        <div className="space-y-8 max-w-5xl mx-auto font-sans">
 
                 {/* Top Navigation & Status */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
@@ -231,7 +230,7 @@ export const IncidentReview = () => {
                     <div className="bg-[#0a1022] border border-slate-800 rounded-2xl p-4">
                         <div className="flex items-center justify-between text-slate-400 text-xs font-mono mb-1">
                             <span>Target Port</span>
-                            <Activity className="w-4 h-4 text-slate-500" />
+                            <Activity className="w-4 h-4 text-orange-400" />
                         </div>
                         <div className="text-sm sm:text-base font-bold font-mono text-white">
                             Port {incident.destination_port}
@@ -296,18 +295,18 @@ export const IncidentReview = () => {
                 )}
 
                 {/* Simplified Explainability Section: "Why Was This Flagged?" */}
-                <div className="bg-[#0a1022] border border-cyan-500/30 rounded-2xl p-6 shadow-sm space-y-4">
+                <div className="bg-[#0a1022]/80 backdrop-blur-xl border border-orange-500/30 rounded-2xl p-6 shadow-sm space-y-4">
                     <div className="flex items-center justify-between pb-3 border-b border-slate-800">
                         <div>
                             <h2 className="text-base font-bold font-orbitron text-white flex items-center gap-2">
-                                <Info className="w-4 h-4 text-cyan-400" />
+                                <Info className="w-4 h-4 text-orange-400" />
                                 Why Was This Traffic Flagged?
                             </h2>
                             <p className="text-xs text-slate-400 mt-0.5">
                                 Simple explanation of the network metrics that caused the machine learning model to classify this flow as <strong className="text-orange-400">{incident.type}</strong>.
                             </p>
                         </div>
-                        <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 text-cyan-300 border border-cyan-800">
+                        <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded bg-orange-950/60 text-orange-300 border border-orange-800">
                             Model Explainability
                         </span>
                     </div>
@@ -316,8 +315,8 @@ export const IncidentReview = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                         {reasons.map((reason, idx) => (
                             <div key={idx} className="p-4 rounded-xl bg-[#080d1e] border border-slate-800 space-y-2">
-                                <div className="flex items-center gap-2 text-cyan-300 font-bold text-xs font-mono">
-                                    <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px]">
+                                <div className="flex items-center gap-2 text-orange-300 font-bold text-xs font-mono">
+                                    <span className="w-5 h-5 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center text-[10px]">
                                         {idx + 1}
                                     </span>
                                     <span>{reason.title}</span>
@@ -388,7 +387,6 @@ export const IncidentReview = () => {
                 </div>
 
             </div>
-        </div>
     );
 };
 

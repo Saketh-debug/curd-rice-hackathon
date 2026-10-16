@@ -141,14 +141,14 @@ export const ModelBenchmark = () => {
                     <button
                         onClick={() => fetchMetrics(true)}
                         disabled={isRecomputing || isLoading}
-                        className="px-4 py-2 rounded-xl bg-[#0e1733] hover:bg-[#15234d] border border-cyan-500/30 text-cyan-300 font-mono text-xs font-semibold flex items-center gap-2 transition-all shadow-sm"
+                        className="px-4 py-2 rounded-xl bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-orange-300 font-mono text-xs font-semibold flex items-center gap-2 transition-all shadow-sm"
                     >
                         <RefreshCw className={`w-4 h-4 ${isRecomputing ? 'animate-spin' : ''}`} />
                         {isRecomputing ? 'Recomputing...' : 'Re-Evaluate on Test Split'}
                     </button>
                     <button
                         onClick={exportEvaluationReport}
-                        className="px-4 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-semibold flex items-center gap-2 transition-all shadow-sm"
+                        className="px-4 py-2 rounded-xl bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-orange-300 cursor-pointer font-mono text-xs font-semibold flex items-center gap-2 transition-all shadow-sm"
                     >
                         <Download className="w-4 h-4" /> Export Report JSON
                     </button>
@@ -170,12 +170,12 @@ export const ModelBenchmark = () => {
 
             {/* Top Metric Cards - Real Data from Evaluation Harness */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-[#0a1022] border border-cyan-500/30 rounded-xl p-5 shadow-sm">
+                <div className="bg-[#0a1022] border border-orange-500/30 rounded-xl p-5 shadow-sm">
                     <div className="text-xs text-slate-400 font-mono uppercase tracking-wider">Test Accuracy</div>
                     <div className="text-3xl font-bold font-orbitron text-white mt-1">
                         {metrics ? pct(metrics.accuracy) : '83.6%'}
                     </div>
-                    <div className="text-[11px] text-cyan-400 font-mono mt-1">Held-out test split (n={metrics?.n_test_segments || 529})</div>
+                    <div className="text-[11px] text-orange-400 font-mono mt-1 font-semibold">Held-out test split (n={metrics?.n_test_segments || 529})</div>
                 </div>
 
                 <div className="bg-[#0a1022] border border-emerald-500/30 rounded-xl p-5 shadow-sm">
@@ -210,11 +210,11 @@ export const ModelBenchmark = () => {
                     className={clsx(
                         'pb-3 font-bold transition-all border-b-2 flex items-center gap-2 px-3 py-2 cursor-pointer',
                         activeTab === 'real_dataset'
-                            ? 'text-cyan-400 border-cyan-400 bg-cyan-950/30 rounded-t-lg'
+                            ? 'text-orange-400 border-orange-400 bg-orange-950/30 rounded-t-lg'
                             : 'text-slate-400 border-transparent hover:text-slate-200'
                     )}
                 >
-                    <Satellite className="w-4 h-4 text-cyan-400" />
+                    <Satellite className="w-4 h-4 text-orange-400" />
                     <span>ESA OPS-SAT Space Telemetry Split (n=529)</span>
                 </button>
                 <button
@@ -222,11 +222,11 @@ export const ModelBenchmark = () => {
                     className={clsx(
                         'pb-3 font-bold transition-all border-b-2 flex items-center gap-2 px-3 py-2 cursor-pointer',
                         activeTab === 'flow_matrix'
-                            ? 'text-cyan-400 border-cyan-400 bg-cyan-950/30 rounded-t-lg'
+                            ? 'text-orange-400 border-orange-400 bg-orange-950/30 rounded-t-lg'
                             : 'text-slate-400 border-transparent hover:text-slate-200'
                     )}
                 >
-                    <Layers className="w-4 h-4 text-cyan-400" />
+                    <Layers className="w-4 h-4 text-orange-400" />
                     <span>7×7 Multiclass Ground Flow Matrix (n=500 Held-Out Split)</span>
                 </button>
             </div>
@@ -257,7 +257,7 @@ export const ModelBenchmark = () => {
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-3 gap-3 font-mono text-xs text-center">
                                         <div className="text-slate-500 text-left self-center text-[10px] font-bold">ACTUAL \ PRED</div>
-                                        <div className="p-2 bg-slate-900/60 rounded text-cyan-300 font-bold">PRED ANOMALY</div>
+                                        <div className="p-2 bg-slate-900/60 rounded text-orange-300 font-bold">PRED ANOMALY</div>
                                         <div className="p-2 bg-slate-900/60 rounded text-slate-300 font-bold">PRED NOMINAL</div>
                                     </div>
 
@@ -343,9 +343,9 @@ export const ModelBenchmark = () => {
                             </div>
 
                             {/* Distribution Drift */}
-                            <div className="bg-[#0a1022] border border-cyan-500/30 rounded-2xl p-5">
+                            <div className="bg-[#0a1022] border border-orange-500/30 rounded-2xl p-5">
                                 <div className="flex items-center justify-between mb-2">
-                                    <span className="text-xs font-mono text-cyan-400 font-bold uppercase">
+                                    <span className="text-xs font-mono text-orange-400 font-bold uppercase">
                                         Data Distribution Drift (KL Divergence)
                                     </span>
                                     <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
@@ -378,7 +378,7 @@ export const ModelBenchmark = () => {
                                     <div key={i} className="font-mono text-xs">
                                         <div className="flex justify-between mb-1">
                                             <span className="text-slate-300 font-bold">{f.feature}</span>
-                                            <span className="text-cyan-400 font-bold">{pct(f.weight)} contribution</span>
+                                            <span className="text-orange-400 font-bold">{pct(f.weight)} contribution</span>
                                         </div>
                                         <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
                                             <div className="bg-gradient-to-r from-cyan-500 to-blue-500 h-full rounded-full" style={{ width: `${f.weight * 100 * 3}%` }}></div>
@@ -395,7 +395,7 @@ export const ModelBenchmark = () => {
                             <div className="p-6 border-b border-slate-800 bg-[#0e1733] flex items-center justify-between">
                                 <div>
                                     <h3 className="font-orbitron font-bold text-base text-white flex items-center gap-2">
-                                        <Satellite className="w-4 h-4 text-cyan-400" />
+                                        <Satellite className="w-4 h-4 text-orange-400" />
                                         Per-Channel ESA OPS-SAT Telemetry Anomaly Breakdown
                                     </h3>
                                     <p className="text-xs font-mono text-slate-400 mt-0.5">
@@ -455,7 +455,7 @@ export const ModelBenchmark = () => {
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-2 mb-6">
                             <div>
                                 <h2 className="text-xl font-bold font-orbitron text-white flex items-center gap-2">
-                                    <Layers className="w-5 h-5 text-cyan-400" />
+                                    <Layers className="w-5 h-5 text-orange-400" />
                                     7×7 Multiclass Ground Flow Confusion Matrix
                                 </h2>
                                 <p className="text-xs text-slate-400 font-mono mt-1">
@@ -479,7 +479,7 @@ export const ModelBenchmark = () => {
                                 <div className="grid grid-cols-8 gap-1.5 mb-2 text-center font-mono text-[11px] text-slate-400">
                                     <div className="text-left font-bold text-slate-500 py-2">ACTUAL \ PRED</div>
                                     {matrixLabels.map((lbl, idx) => (
-                                        <div key={idx} className="p-2 font-bold truncate text-cyan-300" title={lbl}>
+                                        <div key={idx} className="p-2 font-bold truncate text-orange-300" title={lbl}>
                                             {lbl.split(' ')[0]}
                                         </div>
                                     ))}
@@ -513,13 +513,13 @@ export const ModelBenchmark = () => {
                         </div>
 
                         {selectedCell && (
-                            <div className="mt-4 p-4 rounded-xl bg-[#080d1e] border border-cyan-500/30 text-xs font-mono flex items-center justify-between">
+                            <div className="mt-4 p-4 rounded-xl bg-[#080d1e] border border-orange-500/30 text-xs font-mono flex items-center justify-between">
                                 <div>
                                     <span className="text-slate-400">Selected Cell: </span>
                                     <span className="text-white font-bold">{matrixLabels[selectedCell.r]}</span> (Actual) →{' '}
-                                    <span className="text-cyan-400 font-bold">{matrixLabels[selectedCell.c]}</span> (Predicted)
+                                    <span className="text-orange-400 font-bold">{matrixLabels[selectedCell.c]}</span> (Predicted)
                                 </div>
-                                <div className="text-base font-bold text-cyan-300">
+                                <div className="text-base font-bold text-orange-300">
                                     Rate: {(selectedCell.val * 100).toFixed(2)}%
                                 </div>
                             </div>
@@ -531,7 +531,7 @@ export const ModelBenchmark = () => {
                         <div className="p-6 border-b border-slate-800 bg-[#0e1733] flex items-center justify-between">
                             <div>
                                 <h3 className="font-orbitron font-bold text-base text-white flex items-center gap-2">
-                                    <FileSpreadsheet className="w-4 h-4 text-cyan-400" />
+                                    <FileSpreadsheet className="w-4 h-4 text-orange-400" />
                                     Comprehensive Classification Report
                                 </h3>
                                 <p className="text-xs font-mono text-slate-400 mt-0.5">
@@ -588,14 +588,14 @@ export const ModelBenchmark = () => {
             )}
 
             {/* Space Cyber Datasets Reference Panel */}
-            <div className="bg-[#0a1022] border border-cyan-500/20 rounded-2xl p-6">
+            <div className="bg-[#0a1022] border border-orange-500/20 rounded-2xl p-6">
                 <h3 className="font-orbitron font-bold text-base text-white flex items-center gap-2 mb-4">
-                    <Database className="w-5 h-5 text-cyan-400" />
+                    <Database className="w-5 h-5 text-orange-400" />
                     Validated Aerospace & Space Ground Datasets Provenance
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4 text-xs font-mono text-slate-300">
                     <div className="p-4 rounded-xl bg-[#080d1e] border border-slate-800">
-                        <div className="text-cyan-400 font-bold mb-1">1. US Space Force Hack-A-Sat Archives</div>
+                        <div className="text-orange-400 font-bold mb-1">1. US Space Force Hack-A-Sat Archives</div>
                         <p className="text-slate-400 font-sans leading-relaxed">
                             Captured PCAP traces evaluating CCSDS packet injection, COSMOS ground control telemetry attacks, and radio-frequency link hijacking.
                         </p>

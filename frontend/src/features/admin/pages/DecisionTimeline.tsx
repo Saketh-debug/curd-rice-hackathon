@@ -36,16 +36,16 @@ export const DecisionTimeline = () => {
     }, []);
 
     return (
-        <div className="max-w-4xl mx-auto p-6 md:p-8 space-y-6 bg-[#050814] text-slate-100 font-sans min-h-screen">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+        <div className="space-y-10 max-w-4xl mx-auto font-sans">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-800/80 gap-3">
                 <div>
-                    <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-widest mb-1">
+                    <div className="flex items-center gap-2 text-orange-400 font-mono text-xs uppercase tracking-widest mb-1.5">
                         <Satellite className="w-4 h-4" />
-                        ISTRAC Flight Security Operations
+                        <span>ISTRAC Flight Security Operations</span>
                     </div>
-                    <h1 className="text-2xl font-bold font-orbitron text-white flex items-center gap-3">
-                        <History className="text-cyan-400 w-6 h-6" />
-                        Mission Decision Audit Timeline
+                    <h1 className="text-2xl sm:text-3xl font-bold font-orbitron text-white flex items-center gap-3">
+                        <History className="text-orange-400 w-6 h-6" />
+                        <span>Mission Decision Audit Timeline</span>
                     </h1>
                     <p className="text-slate-400 text-xs font-mono mt-1">
                         Chronological record of automated AI neutralizations and mission controller overrides.
@@ -56,7 +56,7 @@ export const DecisionTimeline = () => {
                 </div>
             </div>
 
-            <div className="relative border-l-2 border-slate-800 ml-3 space-y-6 font-mono text-xs">
+            <div className="relative border-l-2 border-slate-800/80 ml-3 space-y-6 font-mono text-xs">
                 {isLoading ? (
                     <div className="pl-6 text-slate-500">Loading audit trail...</div>
                 ) : logs.map((log, idx) => {
@@ -70,17 +70,17 @@ export const DecisionTimeline = () => {
                             <div className={clsx(
                                 "absolute -left-[9px] top-1 h-4 w-4 rounded-full border-2 border-[#050814]",
                                 isBlock ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" :
-                                    isFP ? "bg-orange-400" : "bg-cyan-400"
+                                    isFP ? "bg-orange-400" : "bg-amber-400"
                             )}></div>
 
                             {/* Content Card */}
-                            <div className="bg-[#0a1022] rounded-xl border border-slate-800 p-5 shadow-sm hover:border-cyan-500/40 transition-colors">
+                            <div className="bg-[#0a1022]/80 backdrop-blur-xl rounded-2xl border border-slate-800/80 p-5 shadow-sm hover:border-orange-500/40 transition-colors">
                                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 gap-2">
                                     <div className="flex items-center gap-2">
                                         <h3 className="font-orbitron font-bold text-white text-sm">
                                             {mapSpaceThreatName(log.type)}
                                         </h3>
-                                        <span className="text-[10px] text-cyan-300 bg-cyan-950/60 border border-cyan-800 px-2 py-0.5 rounded">
+                                        <span className="text-[10px] text-orange-300 bg-orange-950/60 border border-orange-800 px-2 py-0.5 rounded-full font-semibold">
                                             {assignedStation}
                                         </span>
                                     </div>
@@ -94,11 +94,11 @@ export const DecisionTimeline = () => {
                                         <span className="text-slate-500">Origin Node:</span> <span className="text-slate-200">{log.src_ip} ({log.country || 'External Interface'})</span>
                                     </div>
                                     <div>
-                                        <span className="text-slate-500">Certainty Score:</span> <span className="text-cyan-400 font-bold">{Math.round(log.confidence * 100)}%</span>
+                                        <span className="text-slate-500">Certainty Score:</span> <span className="text-orange-400 font-bold">{Math.round(log.confidence * 100)}%</span>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-3 bg-[#080d1e] p-3 rounded-lg border border-slate-800">
+                                <div className="flex items-center gap-3 bg-[#080d1e]/80 p-3.5 rounded-xl border border-slate-800">
                                     {isBlock ? <Shield className="w-4 h-4 text-red-400" /> : <CheckCircle className="w-4 h-4 text-emerald-400" />}
 
                                     <div className="flex-1">
@@ -106,7 +106,7 @@ export const DecisionTimeline = () => {
                                             Action: {isBlock ? 'TT&C LINK ISOLATION (BLOCKED)' : isFP ? 'FLAGGED AS FALSE ALARM (LOS MITIGATION)' : log.action}
                                         </p>
                                         <p className="text-[10px] text-slate-400">
-                                            Executed by: <span className="text-cyan-400 font-bold">{log.handled_by === 'SYSTEM_AUTOMATION' ? 'AEGIS AI SOAR' : 'Mission Controller'}</span>
+                                            Executed by: <span className="text-orange-400 font-bold">{log.handled_by === 'SYSTEM_AUTOMATION' ? 'AEGIS AI SOAR' : 'Mission Controller'}</span>
                                         </p>
                                     </div>
                                 </div>
