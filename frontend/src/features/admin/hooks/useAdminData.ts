@@ -46,7 +46,16 @@ export const useAdminData = () => {
     useEffect(() => {
         fetchData();
         const interval = setInterval(fetchData, 5000); // Poll every 5s
-        return () => clearInterval(interval);
+
+        const handleAttackInjected = () => {
+            fetchData();
+        };
+        window.addEventListener('attack-injected', handleAttackInjected);
+
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('attack-injected', handleAttackInjected);
+        };
     }, []);
 
     const resolveIncident = async (id: number, action: 'BLOCK' | 'IGNORE') => {
