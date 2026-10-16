@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAdminData } from '../hooks/useAdminData';
 import { useSystemHealth } from '../../../hooks/useSystemHealth';
+import { AttackSimulatorTrigger } from '../../../components/AttackSimulator/AttackSimulatorTrigger';
 import { AlertTriangle, Clock, ShieldAlert, CheckCircle, ArrowRight, Satellite, ShieldCheck, Activity } from 'lucide-react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
@@ -18,7 +19,7 @@ const mapSpaceThreatName = (type: string) => {
 };
 
 export const AdminDashboard = () => {
-    const { pendingIncidents, stats, recentActions } = useAdminData();
+    const { pendingIncidents, stats, recentActions, refreshData } = useAdminData();
     const { health } = useSystemHealth();
 
     return (
@@ -37,6 +38,7 @@ export const AdminDashboard = () => {
                 </div>
 
                 <div className="flex items-center gap-3 font-mono text-xs">
+                    <AttackSimulatorTrigger variant="header" onSuccess={refreshData} />
                     <Link
                         to="/admin/benchmark"
                         className="px-4 py-2 rounded-xl bg-orange-500/10 border border-orange-500/30 text-orange-300 hover:bg-orange-500/20 hover:border-orange-500/50 transition-all shadow-[0_0_15px_rgba(249,115,22,0.1)] flex items-center gap-2"

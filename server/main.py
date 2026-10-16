@@ -698,11 +698,23 @@ def inject_attack_wave(req: AttackInjectionRequest, db: Session = Depends(get_db
         tier = laya_res["risk_tier"]
         expl = laya_res["explanation"]
 
-        # If severity is forced to CRITICAL for the primary packet, ensure threshold is exceeded
-        if req.severity == "CRITICAL" and i == 0:
-            conf = max(conf, 0.965)
-            action = "AUTO_BLOCK"
-            tier = "CRITICAL"
+        # Determine SOAR Action & Confidence based on request mode
+        if req.severity == "HIGH":
+            # Analyst Review Mode: explicitly route to ManualReview (Active Anomaly Feed)
+            conf = min(conf, 0.92)
+            action = "ESCALATE_TO_ANALYST"
+            tier = "HIGH"
+        elif req.severity == "CRITICAL":
+            if i == 0:
+                # Primary threat: Auto-Blocked instantly by Laya SOAR
+                conf = max(conf, 0.965)
+                action = "AUTO_BLOCK"
+                tier = "CRITICAL"
+            else:
+                # Secondary threat: Escalated to Analyst Review so Active Anomaly Feed also receives it!
+                conf = min(conf, 0.91)
+                action = "ESCALATE_TO_ANALYST"
+                tier = "HIGH"
 
         # 1. Traffic Log
         log_action = "AUTO_BLOCKED" if action == "AUTO_BLOCK" else "PENDING_REVIEW"
@@ -784,8 +796,8 @@ def inject_attack_wave(req: AttackInjectionRequest, db: Session = Depends(get_db
 
 @app.get("/api/incidents/pending")
 def get_pending_incidents(db: Session = Depends(get_db)):
-    """For Page B1 & B2: Analyst Queue"""
-    return db.query(ManualReview).filter(ManualReview.status == "PENDING").all()
+    """For Page B1 & B2: Analyst Queue - returns newest pending incidents first"""
+    return db.query(ManualReview).filter(ManualReview.status == "PENDING").order_by(ManualReview.id.desc()).all()
 
 class ActionRequest(BaseModel):
     action: str # "BLOCK" or "IGNORE"
