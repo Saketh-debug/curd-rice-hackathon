@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOAR Space — 5-Minute Pitch & Judge Demonstration Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(16, 24, 39, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-glow: rgba(255, 153, 51, 0.25);
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --heading: #f8fafc;
+      --saffron: #ff9933;
+      --saffron-glow: rgba(255, 153, 51, 0.15);
+      --cyan: #38bdf8;
+      --cyan-glow: rgba(56, 189, 248, 0.15);
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --amber: #fbbf24;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 10%, rgba(255, 153, 51, 0.07) 0%, transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.06) 0%, transparent 45%),
+        linear-gradient(to bottom, #090d16, #05070c);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      padding: 40px 20px 80px;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    /* Header & Badges */
+    header {
+      margin-bottom: 48px;
+      text-align: center;
+      position: relative;
+    }
+
+    .badge-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      margin-bottom: 20px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--saffron);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--saffron);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .badge-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--saffron);
+      font-weight: 600;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, #fff 30%, var(--saffron) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 28px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .nav-tabs a {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-tabs a:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--saffron);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Section Styles */
+    section {
+      margin-bottom: 56px;
+      scroll-margin-top: 30px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 14px;
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--saffron-glow);
+      border: 1px solid rgba(255, 153, 51, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--saffron);
+      font-size: 18px;
+    }
+
+    h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--heading);
+      letter-spacing: -0.01em;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(16px);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s ease;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .card.highlight {
+      border-color: rgba(255, 153, 51, 0.35);
+      background: linear-gradient(180deg, rgba(255, 153, 51, 0.04) 0%, rgba(16, 24, 39, 0.75) 100%);
+    }
+
+    /* Pitch Speech Blocks */
+    .speech-block {
+      position: relative;
+      padding-left: 24px;
+      border-left: 3px solid var(--card-border);
+      margin-bottom: 28px;
+      transition: border-color 0.2s ease;
+    }
+
+    .speech-block:hover {
+      border-left-color: var(--saffron);
+    }
+
+    .time-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 153, 51, 0.12);
+      color: var(--saffron);
+      border: 1px solid rgba(255, 153, 51, 0.25);
+      display: inline-block;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .speech-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .speech-content {
+      font-size: 15px;
+      color: #cbd5e1;
+      line-height: 1.7;
+      font-style: normal;
+    }
+
+    .speech-content strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .cue {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--cyan);
+      background: var(--cyan-glow);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    /* Tech Stack Table */
+    .table-container {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--card-border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--heading);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--card-border);
+      letter-spacing: 0.02em;
+    }
+
+    td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-muted);
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tech-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #fff;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+    }
+
+    .tech-pill.accent {
+      background: var(--saffron-glow);
+      border-color: rgba(255, 153, 51, 0.3);
+      color: var(--saffron);
+    }
+
+    .tech-pill.cyan {
+      background: var(--cyan-glow);
+      border-color: rgba(56, 189, 248, 0.3);
+      color: var(--cyan);
+    }
+
+    /* Walkthrough Step Cards */
+    .step-card {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .step-card:hover {
+      border-color: rgba(255, 153, 51, 0.4);
+      box-shadow: 0 8px 25px -8px rgba(255, 153, 51, 0.2);
+    }
+
+    .step-num {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--saffron);
+      color: #0b0f17;
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(255, 153, 51, 0.3);
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .step-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .step-path {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--cyan);
+      background: var(--cyan-glow);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .walkthrough-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 14px 0;
+    }
+
+    @media (max-width: 768px) {
+      .walkthrough-grid {
+        grid-template-columns: 1fr;
+      }
+      .step-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .detail-box {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .detail-box h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .detail-box ul {
+      list-style-type: none;
+    }
+
+    .detail-box li {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+      position: relative;
+      padding-left: 14px;
+    }
+
+    .detail-box li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--saffron);
+      font-weight: bold;
+    }
+
+    .judge-quote {
+      background: rgba(16, 185, 129, 0.07);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 12px;
+    }
+
+    .judge-quote-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--emerald);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .judge-quote-text {
+      font-size: 14px;
+      font-style: italic;
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+
+    /* Print styling */
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+        padding: 0;
+      }
+      .card, .step-card {
+        background: #fff;
+        border: 1px solid #ddd;
+        color: #000;
+        box-shadow: none;
+      }
+      .speech-content, td, .subtitle {
+        color: #333;
+      }
+      h1, h2, .step-title, th {
+        color: #000;
+      }
+      .nav-tabs {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <header>
+      <div class="badge-bar">
+        <span class="badge-dot"></span>
+        <span class="badge-text">ISRO Ground Segment Defense • Live Pitch Document</span>
+      </div>
+      <h1>SOAR Space: <span>Pitch & Judge Walkthrough</span></h1>
+      <p class="subtitle">
+        Calibrated Multi-Vector Aerospace Defense • Dual ML Pipelines • Proprietary LAYAA Decision Engine • Local Air-Gapped AEGIS Copilot
+      </p>
+
+      <div class="nav-tabs">
+        <a href="#pitch-script">🎙️ 5-Minute Pitch Script</a>
+        <a href="#tech-stack">⚡ Tech Stack Architecture</a>
+        <a href="#layaa-engine">🧠 The LAYAA Engine</a>
+        <a href="#judge-walkthrough">🎯 Step-by-Step Live Demo</a>
+        <a href="#judge-qa">🛡️ Judge Q&A Cheat Sheet</a>
+      </div>
+    </header>
+
+    <!-- SECTION 1: 5-MINUTE SPEECH SCRIPT -->
+    <section id="pitch-script">
+      <div class="section-header">
+        <div class="section-icon">🎙️</div>
+        <h2>5-Minute Full Presentation Script</h2>
+      </div>
+
+      <div class="card highlight">
+        <div class="speech-block">
+          <span class="time-tag">0:00 – 0:45 • Opening</span>
+          <div class="speech-title">The Real-World Aerospace Threat Landscape</div>
+          <p class="speech-content">
+            "India's space programme is among the most respected in the world, and ISRO has been open about the cyber challenges that come with that scale. At a conference in Kochi, ISRO’s leadership confirmed the agency faces <strong>over 100 attempted cyber-attacks every single day</strong>.<br><br>
+            The landscape is expanding rapidly as commercial and private operators enter orbit. In February 2026, <strong>CERT-In</strong> issued landmark space cybersecurity guidelines mandating strict incident reporting within <strong>six hours</strong>, specifically highlighting threats like unauthorized telecommand uplink and ground station compromise.<br><br>
+            When a satellite passes overhead, ground controllers have a communication window that lasts <strong>only 8 to 12 minutes</strong>. If an intrusion occurs during that pass, teams don't have hours to investigate. <strong>SOAR Space</strong> is an automated ground-segment security platform designed to detect, explain, and mitigate cyber-attacks in milliseconds."
+          </p>
+          <span class="cue">Delivery Cue: Stand tall, steady cadence. Emphasize the 100+ daily attacks and the 8-minute pass window.</span>
+        </div>
+
+        <div class="speech-block">
+          <span class="time-tag">0:45 – 1:40 • The Problem</span>
+          <div class="speech-title">Why Static Rules & Thresholds Fail Space Missions</div>
+          <p class="speech-content">
+            "Most commercial security tools operate on rigid, static rules: exceed a hard threshold, and traffic is cut. Attackers know this. They probe, map the threshold, and stay just below it—or use low-and-slow techniques that no static signature anticipates. But if you tighten those rules, you risk blocking legitimate ground-to-space communications—and in space operations, dropping a valid telecommand can jeopardize an entire mission.<br><br>
+            At the same time, security teams face severe alert fatigue. Across industry SOCs, <strong>45% of security alerts are false alarms</strong>, and more than a third are ignored due to queue overload. In mission-critical space infrastructure, an alert that gets buried in the noise could be an uplink hijack."
+          </p>
+          <span class="cue">Delivery Cue: Contrast "blocking genuine satellite commands" with "alert fatigue". This is the dilemma judges care about.</span>
+        </div>
+
+        <div class="speech-block">
+          <span class="time-tag">1:40 – 2:40 • Dual Detection Models</span>
+          <div class="speech-title">Dual-Tier Detection: Ground Network & Flight Telemetry</div>
+          <p class="speech-content">
+            "SOAR Space protects both the ground network infrastructure and the spacecraft telemetry stream through dual-tier machine learning:<br><br>
+            <strong>Model One monitors ground-station network traffic.</strong> It passively measures <strong>52 continuous flow features</strong> and uses an optimized <strong>XGBoost</strong> classifier to categorize traffic across seven classes mapped to aerospace threats—such as TT&C uplink saturation, telecommand authentication bypass, and command injection.<br><br>
+            <strong>Model Two monitors the spacecraft itself.</strong> It is trained and validated on <strong>real ESA OPS-SAT flight telemetry</strong>, achieving <strong>96% anomaly detection accuracy</strong> on held-out test data—catching subtle sensor drift, reaction wheel bearing friction, and signal degradation that static rules miss."
+          </p>
+          <span class="cue">Delivery Cue: Clearly distinguish Model 1 (Ground Segment 52-signal) from Model 2 (Spacecraft 96% ESA OPS-SAT).</span>
+        </div>
+
+        <div class="speech-block">
+          <span class="time-tag">2:40 – 3:35 • The Core Engine</span>
+          <div class="speech-title">The LAYAA Decision Engine & Adaptive Policy Learning</div>
+          <p class="speech-content">
+            "Raw AI classifications alone aren't enough for mission operations—operators cannot trust a black box. This is where our proprietary <strong>LAYAA Decision Engine</strong> takes over.<br><br>
+            LAYAA is our calibrated decision and explainability engine. In less than two milliseconds, LAYAA:
+            <br>• <strong>Computes calibrated confidence tiers</strong> (CRITICAL, HIGH, ELEVATED, and NOMINAL), eliminating heuristic guesswork.
+            <br>• <strong>Routes actions autonomously:</strong> Definite attacks (>95% confidence) trigger an instant <strong>AUTO_BLOCK</strong> at the firewall level. Ambiguous or stealth border-cases (40–70% range) are routed to <strong>ESCALATE_TO_ANALYST</strong>, while benign traffic passes quietly to <strong>MONITOR</strong>.
+            <br>• <strong>Generates instant root-cause explainability:</strong> LAYAA identifies the top three contributing telemetry signals (such as packet inter-arrival surge, burst deviation, or failed auth spikes) and synthesizes a plain-language briefing.<br><br>
+            When an analyst reviews a borderline incident, their approve-or-reject verdict feeds directly into a <strong>Contextual Bandit Reinforcement Learning loop</strong>. The system tunes its decision thresholds dynamically per attack vector and per ground station—adapting in real time without requiring full model retraining."
+          </p>
+          <span class="cue">Delivery Cue: Highlight LAYAA as the operational brain that solves the "black box" problem.</span>
+        </div>
+
+        <div class="speech-block">
+          <span class="time-tag">3:35 – 4:20 • Operations & Architecture</span>
+          <div class="speech-title">Two Operational Portals, Air-Gapped AEGIS & Full Stack</div>
+          <p class="speech-content">
+            "We present this operational intelligence through two dedicated interfaces:<br><br>
+            • <strong>Portal A for Flight Operations:</strong> A real-time <strong>3D Three.js globe</strong> tracking seven ISRO ISTRAC ground stations, pass-window countdowns for missions like EOS-09, Chandrayaan-3, and Aditya-L1, and live telemetry health.<br>
+            • <strong>Portal B for SOC Analysts:</strong> A triage workspace with LAYAA’s root-cause explainability, interactive <strong>7×7 D3 confusion matrices</strong>, and one-click compliance exports for CERT-In 6-hour reports and CCSDS frame logs.<br><br>
+            For tactical advisory, we integrated <strong>AEGIS</strong>, our autonomous cyber copilot. Powered by an air-gapped, local <strong>Ollama LLM (Qwen 4B)</strong> with live RAG telemetry context, AEGIS answers complex protocol questions completely offline—ensuring zero data ever leaves the secure ground network."
+          </p>
+          <span class="cue">Delivery Cue: Point towards the screen to prep the judge for the live walkthrough.</span>
+        </div>
+
+        <div class="speech-block">
+          <span class="time-tag">4:20 – 4:50 • Close</span>
+          <div class="speech-title">The Demo Transition & Impact</div>
+          <p class="speech-content">
+            "Our built-in <strong>Attack Simulator</strong> lets you inject live multi-vector attacks against any ground station and watch the entire loop unfold in real time: detection, LAYAA triage, 3D globe plotting, analyst review, and automated policy adaptation.<br><br>
+            With zero fixed lines for attackers to game, millisecond mitigation, explainable decisions, and CERT-In audit readiness, SOAR Space gives teams guarding India’s space assets the speed and clarity they need. Let me walk you through the live system right now."
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: TECH STACK MATRIX -->
+    <section id="tech-stack">
+      <div class="section-header">
+        <div class="section-icon">⚡</div>
+        <h2>Complete Technology Stack</h2>
+      </div>
+
+      <div class="table-container card">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 22%;">System Layer</th>
+              <th style="width: 38%;">Technologies Used</th>
+              <th style="width: 40%;">Operational Role in SOAR Space</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Frontend Framework</strong></td>
+              <td>
+                <span class="tech-pill accent">React 19</span>
+                <span class="tech-pill">TypeScript 5.9</span>
+                <span class="tech-pill">Vite 7</span>
+                <span class="tech-pill">TailwindCSS 4</span>
+              </td>
+              <td>High-performance Mission Operations Center UI; reactive client-side rendering with zero UI lag during high-frequency telemetry ingest.</td>
+            </tr>
+            <tr>
+              <td><strong>3D & Data Visualization</strong></td>
+              <td>
+                <span class="tech-pill cyan">Three.js</span>
+                <span class="tech-pill cyan">Three-Globe</span>
+                <span class="tech-pill">D3.js (v7)</span>
+                <span class="tech-pill">React-Leaflet</span>
+              </td>
+              <td>Real-time 3D planetary globe with ISTRAC ground station coordinates and animated attack trajectories; interactive 7×7 and 2×2 confusion matrices.</td>
+            </tr>
+            <tr>
+              <td><strong>Backend Microservices</strong></td>
+              <td>
+                <span class="tech-pill accent">FastAPI</span>
+                <span class="tech-pill">Uvicorn ASGI</span>
+                <span class="tech-pill">Pydantic v2</span>
+                <span class="tech-pill">Starlette</span>
+              </td>
+              <td>Sub-5ms async RESTful endpoints for packet streaming, automated packet dropping, dynamic threshold queries, and compliance generation.</td>
+            </tr>
+            <tr>
+              <td><strong>Persistence & State</strong></td>
+              <td>
+                <span class="tech-pill">SQLAlchemy</span>
+                <span class="tech-pill">SQLite / Postgres</span>
+                <span class="tech-pill">Zustand</span>
+              </td>
+              <td>Relational audit storage for manual analyst reviews, adaptive policy weights, and client-side simulation state store.</td>
+            </tr>
+            <tr>
+              <td><strong>Machine Learning Core</strong></td>
+              <td>
+                <span class="tech-pill accent">XGBoost 3.2</span>
+                <span class="tech-pill">Scikit-Learn 1.7</span>
+                <span class="tech-pill">NumPy</span>
+                <span class="tech-pill">Pandas</span>
+              </td>
+              <td><strong>Model 1:</strong> 52-flow XGBoost classifier for 7 aerospace threat categories.<br><strong>Model 2:</strong> 96% accuracy ESA OPS-SAT telemetry anomaly detector.</td>
+            </tr>
+            <tr>
+              <td><strong>Decision & Explainability</strong></td>
+              <td>
+                <span class="tech-pill accent">LAYAA Decision Engine</span>
+                <span class="tech-pill">SHAP-style Feature Attribution</span>
+              </td>
+              <td>Single-pass calibrated confidence scoring, tri-tier routing (<tt>AUTO_BLOCK</tt>, <tt>ESCALATE</tt>, <tt>MONITOR</tt>), and top-3 factor extraction.</td>
+            </tr>
+            <tr>
+              <td><strong>Adaptive Learning</strong></td>
+              <td>
+                <span class="tech-pill">Contextual Bandit (RL)</span>
+                <span class="tech-pill">Dynamic Thresholding</span>
+              </td>
+              <td>Reinforcement learning policy that tunes station-specific sensitivity per attack type based on human analyst verdicts.</td>
+            </tr>
+            <tr>
+              <td><strong>Air-Gapped AI Copilot</strong></td>
+              <td>
+                <span class="tech-pill cyan">AEGIS AI Copilot</span>
+                <span class="tech-pill">Local Ollama</span>
+                <span class="tech-pill">Qwen 3.5:4B</span>
+                <span class="tech-pill">Local RAG Context</span>
+              </td>
+              <td>100% offline conversational SOC assistant answering ground-station posture, SLE exploits, and CCSDS protocol questions. Zero external network calls.</td>
+            </tr>
+            <tr>
+              <td><strong>Aerospace Protocols & Auditing</strong></td>
+              <td>
+                <span class="tech-pill">CCSDS Frames</span>
+                <span class="tech-pill">SLE (Space Link Ext.)</span>
+                <span class="tech-pill">CLTU Units</span>
+                <span class="tech-pill">CERT-In 6-Hour Engine</span>
+              </td>
+              <td>Built-in compliance exporter for CERT-In incident reporting, Loss-of-Signal (LOS) logs, and SLE port authentication audits.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 3: THE LAYAA DECISION ENGINE -->
+    <section id="layaa-engine">
+      <div class="section-header">
+        <div class="section-icon">🧠</div>
+        <h2>The LAYAA Decision Engine: Why It Solves Alert Fatigue</h2>
+      </div>
+
+      <div class="card">
+        <p style="margin-bottom: 20px; font-size: 15px; color: #cbd5e1;">
+          Located in <code style="color: var(--saffron); font-family: 'JetBrains Mono', monospace;">server/laya_decision.py</code>, the <strong>LAYAA Decision Engine</strong> is the arbitration bridge between raw machine learning probabilities and human mission operators.
+        </p>
+
+        <div class="walkthrough-grid">
+          <div class="detail-box">
+            <h4>1. Calibrated Confidence (No Dice Rolls)</h4>
+            <p style="font-size: 13px; color: #cbd5e1;">
+              Raw ML models produce uncalibrated probabilities that frequently over-score noise. LAYAA maps the 52 network features into calibrated risk tiers:
+            </p>
+            <ul style="margin-top: 8px;">
+              <li><strong style="color: var(--rose);">CRITICAL:</strong> ≥ 95% Confidence → Instant <tt>AUTO_BLOCK</tt></li>
+              <li><strong style="color: var(--amber);">HIGH / ELEVATED:</strong> 40% – 94% → <tt>ESCALATE_TO_ANALYST</tt></li>
+              <li><strong style="color: var(--emerald);">NOMINAL:</strong> &lt; 40% → Quiet <tt>MONITOR</tt></li>
+            </ul>
+          </div>
+
+          <div class="detail-box">
+            <h4>2. Sub-Millisecond Feature Explainability</h4>
+            <p style="font-size: 13px; color: #cbd5e1;">
+              For every escalated packet, LAYAA extracts the top 3 physical telemetry signals driving the score, eliminating the black-box effect:
+            </p>
+            <ul style="margin-top: 8px;">
+              <li><strong>Packet Inter-Arrival:</strong> Near zero (&lt;1ms surge)</li>
+              <li><strong>Connection Pattern:</strong> Unfinished SYN handshake flood</li>
+              <li><strong>Burst Deviation:</strong> 3.4× above baseline nominal flow</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: STEP-BY-STEP LIVE JUDGE WALKTHROUGH -->
+    <section id="judge-walkthrough">
+      <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <h2>Step-by-Step Live Demonstration Walkthrough</h2>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-header">
+            <div class="step-title">The Operational Picture: Flight Ops 3D Threat Globe</div>
+            <span class="step-path">Route: /client/dashboard or /client/threat-map</span>
+          </div>
+          <div class="walkthrough-grid">
+            <div class="detail-box">
+              <h4>What to Click & Show on Screen</h4>
+              <ul>
+                <li>Rotate the <strong>3D Three.js Globe</strong> with mouse controls.</li>
+                <li>Point to the <strong>7 ISTRAC ground stations</strong> (Bengaluru MOX, Sriharikota, Hassan, Lucknow, Port Blair, Mauritius, Byalalu).</li>
+                <li>Point out the live pass countdowns for <strong>EOS-09</strong> and <strong>Chandrayaan-3</strong>.</li>
+              </ul>
+            </div>
+            <div class="detail-box">
+              <h4>Why This Matters to Judges</h4>
+              <ul>
+                <li>Proves domain-specific aerospace engineering.</li>
+                <li>Shows that flight controllers have real-time visibility into satellite contact windows and link health.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="judge-quote">
+            <div class="judge-quote-title">What to say to the Judge:</div>
+            <div class="judge-quote-text">
+              "Flight controllers operate under tight pass windows. Here in Portal A, operators have a live 3D visualization of all active downlinks, pass windows, and station link health."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-header">
+            <div class="step-title">Simulate a Coordinated Incursion via Attack Simulator</div>
+            <span class="step-path">Modal: Attack Simulator Button</span>
+          </div>
+          <div class="walkthrough-grid">
+            <div class="detail-box">
+              <h4>What to Click & Show on Screen</h4>
+              <ul>
+                <li>Click the <strong>Attack Simulator</strong> button.</li>
+                <li>Select preset: <strong>Multi-Vector Wave</strong> or <strong>Telecommand Auth Bypass</strong> on <strong>ISTRAC-BLR</strong>.</li>
+                <li>Click <strong>Inject Attack</strong>.</li>
+                <li>Watch the attack trajectories arc onto the 3D globe in real time.</li>
+              </ul>
+            </div>
+            <div class="detail-box">
+              <h4>Instant Backend Action</h4>
+              <ul>
+                <li>FastAPI backend receives the synthetic stream.</li>
+                <li>Features are extracted across the 52 network dimensions.</li>
+                <li>Routed through LAYAA in under 2 milliseconds.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="judge-quote">
+            <div class="judge-quote-title">What to say to the Judge:</div>
+            <div class="judge-quote-text">
+              "We just injected a coordinated attack during an active satellite pass. Within milliseconds, the traffic is classified by our 52-signal model, evaluated by LAYAA, and isolated."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-header">
+            <div class="step-title">Inspect LAYAA Explainability in the Analyst Queue</div>
+            <span class="step-path">Route: /admin/dashboard → /admin/incidents/review/:id</span>
+          </div>
+          <div class="walkthrough-grid">
+            <div class="detail-box">
+              <h4>What to Click & Show on Screen</h4>
+              <ul>
+                <li>Navigate to Portal B (Admin/SOC Dashboard).</li>
+                <li>Show that high-confidence attacks were already <strong>`AUTO_BLOCKED`</strong>.</li>
+                <li>Click <strong>Review</strong> on a borderline escalated incident.</li>
+                <li>Highlight the <strong>"Why Was This Flagged?"</strong> section showing LAYAA's 3 plain-English factors.</li>
+              </ul>
+            </div>
+            <div class="detail-box">
+              <h4>Core Value Highlight</h4>
+              <ul>
+                <li>Calibrated confidence score with progress bar.</li>
+                <li>Forward flow packets, burst deviation score, and targeted authentication ports.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="judge-quote">
+            <div class="judge-quote-title">What to say to the Judge:</div>
+            <div class="judge-quote-text">
+              "Notice that the analyst is never shown a raw black-box prediction. LAYAA gives them the exact top three physical factors driving the alert in plain English, enabling a decisive verdict in seconds."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div>
+          <div class="step-header">
+            <div class="step-title">Execute Verdict & Trigger Reinforcement Learning Adaptation</div>
+            <span class="step-path">Route: IncidentReview.tsx Action Buttons</span>
+          </div>
+          <div class="walkthrough-grid">
+            <div class="detail-box">
+              <h4>What to Click & Show on Screen</h4>
+              <ul>
+                <li>Click <strong>"Confirm Threat & Block IP"</strong> (or demonstrate false-alarm clearing).</li>
+                <li>Observe the instant resolution toast notification.</li>
+                <li>Explain that the action updates the <strong>Contextual Bandit policy weights</strong>.</li>
+              </ul>
+            </div>
+            <div class="detail-box">
+              <h4>The Feedback Loop</h4>
+              <ul>
+                <li>Threshold adapts specifically for that ground station and attack category.</li>
+                <li>Zero retraining downtime; system gets smarter with every analyst interaction.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="judge-quote">
+            <div class="judge-quote-title">What to say to the Judge:</div>
+            <div class="judge-quote-text">
+              "When the analyst confirms the threat, our reinforcement learning layer immediately updates the contextual policy for the Bengaluru station. The system tightens its sensitivity for that attack pattern without requiring full retraining."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <div>
+          <div class="step-header">
+            <div class="step-title">Inspect Scientific Benchmarks & D3 Confusion Matrices</div>
+            <span class="step-path">Route: /admin/benchmark</span>
+          </div>
+          <div class="walkthrough-grid">
+            <div class="detail-box">
+              <h4>What to Click & Show on Screen</h4>
+              <ul>
+                <li>Click on the <strong>7×7 D3 Multiclass Confusion Matrix</strong>. Click individual cells to inspect behavioral heuristics.</li>
+                <li>Show the <strong>2×2 Spacecraft Confusion Matrix</strong> validated on real ESA OPS-SAT telemetry (96% accuracy).</li>
+                <li>Drag the <strong>Threshold Calibration Slider</strong> to demonstrate precision vs recall trade-offs.</li>
+              </ul>
+            </div>
+            <div class="detail-box">
+              <h4>Why This Impresses Judges</h4>
+              <ul>
+                <li>Demonstrates mathematical rigor and transparency.</li>
+                <li>Proves the team did not cherry-pick synthetic data.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="judge-quote">
+            <div class="judge-quote-title">What to say to the Judge:</div>
+            <div class="judge-quote-text">
+              "Every claim is backed by reproducible benchmarks. We benchmarked against both ground flow datasets and real ESA OPS-SAT telemetry, giving you full visibility into precision, recall, and false-alarm mitigation."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="step-card">
+        <div class="step-num">6</div>
+        <div>
+          <div class="step-header">
+            <div class="step-title">Consult AEGIS Air-Gapped AI Mission Copilot</div>
+            <span class="step-path">Widget: Bottom-Right Floating AEGIS Button</span>
+          </div>
+          <div class="walkthrough-grid">
+            <div class="detail-box">
+              <h4>What to Click & Show on Screen</h4>
+              <ul>
+                <li>Click the floating <strong>AEGIS</strong> button.</li>
+                <li>Ask: <tt>"What is the current threat posture at ISTRAC Bengaluru?"</tt> or <tt>"Explain the risk of an SLE port exploit during pass window."</tt></li>
+                <li>Show the streamed response powered by local Ollama / Qwen.</li>
+              </ul>
+            </div>
+            <div class="detail-box">
+              <h4>Air-Gapped Security Architecture</h4>
+              <ul>
+                <li>100% local hardware inference.</li>
+                <li>No secret mission data or ground station keys leave the air-gapped facility.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="judge-quote">
+            <div class="judge-quote-title">What to say to the Judge:</div>
+            <div class="judge-quote-text">
+              "AEGIS is our cyber copilot. Crucially for defense and aerospace, it runs completely on local hardware using Ollama and Qwen with RAG. Zero telemetry or sensitive mission data ever touches a commercial cloud."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 7 -->
+      <div class="step-card">
+        <div class="step-num">7</div>
+        <div>
+          <div class="step-header">
+            <div class="step-title">Generate 1-Click CERT-In & CCSDS Compliance Reports</div>
+            <span class="step-path">Route: /admin/compliance</span>
+          </div>
+          <div class="walkthrough-grid">
+            <div class="detail-box">
+              <h4>What to Click & Show on Screen</h4>
+              <ul>
+                <li>Click <strong>Export CERT-In 6-Hour Space Incident Report</strong>.</li>
+                <li>Click <strong>Export SLE Port Audit Log</strong> or <strong>CCSDS Frame Anomaly Log</strong>.</li>
+                <li>Show the cleanly formatted CSV export with exact packet timestamps and operator signatures.</li>
+              </ul>
+            </div>
+            <div class="detail-box">
+              <h4>Regulatory Alignment</h4>
+              <ul>
+                <li>Fulfills CERT-In Feb 2026 Space Cybersecurity Guidelines.</li>
+                <li>Provides instant auditability for government and commercial ground networks.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="judge-quote">
+            <div class="judge-quote-title">What to say to the Judge:</div>
+            <div class="judge-quote-text">
+              "Under the February 2026 CERT-In guidelines, space operators have just six hours to report an incident. SOAR Space compiles the full audit trail into a compliant incident report with a single click."
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: JUDGE Q&A DEFENSE -->
+    <section id="judge-qa">
+      <div class="section-header">
+        <div class="section-icon">🛡️</div>
+        <h2>Judge Q&A Quick Defense Guide</h2>
+      </div>
+
+      <div class="card">
+        <div style="margin-bottom: 20px;">
+          <h3 style="font-size: 16px; color: var(--saffron); margin-bottom: 6px;">Q1: "How do you ensure your models don't accidentally block legitimate satellite commands?"</h3>
+          <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6;">
+            <strong>Answer:</strong> That is the exact reason we built the <strong>LAYAA Decision Engine</strong>. Only events exceeding our high-confidence threshold (&ge;95%) trigger an automated block. Anything borderline in the 40–70% range is elevated to human flight controllers in Portal B with full feature attribution. Furthermore, our Reinforcement Learning loop penalizes false alarms heavily, continuously widening safety margins on critical telecommand channels.
+          </p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <h3 style="font-size: 16px; color: var(--saffron); margin-bottom: 6px;">Q2: "Why can't existing enterprise tools (like Splunk or CrowdStrike) do this?"</h3>
+          <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6;">
+            <strong>Answer:</strong> Enterprise tools are designed for standard enterprise IT protocols (HTTP, Active Directory, DNS). They have no native understanding of CCSDS frame architectures, Space Link Extension (SLE) ports, CLTU command structures, or the physics of an 8-minute satellite pass window. SOAR Space is purpose-built for the constraints of aerospace telemetry.
+          </p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <h3 style="font-size: 16px; color: var(--saffron); margin-bottom: 6px;">Q3: "Is AEGIS sending sensitive ground-station telemetry to OpenAI or an external cloud?"</h3>
+          <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6;">
+            <strong>Answer:</strong> No, absolutely not. AEGIS runs completely air-gapped on local hardware utilizing Ollama and Qwen 4B with a local in-memory vector index. It was engineered specifically to adhere to ISRO mission security protocols where zero data may egress the physical Operations Complex.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</body>
+</html>
