@@ -35,14 +35,14 @@ const ISRO_GROUND_STATIONS: GroundStation[] = [
         name: "Indian Deep Space Network",
         location: "Byalalu, India",
         coords: [12.8711, 77.3789],
-        role: "Chandrayaan / Aditya-L1 TT&C"
+        role: "Deep Space Tracking (Chandrayaan/Aditya)"
     },
     {
         code: "SDSC-SHAR",
         name: "Satish Dhawan Space Centre",
         location: "Sriharikota, India",
         coords: [13.7199, 80.2305],
-        role: "Launch Ground & Telemetry Tracking"
+        role: "Launch Telemetry & Ground Radar"
     },
     {
         code: "ISTRAC-PBL",
@@ -52,25 +52,25 @@ const ISRO_GROUND_STATIONS: GroundStation[] = [
         role: "Downrange Launch & Orbit Injection"
     },
     {
-        code: "ISTRAC-MAU",
-        name: "Indian Ocean Ground Station",
-        location: "Port Louis, Mauritius",
-        coords: [-20.1609, 57.5012],
-        role: "LEO Contact & Geostationary Transfer"
+        code: "NRSC-HYD",
+        name: "National Remote Sensing Centre",
+        location: "Hyderabad, India",
+        coords: [17.3850, 78.4867],
+        role: "Earth Observation Data Receiving"
     },
     {
-        code: "ISTRAC-BIK",
-        name: "Equatorial Tracking Station",
-        location: "Biak, Indonesia",
-        coords: [-1.1764, 136.0847],
-        role: "Equatorial Orbit Pass Monitoring"
+        code: "SAC-AHM",
+        name: "Space Applications Centre",
+        location: "Ahmedabad, India",
+        coords: [23.0225, 72.5714],
+        role: "Communication & Payload Ops"
     },
     {
-        code: "SVALSAT",
-        name: "Polar Orbit Earth Obs. Station",
-        location: "Svalbard, Norway (Arctic)",
-        coords: [78.2298, 15.4078],
-        role: "Polar SSO EOS Satellite Pass Support"
+        code: "VSSC-TRV",
+        name: "Vikram Sarabhai Space Centre",
+        location: "Thiruvananthapuram, India",
+        coords: [8.5241, 76.9366],
+        role: "Avionics & Launch Vehicle Telemetry"
     }
 ];
 
@@ -206,10 +206,10 @@ export const ThreatMap = () => {
             {/* ================= MAP ================= */}
             <div className="absolute inset-0">
                 <MapContainer
-                    center={[15, 78]} // Centered on India and the Indian Ocean
-                    zoom={3}
-                    minZoom={2}
-                    maxBounds={[[-90, -180], [90, 180]]}
+                    center={[20.5937, 78.9629]} // Centered on India
+                    zoom={5}
+                    minZoom={4}
+                    maxBounds={[[6.0, 68.0], [36.0, 98.0]]}
                     className="h-full w-full"
                     style={{ height: "100%", width: "100%", background: "#050814" }}
                     zoomControl={false}
@@ -259,13 +259,20 @@ export const ThreatMap = () => {
 
                     {/* Threat Trajectories mapped into ISRO Ground Stations */}
                     {threats.map((threat, index) => {
-                        // Derive origin coordinates from packet lat/lon or deterministically from src_ip
-                        const fallbackLat = 15 + ((index * 17) % 50);
-                        const fallbackLon = -40 + ((index * 31) % 120);
-                        const from: [number, number] = [
-                            typeof threat.lat === 'number' && !isNaN(threat.lat) ? threat.lat : fallbackLat,
-                            typeof threat.lon === 'number' && !isNaN(threat.lon) ? threat.lon : fallbackLon
-                        ];
+                        // Regional Indian node coordinates fallback (11°N to 28°N, 72°E to 88°E)
+                        const fallbackLat = 11.0 + ((index * 13) % 17);
+                        const fallbackLon = 72.0 + ((index * 17) % 16);
+                        const isInsideIndia = (lat: number, lon: number) =>
+                            lat >= 6.0 && lat <= 36.0 && lon >= 68.0 && lon <= 98.0;
+
+                        const threatLat = typeof threat.lat === 'number' && !isNaN(threat.lat) && isInsideIndia(threat.lat, threat.lon)
+                            ? threat.lat
+                            : fallbackLat;
+                        const threatLon = typeof threat.lon === 'number' && !isNaN(threat.lon) && isInsideIndia(threat.lat, threat.lon)
+                            ? threat.lon
+                            : fallbackLon;
+
+                        const from: [number, number] = [threatLat, threatLon];
                         // Distribute target to real ISRO ground stations matching packet's assigned station
                         const targetStation = (threat.station && ISRO_GROUND_STATIONS.find(s => s.code === threat.station))
                             || ISRO_GROUND_STATIONS[index % ISRO_GROUND_STATIONS.length];
@@ -322,7 +329,7 @@ export const ThreatMap = () => {
                         </h2>
                     </div>
                     <p className="text-xs text-slate-400 font-mono mt-1">
-                        Tracking 7 Global ISRO Ground Nodes • Active Pass Vectors
+                        Tracking 7 National ISRO Ground & Tracking Centers • India Network
                     </p>
                 </div>
 

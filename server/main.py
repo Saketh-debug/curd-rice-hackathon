@@ -32,15 +32,22 @@ BANDIT_MODEL_FILE = os.path.join(BASE_DIR, 'bandit_model.joblib')
 
 CLASSES = ['Bots', 'Brute Force', 'DDoS', 'DoS', 'Normal Traffic', 'Port Scanning', 'Web Attacks']
 
-# --- COUNTRY MAPPING (For Portal A Map) ---
-COUNTRY_COORDS = {
-    "USA": [37.0902, -95.7129], "China": [35.8617, 104.1954],
-    "Russia": [61.5240, 105.3188], "Germany": [51.1657, 10.4515],
-    "Brazil": [-14.2350, -51.9253], "India": [20.5937, 78.9629],
-    "North Korea": [40.3399, 127.5101], "Australia": [-33.8688, 151.2093],
-    "Zimbabwe": [-19.0154, 29.1549],"Israel": [31.0461, 34.8516],
-    "Bangladesh": [23.6850, 90.3563],"Spain": [40.4637, -3.7492],
+# --- INDIAN REGIONAL NODES (For Cyber Threat Map) ---
+INDIA_NODES = {
+    "New Delhi (Northern Hub)": [28.6139, 77.2090],
+    "Mumbai (Western Gateway)": [19.0760, 72.8777],
+    "Bengaluru (Aerospace Hub)": [12.9716, 77.5946],
+    "Hyderabad (IT Corridor)": [17.3850, 78.4867],
+    "Chennai (Coastal Gateway)": [13.0827, 80.2707],
+    "Kolkata (Eastern Exchange)": [22.5726, 88.3639],
+    "Ahmedabad (SAC Center)": [23.0225, 72.5714],
+    "Pune (Defense Research)": [18.5204, 73.8567],
+    "Thiruvananthapuram (VSSC Node)": [8.5241, 76.9366],
+    "Jaipur (North-West Link)": [26.9124, 75.7873],
+    "Lucknow (Central Exchange)": [26.8467, 80.9462],
+    "Bhopal (Central Relay)": [23.2599, 77.4126],
 }
+COUNTRY_COORDS = INDIA_NODES  # Backwards compatibility alias
 
 from sqlalchemy.orm import Session
 from fastapi import Depends
@@ -188,7 +195,8 @@ def traffic_simulator():
             threat_rows = traffic_df[traffic_df.get("Attack Type", pd.Series(["Normal Traffic"] * len(traffic_df))) != "Normal Traffic"]
             if len(threat_rows) == 0:
                 threat_rows = traffic_df
-            station_choices = ["ISTRAC-BLR", "IDSN-32M", "SDSC-SHAR", "ISTRAC-PBL", "ISTRAC-MAU"]
+            station_choices = ["ISTRAC-BLR", "IDSN-32M", "SDSC-SHAR", "ISTRAC-PBL", "NRSC-HYD", "SAC-AHM", "VSSC-TRV"]
+            indian_cities = ["Bengaluru, India", "New Delhi, India", "Mumbai, India", "Hyderabad, India", "Chennai, India", "Kolkata, India"]
             for i in range(min(6, len(threat_rows))):
                 srow = threat_rows.iloc[i].to_dict()
                 stype = srow.get("Attack Type", "DoS")
@@ -196,8 +204,8 @@ def traffic_simulator():
                 sconf = round(0.78 + (i * 0.03) % 0.16, 2)
                 seed_entry = ManualReview(
                     timestamp=datetime.now(),
-                    src_ip=f"192.168.1.{120 + i}",
-                    country="India" if i % 2 == 0 else "USA",
+                    src_ip=f"10.14.{i+1}.{120 + i}",
+                    country=indian_cities[i % len(indian_cities)],
                     type=stype,
                     confidence=sconf,
                     destination_port=int(srow.get("Destination Port", 5100)),
@@ -311,9 +319,9 @@ def traffic_simulator():
                 elif dport_val == 443:
                     assigned_station = "ISTRAC-PBL"
                 elif dport_val == 80:
-                    assigned_station = "ISTRAC-MAU"
+                    assigned_station = "NRSC-HYD"
                 else:
-                    station_names = ["ISTRAC-BLR", "IDSN-32M", "SDSC-SHAR", "ISTRAC-PBL", "ISTRAC-MAU", "ISTRAC-BIK", "SVALSAT"]
+                    station_names = ["ISTRAC-BLR", "IDSN-32M", "SDSC-SHAR", "ISTRAC-PBL", "NRSC-HYD", "SAC-AHM", "VSSC-TRV"]
                     assigned_station = station_names[dport_val % len(station_names)]
 
                 # 4. Create Traffic Log Entry
@@ -839,11 +847,11 @@ def get_stations_status(db: Session = Depends(get_db)):
     stations_info = [
         {"code": "ISTRAC-BLR", "name": "Bengaluru MOX", "status": "ONLINE", "ping": "2ms", "coords": [12.9716, 77.5946], "role": "Mission Operations Complex"},
         {"code": "IDSN-32M", "name": "Byalalu Deep Space", "status": "ONLINE", "ping": "4ms", "coords": [12.8711, 77.3789], "role": "Deep Space Network TT&C"},
-        {"code": "SDSC-SHAR", "name": "Sriharikota Ground", "status": "ONLINE", "ping": "6ms", "coords": [13.7199, 80.2305], "role": "Launch & Orbit Tracking"},
+        {"code": "SDSC-SHAR", "name": "Sriharikota Ground", "status": "ONLINE", "ping": "5ms", "coords": [13.7199, 80.2305], "role": "Launch & Orbit Tracking"},
         {"code": "ISTRAC-PBL", "name": "Port Blair Downrange", "status": "ONLINE", "ping": "12ms", "coords": [11.6234, 92.7265], "role": "Downrange Injection Tracking"},
-        {"code": "ISTRAC-MAU", "name": "Mauritius Pass", "status": "ONLINE", "ping": "38ms", "coords": [-20.1609, 57.5012], "role": "Indian Ocean Contact Node"},
-        {"code": "ISTRAC-BIK", "name": "Biak Equatorial", "status": "ONLINE", "ping": "45ms", "coords": [-1.1764, 136.0847], "role": "Equatorial Pass Tracking"},
-        {"code": "SVALSAT", "name": "Svalbard Arctic", "status": "STANDBY", "ping": "82ms", "coords": [78.2298, 15.4078], "role": "Polar SSO Earth Observation"}
+        {"code": "NRSC-HYD", "name": "Hyderabad Shadnagar", "status": "ONLINE", "ping": "6ms", "coords": [17.3850, 78.4867], "role": "Earth Observation Data Center"},
+        {"code": "SAC-AHM", "name": "Ahmedabad SAC", "status": "ONLINE", "ping": "8ms", "coords": [23.0225, 72.5714], "role": "Payload & Space Applications"},
+        {"code": "VSSC-TRV", "name": "Thiruvananthapuram VSSC", "status": "ONLINE", "ping": "7ms", "coords": [8.5241, 76.9366], "role": "Avionics & Launch Telemetry"}
     ]
     return stations_info
 
