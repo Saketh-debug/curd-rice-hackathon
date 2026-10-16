@@ -135,6 +135,15 @@ class ChatMessage(Base):
 # --- INITIALIZATION ---
 def init_db():
     Base.metadata.create_all(bind=engine)
+    if DATABASE_URL.startswith("sqlite"):
+        try:
+            with engine.connect() as conn:
+                for table in ["traffic_logs", "manual_review", "auto_blocked"]:
+                    cols = [row[1] for row in conn.exec_driver_sql(f"PRAGMA table_info({table})").fetchall()]
+                    if "station" not in cols:
+                        conn.exec_driver_sql(f"ALTER TABLE {table} ADD COLUMN station TEXT")
+        except Exception as e:
+            print(f"[DB] Migration check: {e}")
 
 def get_db():
     db = SessionLocal()
