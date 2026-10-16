@@ -16,11 +16,12 @@ interface BlockchainStatus {
     privacyGuarantee: string;
 }
 
-const mapSpaceThreatName = (type: string) => {
+const mapSpaceThreatName = (type: string = '') => {
+    if (!type) return 'Unknown Flow';
     if (type.includes('DDoS')) return 'TT&C Uplink Saturation';
     if (type.includes('DoS')) return 'TT&C Gateway Flood';
     if (type.includes('Brute')) return 'TC Authentication Bypass';
-    if (type.includes('Port')) return 'SLE Port Reconnaissance';
+    if (type.includes('Port') || type.includes('Scan')) return 'SLE Port Reconnaissance';
     if (type.includes('Bot')) return 'Ground RTU Sensor Hijack';
     if (type.includes('Web')) return 'Mission Data Distribution Exploit';
     if (type.includes('Normal')) return 'Nominal Housekeeping Telemetry';
@@ -34,6 +35,8 @@ export const DecisionTimeline = () => {
     const [blockchainStatus, setBlockchainStatus] = useState<BlockchainStatus | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [viewMode, setViewMode] = useState<'timeline' | 'table'>('timeline');
+    const [sourceFilter, setSourceFilter] = useState<'all' | 'manual' | 'auto'>('all');
+    const [actionFilter, setActionFilter] = useState<'all' | 'blocked' | 'allowed'>('all');
     const [copiedHash, setCopiedHash] = useState<string | null>(null);
     const [selectedProof, setSelectedProof] = useState<any | null>(null);
 
@@ -170,12 +173,95 @@ export const DecisionTimeline = () => {
                 </div>
             </div>
 
+            {/* AUDIT FILTER CONTROLS */}
+            {(() => {
+                const manualCount = logs.filter(l => l.handled_by !== 'SYSTEM_AUTOMATION').length;
+                const autoCount = logs.filter(l => l.handled_by === 'SYSTEM_AUTOMATION').length;
+                return (
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-card/60 p-3 rounded-xl border border-border text-xs font-mono">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="text-muted-foreground text-[11px] mr-1 flex items-center gap-1">
+                                <ListFilter className="w-3 h-3 text-signal" /> Source:
+                            </span>
+                            <button
+                                onClick={() => setSourceFilter('all')}
+                                className={clsx(
+                                    "px-2.5 py-1 rounded-md transition-colors cursor-pointer text-[11px]",
+                                    sourceFilter === 'all' ? "bg-signal text-background font-bold shadow-xs" : "bg-muted text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                All Decisions ({logs.length})
+                            </button>
+                            <button
+                                onClick={() => setSourceFilter('manual')}
+                                className={clsx(
+                                    "px-2.5 py-1 rounded-md transition-colors cursor-pointer text-[11px] flex items-center gap-1",
+                                    sourceFilter === 'manual' ? "bg-signal text-background font-bold shadow-xs" : "bg-muted text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                Mission Controller ({manualCount})
+                            </button>
+                            <button
+                                onClick={() => setSourceFilter('auto')}
+                                className={clsx(
+                                    "px-2.5 py-1 rounded-md transition-colors cursor-pointer text-[11px] flex items-center gap-1",
+                                    sourceFilter === 'auto' ? "bg-signal text-background font-bold shadow-xs" : "bg-muted text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                AEGIS AI SOAR ({autoCount})
+                            </button>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 border-t sm:border-t-0 pt-2 sm:pt-0 border-border">
+                            <span className="text-muted-foreground text-[11px] mr-1">Outcome:</span>
+                            <button
+                                onClick={() => setActionFilter('all')}
+                                className={clsx(
+                                    "px-2 py-0.5 rounded transition-colors cursor-pointer text-[11px]",
+                                    actionFilter === 'all' ? "bg-background text-foreground font-semibold shadow-xs" : "text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                All
+                            </button>
+                            <button
+                                onClick={() => setActionFilter('blocked')}
+                                className={clsx(
+                                    "px-2 py-0.5 rounded transition-colors cursor-pointer text-[11px]",
+                                    actionFilter === 'blocked' ? "bg-destructive/20 text-destructive font-bold border border-destructive/40" : "text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                Blocked
+                            </button>
+                            <button
+                                onClick={() => setActionFilter('allowed')}
+                                className={clsx(
+                                    "px-2 py-0.5 rounded transition-colors cursor-pointer text-[11px]",
+                                    actionFilter === 'allowed' ? "bg-grove/20 text-grove font-bold border border-grove/40" : "text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                Not Blocked
+                            </button>
+                        </div>
+                    </div>
+                );
+            })()}
+
             {/* VIEW MODE 1: TIMELINE LIST */}
-            {viewMode === 'timeline' && (
+            {viewMode === 'timeline' && (() => {
+                const filteredLogs = logs.filter(log => {
+                    if (sourceFilter === 'manual' && log.handled_by === 'SYSTEM_AUTOMATION') return false;
+                    if (sourceFilter === 'auto' && log.handled_by !== 'SYSTEM_AUTOMATION') return false;
+                    const isBlock = typeof log.action === 'string' && log.action.includes('BLOCK');
+                    if (actionFilter === 'blocked' && !isBlock) return false;
+                    if (actionFilter === 'allowed' && isBlock) return false;
+                    return true;
+                });
+
+                return (
                 <div className="relative border-l-2 border-border ml-3 space-y-6 font-mono text-xs">
                     {isLoading ? (
                         <div className="pl-6 text-muted-foreground">Loading zero-knowledge audit trail...</div>
-                    ) : logs.map((log, idx) => {
+                    ) : filteredLogs.map((log, idx) => {
                         const assignedStation = log.station || STATIONS[idx % STATIONS.length];
                         const isBlock = typeof log.action === 'string' && log.action.includes('BLOCK');
                         const isFP = log.action === 'FALSE_POSITIVE' || log.action === 'IGNORE';
@@ -272,11 +358,21 @@ export const DecisionTimeline = () => {
                                         {isBlock ? <Shield className="w-4 h-4 text-destructive shrink-0" /> : <CheckCircle className="w-4 h-4 text-grove shrink-0" />}
 
                                         <div className="flex-1">
-                                            <p className="text-xs font-semibold text-foreground">
-                                                Action: {isBlock ? 'TT&C LINK ISOLATION (BLOCKED)' : isFP ? 'FLAGGED AS FALSE ALARM (LOS MITIGATION)' : log.action}
+                                            <p className="text-xs font-semibold text-foreground flex items-center gap-2 flex-wrap">
+                                                <span className={clsx(
+                                                    "px-1.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase",
+                                                    isBlock ? "bg-destructive/15 text-destructive border border-destructive/30" : "bg-grove/15 text-grove border border-grove/30"
+                                                )}>
+                                                    {isBlock ? "BLOCKED" : "NOT BLOCKED"}
+                                                </span>
+                                                <span>
+                                                    {isBlock ? 'TT&C LINK ISOLATION (BLOCKED)' : isFP ? 'FLAGGED AS FALSE ALARM (NOT BLOCKED / ALLOWED)' : log.action}
+                                                </span>
                                             </p>
-                                            <p className="text-[11px] text-muted-foreground">
-                                                Executed by: <span className="text-signal font-medium">{log.handled_by === 'SYSTEM_AUTOMATION' ? 'AEGIS AI SOAR' : (log.handled_by || 'Mission Controller')}</span>
+                                            <p className="text-[11px] text-muted-foreground mt-0.5">
+                                                Executed by: <span className={clsx("font-medium", log.handled_by === 'SYSTEM_AUTOMATION' ? "text-muted-foreground" : "text-signal font-semibold")}>
+                                                    {log.handled_by === 'SYSTEM_AUTOMATION' ? 'AEGIS AI SOAR' : `${log.handled_by || 'Mission Controller'} (Analyst Manual Resolution)`}
+                                                </span>
                                             </p>
                                         </div>
                                     </div>
@@ -285,14 +381,27 @@ export const DecisionTimeline = () => {
                         );
                     })}
 
-                    {!isLoading && logs.length === 0 && (
-                        <div className="pl-8 text-muted-foreground">No actions recorded in current session. Nominal state.</div>
+                    {!isLoading && filteredLogs.length === 0 && (
+                        <div className="pl-8 text-muted-foreground py-6">
+                            No actions match current filter criteria.
+                        </div>
                     )}
                 </div>
-            )}
+                );
+            })()}
 
             {/* VIEW MODE 2: ENTERPRISE LEDGER TABLE */}
-            {viewMode === 'table' && (
+            {viewMode === 'table' && (() => {
+                const filteredLogs = logs.filter(log => {
+                    if (sourceFilter === 'manual' && log.handled_by === 'SYSTEM_AUTOMATION') return false;
+                    if (sourceFilter === 'auto' && log.handled_by !== 'SYSTEM_AUTOMATION') return false;
+                    const isBlock = typeof log.action === 'string' && log.action.includes('BLOCK');
+                    if (actionFilter === 'blocked' && !isBlock) return false;
+                    if (actionFilter === 'allowed' && isBlock) return false;
+                    return true;
+                });
+
+                return (
                 <div className="bg-card rounded-xl border border-border shadow-xs overflow-hidden font-mono text-xs">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
@@ -308,7 +417,7 @@ export const DecisionTimeline = () => {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-border/60">
-                                {logs.map((log, idx) => {
+                                {filteredLogs.map((log, idx) => {
                                     const assignedStation = log.station || STATIONS[idx % STATIONS.length];
                                     const txHash = log.txHash || `0x${((idx + 1) * 9876543210123).toString(16).padStart(64, '0')}`;
                                     const commitmentHash = log.commitmentHash || `0x${((idx + 1) * 1234567890987).toString(16).padStart(64, '0')}`;
@@ -346,13 +455,15 @@ export const DecisionTimeline = () => {
                                                 <span className={clsx(
                                                     "px-2 py-0.5 rounded text-[10px] font-bold border",
                                                     isBlock ? "bg-destructive/15 text-destructive border-destructive/30" :
-                                                    isFP ? "bg-signal/15 text-signal border-signal/30" : "bg-grove/15 text-grove border-grove/30"
+                                                    isFP ? "bg-grove/15 text-grove border-grove/30" : "bg-signal/15 text-signal border-signal/30"
                                                 )}>
-                                                    {isBlock ? "BLOCKED" : isFP ? "FALSE ALARM" : log.action}
+                                                    {isBlock ? "BLOCKED" : isFP ? "NOT BLOCKED (ALLOW)" : log.action}
                                                 </span>
                                             </td>
-                                            <td className="py-3 px-4 text-[11px] text-muted-foreground">
-                                                {log.handled_by === 'SYSTEM_AUTOMATION' ? 'AEGIS SOAR' : (log.handled_by || 'Controller')}
+                                            <td className="py-3 px-4 text-[11px]">
+                                                <span className={log.handled_by === 'SYSTEM_AUTOMATION' ? 'text-muted-foreground' : 'text-signal font-semibold'}>
+                                                    {log.handled_by === 'SYSTEM_AUTOMATION' ? 'AEGIS SOAR' : (log.handled_by || 'Mission Controller')}
+                                                </span>
                                             </td>
                                             <td className="py-3 px-4 text-right font-mono text-[11px] text-muted-foreground">
                                                 {gasUsed.toLocaleString()}
@@ -372,7 +483,8 @@ export const DecisionTimeline = () => {
                         </table>
                     </div>
                 </div>
-            )}
+                );
+            })()}
 
             {/* BLOCKCHAIN PROOF MODAL */}
             {selectedProof && (

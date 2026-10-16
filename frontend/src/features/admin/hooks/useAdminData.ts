@@ -33,9 +33,10 @@ export const useAdminData = () => {
                 avgResponseTime: avgLatency,
             });
 
-            // Fetch Audit Logs for "Recent Actions"
+            // Fetch Audit Logs for "Recent Actions" (newest 5 actions)
             const auditRes = await apiClient.get('/logs/audit');
-            setRecentActions(auditRes.data.slice(-5).reverse());
+            const auditList = Array.isArray(auditRes.data) ? auditRes.data : [];
+            setRecentActions(auditList.slice(0, 5));
 
             setIsLoading(false);
         } catch (error) {

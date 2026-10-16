@@ -55,7 +55,7 @@ class TrafficLog(Base):
     __tablename__ = "traffic_logs"
 
     id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=datetime.now)
     src_ip = Column(String, index=True)
     country = Column(String)
     lat = Column(Float)
@@ -78,7 +78,7 @@ class AutoBlocked(Base):
     __tablename__ = "auto_blocked"
 
     id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=datetime.now)
     src_ip = Column(String, index=True)
     country = Column(String)
     limit_reached = Column(String) # Reason, e.g., "Confidence > 95%"
@@ -92,7 +92,7 @@ class ManualReview(Base):
     __tablename__ = "manual_review"
 
     id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=datetime.now)
     src_ip = Column(String, index=True)
     country = Column(String)
     type = Column(String)

@@ -16,6 +16,18 @@ import {
 import clsx from 'clsx';
 import StarBorder from '../../../components/StarBorder';
 
+const mapSpaceThreatName = (type: string = '') => {
+    if (!type) return 'Unknown Flow';
+    if (type.includes('DDoS')) return 'TT&C Uplink Saturation';
+    if (type.includes('DoS')) return 'TT&C Gateway Flood';
+    if (type.includes('Brute')) return 'TC Authentication Bypass';
+    if (type.includes('Port') || type.includes('Scan')) return 'SLE Port Reconnaissance';
+    if (type.includes('Bot')) return 'Ground RTU Sensor Hijack';
+    if (type.includes('Web')) return 'Mission Data Distribution Exploit';
+    if (type.includes('Normal')) return 'Nominal Housekeeping Telemetry';
+    return type;
+};
+
 export const IncidentReview = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -224,7 +236,7 @@ export const IncidentReview = () => {
                             Threat Review Queue
                         </div>
                         <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
-                            Incident #{incident.id}
+                            Incident #{incident.id} • {mapSpaceThreatName(incident.type)}
                         </h1>
                     </div>
                 </div>
@@ -294,7 +306,7 @@ export const IncidentReview = () => {
                         </span>
                     </div>
                     <div className="text-sm sm:text-base font-semibold text-foreground">
-                        {incident.type}
+                        {mapSpaceThreatName(incident.type)}
                     </div>
                     <div className="w-full bg-muted h-1.5 rounded-full mt-2 overflow-hidden">
                         <div
@@ -336,7 +348,7 @@ export const IncidentReview = () => {
                             Why Was This Traffic Flagged?
                         </h2>
                         <p className="text-sm text-muted-foreground leading-relaxed mt-0.5 font-sans">
-                            The system flagged this as <strong className="text-foreground">{incident.type}</strong> because it saw the signs below.
+                            The system flagged this as <strong className="text-foreground">{mapSpaceThreatName(incident.type)}</strong> because it saw the signs below.
                         </p>
                     </div>
                     <span className="caps-label hidden sm:inline-block px-2.5 py-1 rounded-md bg-muted text-muted-foreground border border-border">
