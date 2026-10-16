@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import StarBorder from '../../../components/StarBorder';
+import { D3ConfusionMatrix2x2 } from '../../../components/D3ConfusionMatrix2x2';
+import { D3ConfusionMatrix7x7 } from '../../../components/D3ConfusionMatrix7x7';
 
 interface ClassMetric {
     name: string;
@@ -520,111 +522,21 @@ export const ModelBenchmark = () => {
                 <div className="space-y-8">
                     {/* Real Confusion Matrix Heatmap & ROC-AUC Gauge */}
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                        {/* 2x2 Heatmap */}
-                        <div className="lg:col-span-7 bg-card border border-border rounded-xl p-6">
-                            <div className="flex items-center justify-between pb-4 border-b border-border mb-6">
-                                <div>
-                                    <h3 className="font-sans font-semibold text-base text-foreground flex items-center gap-2">
-                                        <BarChart2 className="w-4 h-4 text-signal" />
-                                        Confusion Matrix (ESA OPS-SAT Held-Out Test Split)
-                                    </h3>
-                                    <p className="text-xs text-muted-foreground font-mono mt-1">
-                                        529 independent held-out telemetry segments (train==0)
-                                    </p>
-                                </div>
-                                <span className="caps-label px-2 py-0.5 rounded-md bg-signal/15 text-signal border border-signal/30 font-medium tabular-nums">
-                                    EMPIRICAL DATA
-                                </span>
-                            </div>
-
+                        {/* 2x2 D3 Interactive Confusion Matrix */}
+                        <div className="lg:col-span-7">
                             {metrics ? (
-                                <div className="space-y-4">
-                                    <div className="grid grid-cols-3 gap-3 font-mono text-xs text-center">
-                                        <div className="text-muted-foreground text-left self-center text-[11px] font-medium caps-label">ACTUAL \ PRED</div>
-                                        <div className="p-2 bg-muted/60 rounded-md text-foreground font-medium">PRED ANOMALY</div>
-                                        <div className="p-2 bg-muted/60 rounded-md text-muted-foreground font-medium">PRED NOMINAL</div>
-                                    </div>
-
-                                    {/* Actual Anomaly */}
-                                    <div className="grid grid-cols-3 gap-3 font-mono text-xs">
-                                        <div className="p-3 bg-destructive/10 text-destructive font-semibold rounded-lg flex items-center">
-                                            ACTUAL ANOMALY ({metrics.confusion_matrix.tp + metrics.confusion_matrix.fn})
-                                        </div>
-                                        <button
-                                            onClick={() => fetchTelemetrySamples('TP')}
-                                            className={clsx(
-                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border active:scale-95',
-                                                activeDrilldownCell === 'TP'
-                                                    ? 'bg-grove text-[#161513] border-grove ring-4 ring-grove/30 scale-[1.02] shadow-lg'
-                                                    : 'bg-grove/15 text-grove border-grove/40 hover:bg-grove/25 hover:scale-[1.01]'
-                                            )}
-                                        >
-                                            <div className="text-2xl font-bold font-sans tabular-nums">{metrics.confusion_matrix.tp}</div>
-                                            <div className={clsx("text-[11px] uppercase tracking-wide mt-1", activeDrilldownCell === 'TP' ? 'font-black text-[#161513]' : 'font-medium')}>TRUE POSITIVE</div>
-                                            <div className={clsx("text-[11px] font-sans", activeDrilldownCell === 'TP' ? 'font-semibold text-[#161513]/90' : 'opacity-80')}>Correct Detections</div>
-                                            <div className={clsx("text-[10px] font-mono mt-1 flex items-center justify-center gap-1", activeDrilldownCell === 'TP' ? 'font-black text-[#161513]' : 'font-medium text-grove opacity-90 group-hover:underline')}>
-                                                <Eye className="w-3 h-3" /> {activeDrilldownCell === 'TP' ? 'Active Inspector ✓' : 'Inspect Samples'}
-                                            </div>
-                                        </button>
-                                        <button
-                                            onClick={() => fetchTelemetrySamples('FN')}
-                                            className={clsx(
-                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border active:scale-95',
-                                                activeDrilldownCell === 'FN'
-                                                    ? 'bg-destructive text-white border-destructive ring-4 ring-destructive/30 scale-[1.02] shadow-lg'
-                                                    : 'bg-destructive/15 text-destructive border-destructive/40 hover:bg-destructive/25 hover:scale-[1.01]'
-                                            )}
-                                        >
-                                            <div className="text-2xl font-bold font-sans tabular-nums">{metrics.confusion_matrix.fn}</div>
-                                            <div className={clsx("text-[11px] uppercase tracking-wide mt-1", activeDrilldownCell === 'FN' ? 'font-black text-white' : 'font-medium')}>FALSE NEGATIVE</div>
-                                            <div className={clsx("text-[11px] font-sans", activeDrilldownCell === 'FN' ? 'font-semibold text-white/90' : 'opacity-80')}>Missed Anomalies</div>
-                                            <div className={clsx("text-[10px] font-mono mt-1 flex items-center justify-center gap-1", activeDrilldownCell === 'FN' ? 'font-black text-white' : 'font-medium text-destructive opacity-90 group-hover:underline')}>
-                                                <Eye className="w-3 h-3" /> {activeDrilldownCell === 'FN' ? 'Active Inspector ✓' : 'Inspect Samples'}
-                                            </div>
-                                        </button>
-                                    </div>
-
-                                    {/* Actual Nominal */}
-                                    <div className="grid grid-cols-3 gap-3 font-mono text-xs">
-                                        <div className="p-3 bg-muted text-muted-foreground font-semibold rounded-lg flex items-center">
-                                            ACTUAL NOMINAL ({metrics.confusion_matrix.fp + metrics.confusion_matrix.tn})
-                                        </div>
-                                        <button
-                                            onClick={() => fetchTelemetrySamples('FP')}
-                                            className={clsx(
-                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border active:scale-95',
-                                                activeDrilldownCell === 'FP'
-                                                    ? 'bg-signal text-[#161513] border-signal ring-4 ring-signal/30 scale-[1.02] shadow-lg'
-                                                    : 'bg-signal/15 text-signal border-signal/40 hover:bg-signal/25 hover:scale-[1.01]'
-                                            )}
-                                        >
-                                            <div className="text-2xl font-bold font-sans tabular-nums">{metrics.confusion_matrix.fp}</div>
-                                            <div className={clsx("text-[11px] uppercase tracking-wide mt-1", activeDrilldownCell === 'FP' ? 'font-black text-[#161513]' : 'font-medium')}>FALSE POSITIVE</div>
-                                            <div className={clsx("text-[11px] font-sans", activeDrilldownCell === 'FP' ? 'font-semibold text-[#161513]/90' : 'opacity-80')}>False Alarms ({pct(metrics.false_positive_rate)})</div>
-                                            <div className={clsx("text-[10px] font-mono mt-1 flex items-center justify-center gap-1", activeDrilldownCell === 'FP' ? 'font-black text-[#161513]' : 'font-medium text-signal opacity-90 group-hover:underline')}>
-                                                <Eye className="w-3 h-3" /> {activeDrilldownCell === 'FP' ? 'Active Inspector ✓' : 'Inspect Samples'}
-                                            </div>
-                                        </button>
-                                        <button
-                                            onClick={() => fetchTelemetrySamples('TN')}
-                                            className={clsx(
-                                                'p-4 rounded-xl text-center shadow-xs transition-all cursor-pointer relative group text-left sm:text-center border active:scale-95',
-                                                activeDrilldownCell === 'TN'
-                                                    ? 'bg-[#f1efea] text-[#161513] border-[#f1efea] ring-4 ring-white/20 scale-[1.02] shadow-lg'
-                                                    : 'bg-muted/70 text-foreground border-border hover:bg-muted hover:scale-[1.01]'
-                                            )}
-                                        >
-                                            <div className="text-2xl font-bold font-sans tabular-nums">{metrics.confusion_matrix.tn}</div>
-                                            <div className={clsx("text-[11px] uppercase tracking-wide mt-1", activeDrilldownCell === 'TN' ? 'font-black text-[#161513]' : 'font-medium')}>TRUE NEGATIVE</div>
-                                            <div className={clsx("text-[11px] font-sans", activeDrilldownCell === 'TN' ? 'font-semibold text-[#161513]/90' : 'opacity-80')}>Pass Clearances</div>
-                                            <div className={clsx("text-[10px] font-mono mt-1 flex items-center justify-center gap-1", activeDrilldownCell === 'TN' ? 'font-black text-[#161513]' : 'font-medium text-muted-foreground opacity-90 group-hover:underline')}>
-                                                <Eye className="w-3 h-3" /> {activeDrilldownCell === 'TN' ? 'Active Inspector ✓' : 'Inspect Samples'}
-                                            </div>
-                                        </button>
-                                    </div>
-                                </div>
+                                <D3ConfusionMatrix2x2
+                                    confusionMatrix={metrics.confusion_matrix}
+                                    activeCell={activeDrilldownCell}
+                                    onSelectCell={(cell) => fetchTelemetrySamples(cell)}
+                                    totalTestSegments={metrics.n_test_segments}
+                                    title="2×2 Binary Telemetry Confusion Matrix"
+                                    subtitle="Empirical Held-Out Validation (ESA OPS-SAT Spacecraft Telemetry)"
+                                />
                             ) : (
-                                <div className="p-8 text-center text-muted-foreground font-mono">Loading real confusion matrix...</div>
+                                <div className="bg-card border border-border rounded-xl p-8 text-center text-muted-foreground font-mono">
+                                    Loading real confusion matrix...
+                                </div>
                             )}
                         </div>
 
@@ -950,63 +862,13 @@ export const ModelBenchmark = () => {
             {/* TAB 2: 7X7 MULTICLASS NETWORK FLOW MATRIX */}
             {activeTab === 'flow_matrix' && (
                 <div className="space-y-8">
-                    {/* 7x7 Confusion Matrix Heatmap */}
-                    <div className="bg-card border border-border rounded-xl p-6 overflow-hidden shadow-xs">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-2 mb-6">
-                            <div>
-                                <h2 className="text-xl font-semibold tracking-tight text-foreground flex items-center gap-2">
-                                    <Layers className="w-5 h-5 text-signal" />
-                                    7×7 Multiclass Ground Flow Confusion Matrix
-                                </h2>
-                                <p className="text-xs text-muted-foreground font-mono mt-1">
-                                    Rows: Ground Truth Class • Columns: Predicted Classification (52 network features)
-                                </p>
-                            </div>
-
-                            <div className="flex items-center gap-3 text-xs font-mono">
-                                <span className="flex items-center gap-1.5">
-                                    <span className="w-2.5 h-2.5 rounded-full bg-grove"></span> High TP (&gt;98%)
-                                </span>
-                                <span className="flex items-center gap-1.5">
-                                    <span className="w-2.5 h-2.5 rounded-full bg-destructive"></span> Error Cell
-                                </span>
-                            </div>
-                        </div>
-
-                        {/* Matrix Grid */}
-                        <div className="overflow-x-auto pb-4">
-                            <div className="min-w-[700px]">
-                                <div className="grid grid-cols-8 gap-1.5 mb-2 text-center font-mono text-[11px] text-muted-foreground">
-                                    <div className="text-left font-medium caps-label py-2">ACTUAL \ PRED</div>
-                                    {matrixLabels.map((lbl, idx) => (
-                                        <div key={idx} className="p-2 font-medium truncate text-foreground" title={lbl}>
-                                            {lbl.split(' ')[0]}
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {confusionMatrix.map((row, rIdx) => (
-                                    <div key={rIdx} className="grid grid-cols-8 gap-1.5 mb-1.5 items-center font-mono text-xs">
-                                        <div className="text-left font-medium text-foreground truncate pr-2 text-[11px]" title={matrixLabels[rIdx]}>
-                                            {matrixLabels[rIdx]}
-                                        </div>
-                                        {row.map((val, cIdx) => (
-                                            <button
-                                                key={cIdx}
-                                                onClick={() => handleSelectFlowCell(rIdx, cIdx, val)}
-                                                className={`p-3 rounded-lg text-center transition-all cursor-pointer active:scale-95 ${
-                                                    selectedCell?.r === rIdx && selectedCell?.c === cIdx
-                                                        ? '!bg-signal !text-[#161513] font-black ring-4 ring-signal/40 scale-110 shadow-xl z-10'
-                                                        : `${getCellColor(rIdx, cIdx, val)} hover:scale-105 active:bg-signal active:text-[#161513]`
-                                                }`}
-                                            >
-                                                {(val * 100).toFixed(1)}%
-                                            </button>
-                                        ))}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                    {/* 7x7 Interactive D3 Confusion Matrix Heatmap */}
+                    <D3ConfusionMatrix7x7
+                        matrix={confusionMatrix}
+                        labels={matrixLabels}
+                        selectedCell={selectedCell}
+                        onSelectCell={handleSelectFlowCell}
+                    />
 
                         {selectedCell && (
                             <div className="mt-6 p-6 rounded-xl bg-card border border-border text-xs font-mono space-y-4 shadow-xl animate-fade-in">
@@ -1082,7 +944,6 @@ export const ModelBenchmark = () => {
                                 ) : null}
                             </div>
                         )}
-                    </div>
 
                     {/* Per-Class Classification Report Table */}
                     <div className="bg-card border border-border rounded-xl overflow-hidden shadow-xs">
