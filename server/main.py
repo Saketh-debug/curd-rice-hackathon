@@ -827,7 +827,7 @@ def resolve_incident(packet_id: int, req: ActionRequest, db: Session = Depends(g
     
     # Log specific class threshold
     thresholds = get_thresholds()
-    print(f"🧠 RL UPDATE (5x Weight): Incident {packet_id} ({inc_type}, Conf={inc_confidence:.2f}) -> Action {req.action}")
+    print(f"[RL UPDATE] (5x Weight): Incident {packet_id} ({inc_type}, Conf={inc_confidence:.2f}) -> Action {req.action}")
     print(f"   New Threshold for {inc_type}: {thresholds.get(inc_type, 0.95):.2%}")
 
     # Update Status
