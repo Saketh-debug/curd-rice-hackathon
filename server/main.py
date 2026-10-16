@@ -354,6 +354,8 @@ app.add_middleware(
 )
 
 app.include_router(ai_router)
+from evaluation.router import router as benchmark_router
+app.include_router(benchmark_router)
 
 # === PORTAL A ENDPOINTS (Read-Only / Monitoring) ===
 

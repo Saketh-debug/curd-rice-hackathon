@@ -1,0 +1,281 @@
+{
+  "classes": [
+    "Nominal Telemetry",
+    "Spacecraft Anomaly"
+  ],
+  "sample_count": 2123,
+  "overall_accuracy": 0.9603,
+  "macro_f1": 0.9032,
+  "macro_precision": 0.9423,
+  "macro_recall": 0.8673,
+  "binary_fpr": 0.01442,
+  "inference_latency_ms": 3.4,
+  "evaluated_at": "2026-10-16T15:20:00Z",
+  "dataset_title": "NASA SMAP / MSL CADC Spacecraft Telemetry Anomaly Dataset",
+  "confusion_matrix_normalized": [
+    [
+      0.9856,
+      0.0144
+    ],
+    [
+      0.1327,
+      0.8673
+    ]
+  ],
+  "confusion_matrix_raw": [
+    [
+      410,
+      6
+    ],
+    [
+      15,
+      98
+    ]
+  ],
+  "per_class_metrics": [
+    {
+      "name": "CADC0872",
+      "alias": "Telemetry Stream CADC0872",
+      "precision": 0.9823,
+      "recall": 0.8473,
+      "f1": 0.9098,
+      "fpr": 0.00482,
+      "support": 546
+    },
+    {
+      "name": "CADC0873",
+      "alias": "Telemetry Stream CADC0873",
+      "precision": 0.9697,
+      "recall": 0.9143,
+      "f1": 0.9412,
+      "fpr": 0.00615,
+      "support": 593
+    },
+    {
+      "name": "CADC0874",
+      "alias": "Telemetry Stream CADC0874",
+      "precision": 1.0,
+      "recall": 0.8986,
+      "f1": 0.9466,
+      "fpr": 0.0,
+      "support": 194
+    },
+    {
+      "name": "CADC0884",
+      "alias": "Telemetry Stream CADC0884",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.0,
+      "support": 158
+    },
+    {
+      "name": "CADC0886",
+      "alias": "Telemetry Stream CADC0886",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "fpr": 0.0,
+      "support": 11
+    },
+    {
+      "name": "CADC0888",
+      "alias": "Telemetry Stream CADC0888",
+      "precision": 0.96,
+      "recall": 0.8,
+      "f1": 0.8727,
+      "fpr": 0.01042,
+      "support": 252
+    },
+    {
+      "name": "CADC0890",
+      "alias": "Telemetry Stream CADC0890",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "fpr": 0.0,
+      "support": 14
+    },
+    {
+      "name": "CADC0892",
+      "alias": "Telemetry Stream CADC0892",
+      "precision": 0.9474,
+      "recall": 0.5294,
+      "f1": 0.6792,
+      "fpr": 0.00565,
+      "support": 211
+    },
+    {
+      "name": "CADC0894",
+      "alias": "Telemetry Stream CADC0894",
+      "precision": 0.7222,
+      "recall": 0.619,
+      "f1": 0.6667,
+      "fpr": 0.04065,
+      "support": 144
+    }
+  ],
+  "binary_metrics": {
+    "tp": 98,
+    "fp": 6,
+    "fn": 15,
+    "tn": 410,
+    "precision": 0.9423,
+    "recall": 0.8673,
+    "f1": 0.9032,
+    "fpr": 0.01442,
+    "specificity": 0.9856,
+    "accuracy": 0.9603,
+    "total": 529
+  },
+  "macro_avg": {
+    "precision": 0.8424,
+    "recall": 0.7343,
+    "f1": 0.7796,
+    "fpr": 0.00752
+  },
+  "weighted_avg": {
+    "precision": 0.9423,
+    "recall": 0.8673,
+    "f1": 0.9032,
+    "fpr": 0.01442
+  },
+  "threshold_curve": [
+    {
+      "threshold": 0.1,
+      "precision": 0.7312,
+      "recall": 0.9401,
+      "f1": 0.8226,
+      "fpr": 0.08881,
+      "auto_block_rate": 0.2628
+    },
+    {
+      "threshold": 0.15,
+      "precision": 0.7928,
+      "recall": 0.9171,
+      "f1": 0.8504,
+      "fpr": 0.06157,
+      "auto_block_rate": 0.2365
+    },
+    {
+      "threshold": 0.2,
+      "precision": 0.8475,
+      "recall": 0.8963,
+      "f1": 0.8712,
+      "fpr": 0.04144,
+      "auto_block_rate": 0.2162
+    },
+    {
+      "threshold": 0.25,
+      "precision": 0.8682,
+      "recall": 0.8802,
+      "f1": 0.8741,
+      "fpr": 0.03434,
+      "auto_block_rate": 0.2073
+    },
+    {
+      "threshold": 0.3,
+      "precision": 0.896,
+      "recall": 0.8733,
+      "f1": 0.8845,
+      "fpr": 0.02605,
+      "auto_block_rate": 0.1992
+    },
+    {
+      "threshold": 0.35,
+      "precision": 0.9148,
+      "recall": 0.8664,
+      "f1": 0.8899,
+      "fpr": 0.02072,
+      "auto_block_rate": 0.1936
+    },
+    {
+      "threshold": 0.4,
+      "precision": 0.925,
+      "recall": 0.8525,
+      "f1": 0.8873,
+      "fpr": 0.01776,
+      "auto_block_rate": 0.1884
+    },
+    {
+      "threshold": 0.45,
+      "precision": 0.9504,
+      "recall": 0.8387,
+      "f1": 0.8911,
+      "fpr": 0.01125,
+      "auto_block_rate": 0.1804
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.9653,
+      "recall": 0.8341,
+      "f1": 0.8949,
+      "fpr": 0.0077,
+      "auto_block_rate": 0.1766
+    },
+    {
+      "threshold": 0.55,
+      "precision": 0.9755,
+      "recall": 0.8272,
+      "f1": 0.8953,
+      "fpr": 0.00533,
+      "auto_block_rate": 0.1733
+    },
+    {
+      "threshold": 0.6,
+      "precision": 0.9778,
+      "recall": 0.8111,
+      "f1": 0.8866,
+      "fpr": 0.00474,
+      "auto_block_rate": 0.1696
+    },
+    {
+      "threshold": 0.65,
+      "precision": 0.9774,
+      "recall": 0.7972,
+      "f1": 0.8782,
+      "fpr": 0.00474,
+      "auto_block_rate": 0.1667
+    },
+    {
+      "threshold": 0.7,
+      "precision": 0.9826,
+      "recall": 0.7811,
+      "f1": 0.8703,
+      "fpr": 0.00355,
+      "auto_block_rate": 0.1625
+    },
+    {
+      "threshold": 0.75,
+      "precision": 0.9881,
+      "recall": 0.765,
+      "f1": 0.8623,
+      "fpr": 0.00237,
+      "auto_block_rate": 0.1583
+    },
+    {
+      "threshold": 0.8,
+      "precision": 0.9877,
+      "recall": 0.7419,
+      "f1": 0.8474,
+      "fpr": 0.00237,
+      "auto_block_rate": 0.1536
+    },
+    {
+      "threshold": 0.85,
+      "precision": 0.9876,
+      "recall": 0.735,
+      "f1": 0.8428,
+      "fpr": 0.00237,
+      "auto_block_rate": 0.1521
+    },
+    {
+      "threshold": 0.9,
+      "precision": 0.9934,
+      "recall": 0.6982,
+      "f1": 0.82,
+      "fpr": 0.00118,
+      "auto_block_rate": 0.1437
+    }
+  ]
+}
