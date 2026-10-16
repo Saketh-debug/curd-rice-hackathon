@@ -97,10 +97,10 @@ export const FloatingWidget = () => {
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 font-sans">
+        <div className="fixed bottom-6 right-6 z-[2000] font-sans">
             {!isOpen && (
                 <StarBorder
-                    color="#f5b325"
+                    color="#ff9933"
                     trailColor="#ffffff"
                     duration={4}
                     direction="clockwise"

@@ -53,7 +53,7 @@ export const PolicyConfig = () => {
     };
 
     return (
-        <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 bg-background text-foreground font-sans min-h-screen">
+        <div className="px-6 pb-6 md:px-8 md:pb-8 max-w-7xl mx-auto space-y-6 bg-background text-foreground font-sans min-h-screen">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-3">
                 <div>
@@ -197,7 +197,7 @@ export const PolicyConfig = () => {
                                 </div>
                             </li>
                             <li className="p-2.5 rounded-lg bg-background border border-border flex items-start gap-2.5">
-                                <span className="w-2 h-2 rounded-full bg-slate shrink-0 mt-1"></span>
+                                <span className="w-2 h-2 rounded-full bg-signal shrink-0 mt-1"></span>
                                 <div>
                                     <strong className="text-foreground font-mono">SLE Service:</strong> Space Link Extension over TCP/IP ports 5100-5102.
                                 </div>

@@ -190,8 +190,8 @@ export const ThreatMap = () => {
                                     center={station.coords}
                                     radius={12}
                                     pathOptions={{
-                                        color: "#f5b325",
-                                        fillColor: "#f5b325",
+                                        color: "#ff9933",
+                                        fillColor: "#ff9933",
                                         fillOpacity: 0.12,
                                         weight: 1,
                                         dashArray: "3, 3",
@@ -202,7 +202,7 @@ export const ThreatMap = () => {
                                     radius={4.5}
                                     pathOptions={{
                                         color: "#f1efea",
-                                        fillColor: "#f5b325",
+                                        fillColor: "#ff9933",
                                         fillOpacity: 1,
                                         weight: 1.5,
                                     }}
@@ -261,7 +261,7 @@ export const ThreatMap = () => {
             </div>
 
             {/* ================= TOP HEADER OVERLAY ================= */}
-            <div className="absolute top-4 left-6 right-6 flex flex-wrap justify-between items-start z-[500] pointer-events-none gap-4">
+            <div className="absolute top-20 left-4 sm:left-6 right-4 sm:right-6 flex flex-wrap justify-between items-start z-[500] pointer-events-none gap-4">
                 <div className="pointer-events-auto bg-card/90 backdrop-blur-md border border-border p-3.5 rounded-xl shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                         <div className="flex items-center gap-2 mb-0.5">

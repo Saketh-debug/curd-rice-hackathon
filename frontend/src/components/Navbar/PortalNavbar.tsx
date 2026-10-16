@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
     Satellite,
@@ -7,8 +7,7 @@ import {
     Shield,
     Menu,
     X,
-    ExternalLink,
-    ChevronRight,
+    ArrowUpRight,
     type LucideIcon
 } from 'lucide-react';
 import clsx from 'clsx';
@@ -17,152 +16,245 @@ export interface NavItem {
     icon: LucideIcon;
     label: string;
     path: string;
+    badge?: number;
 }
 
 interface PortalNavbarProps {
     portalType: 'client' | 'admin';
     navItems: NavItem[];
-    isFloating?: boolean;
 }
 
-export const PortalNavbar: React.FC<PortalNavbarProps> = ({ portalType, navItems, isFloating = false }) => {
+export const PortalNavbar: React.FC<PortalNavbarProps> = ({ portalType, navItems }) => {
     const location = useLocation();
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
 
     const isAdmin = portalType === 'admin';
     const switchPath = isAdmin ? '/client/dashboard' : '/admin/dashboard';
-    const switchLabel = isAdmin ? 'MOC Operations' : 'Sec Console';
+    const switchLabel = isAdmin ? 'Flight Ops' : 'Sec Console';
+
+    // Enhance glass effect on scroll
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Close mobile menu on route change
+    useEffect(() => {
+        setMobileOpen(false);
+    }, [location.pathname]);
+
+    const isActive = (item: NavItem) =>
+        location.pathname === item.path ||
+        (item.path !== '/admin/dashboard' &&
+            item.path !== '/client/dashboard' &&
+            location.pathname.startsWith(item.path));
 
     return (
-        <header className={clsx(
-            "z-[1500] transition-all duration-300",
-            isFloating
-                ? "fixed top-3 left-3 right-3 sm:left-6 sm:right-6 max-w-7xl mx-auto pointer-events-auto"
-                : "fixed top-0 left-0 right-0"
-        )}>
-            {/* Glassmorphic Container */}
-            <div className={clsx(
-                "transition-all duration-300",
-                isFloating
-                    ? "bg-[#080d1e]/85 backdrop-blur-2xl border border-orange-500/30 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.7)]"
-                    : "bg-[#050814]/80 backdrop-blur-xl border-b border-orange-500/15 shadow-[0_4px_30px_rgba(249,115,22,0.05)]"
-            )}>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-                    
-                    {/* Brand / Logo */}
-                    <div className="flex items-center gap-3 shrink-0">
-                        <Link 
-                            to="/" 
-                            className="flex items-center gap-2 group transition-transform duration-200 hover:scale-[1.02]"
-                        >
-                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.15)] group-hover:border-orange-500/60 transition-all">
-                                {isAdmin ? <Lock className="w-4 h-4 text-orange-400" /> : <Satellite className="w-4 h-4 text-orange-400" />}
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="font-orbitron font-bold text-base tracking-wider text-white flex items-center">
-                                    SOAR
-                                    <span className="text-orange-400 ml-1.5 text-xs font-mono px-1.5 py-0.5 rounded bg-orange-500/10 border border-orange-500/25">
-                                        {isAdmin ? 'ADMIN' : 'SPACE'}
-                                    </span>
-                                </span>
-                            </div>
-                        </Link>
+        <>
+            {/* ══════════ FLOATING PILL NAVBAR ══════════ */}
+            <div
+                className={clsx(
+                    'fixed top-4 left-1/2 -translate-x-1/2 z-[1500]',
+                    'transition-all duration-300 pointer-events-auto',
+                    // On mobile, stretch to near-full width for readability
+                    'w-[calc(100vw-2rem)] sm:w-auto'
+                )}
+            >
+                <nav
+                    className={clsx(
+                        'flex items-center gap-1 px-2 py-2',
+                        'rounded-full',
+                        'border transition-all duration-300',
+                        scrolled
+                            ? 'bg-[#161513]/72 backdrop-blur-3xl border-[rgba(255,153,51,0.32)] shadow-[0_16px_50px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.07),0_0_26px_rgba(255,153,51,0.12)]'
+                            : 'bg-[#161513]/60 backdrop-blur-2xl border-[rgba(255,153,51,0.22)] shadow-[0_10px_38px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)]'
+                    )}
+                    role="navigation"
+                    aria-label={`${isAdmin ? 'Admin' : 'Client'} portal navigation`}
+                >
+                    {/* ── Brand Logo Pill ── */}
+                    <Link
+                        to="/"
+                        className={clsx(
+                            'flex items-center gap-2 px-3 py-1.5 rounded-full shrink-0',
+                            'border border-[rgba(255,153,51,0.24)] bg-[rgba(255,153,51,0.07)]',
+                            'hover:bg-[rgba(255,153,51,0.14)] hover:border-[rgba(255,153,51,0.42)]',
+                            'transition-all duration-200 group'
+                        )}
+                        title="SOAR Home"
+                    >
+                        {isAdmin
+                            ? <Lock className="w-3.5 h-3.5 text-signal" />
+                            : <Satellite className="w-3.5 h-3.5 text-signal group-hover:rotate-12 transition-transform duration-300" />
+                        }
+                        <span className="font-orbitron font-bold text-[11px] tracking-widest text-foreground">
+                            SOAR
+                        </span>
+                        <span className="font-mono text-[9px] px-1.5 py-0.5 rounded-full bg-signal text-signal-foreground font-bold tracking-wider leading-none">
+                            {isAdmin ? 'GOV' : 'OPS'}
+                        </span>
+                    </Link>
 
-                        <div className="hidden lg:flex items-center gap-1.5 pl-3 border-l border-slate-800 text-[10px] font-mono text-slate-400">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span className="text-slate-300 font-semibold">{isAdmin ? 'ISTRAC-SEC' : 'MOC-BLR'}</span>
-                            <span className="text-slate-500">|</span>
-                            <span className="text-emerald-400 font-bold">{isAdmin ? 'AIR-GAP SAFE' : 'PASS NOMINAL'}</span>
-                        </div>
-                    </div>
+                    {/* ── Separator ── */}
+                    <div className="w-px h-5 bg-border/60 mx-1 shrink-0 hidden sm:block" />
 
-                    {/* Centered Desktop Navigation Links */}
-                    <nav className="hidden md:flex items-center justify-center gap-1.5 overflow-x-auto py-1 px-2 rounded-full bg-slate-900/60 border border-slate-800/80 backdrop-blur-md">
+                    {/* ── Desktop Nav Items ── */}
+                    <div className="hidden md:flex items-center gap-0.5">
                         {navItems.map((item) => {
-                            const isActive = location.pathname === item.path || 
-                                (item.path !== '/admin/dashboard' && item.path !== '/client/dashboard' && location.pathname.startsWith(item.path));
-                            const IconComponent = item.icon;
+                            const active = isActive(item);
+                            const Icon = item.icon;
                             return (
                                 <Link
                                     key={item.path}
                                     to={item.path}
                                     className={clsx(
-                                        "flex items-center gap-2 px-3.5 py-1.5 rounded-full transition-all duration-200 text-xs font-mono whitespace-nowrap",
-                                        isActive
-                                            ? "bg-gradient-to-r from-orange-500/20 to-amber-500/15 text-orange-300 font-bold border border-orange-500/40 shadow-[0_0_15px_rgba(249,115,22,0.18)]"
-                                            : "text-slate-300 hover:text-orange-300 hover:bg-slate-800/50 hover:border-slate-700/50 border border-transparent"
+                                        'relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full',
+                                        'text-[11px] font-medium font-sans whitespace-nowrap',
+                                        'transition-all duration-200',
+                                        active
+                                            ? 'bg-[rgba(255,153,51,0.15)] border border-[rgba(255,153,51,0.45)] text-signal shadow-[0_0_14px_rgba(255,153,51,0.18)]'
+                                            : 'border border-transparent text-muted-foreground hover:text-foreground hover:bg-[rgba(255,255,255,0.05)]'
                                     )}
                                 >
-                                    <IconComponent className={clsx("w-3.5 h-3.5", isActive ? "text-orange-400" : "text-slate-400 group-hover:text-orange-400")} />
+                                    <Icon
+                                        className={clsx(
+                                            'w-3.5 h-3.5 shrink-0',
+                                            active ? 'text-signal' : 'text-muted-foreground'
+                                        )}
+                                    />
                                     <span>{item.label}</span>
+                                    {/* Badge dot for pending items */}
+                                    {item.badge !== undefined && item.badge > 0 && (
+                                        <span className={clsx(
+                                            'absolute -top-1 -right-0.5',
+                                            'min-w-[16px] h-4 px-1 rounded-full',
+                                            'bg-destructive text-white text-[9px] font-mono font-bold',
+                                            'flex items-center justify-center',
+                                            'border border-[#161513]',
+                                            'animate-pulse'
+                                        )}>
+                                            {item.badge > 99 ? '99+' : item.badge}
+                                        </span>
+                                    )}
                                 </Link>
                             );
                         })}
-                    </nav>
-
-                    {/* Right Action / Switcher */}
-                    <div className="flex items-center gap-3 shrink-0">
-                        <Link
-                            to={switchPath}
-                            className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono text-orange-300 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 hover:border-orange-500/50 transition-all shadow-[0_0_12px_rgba(249,115,22,0.1)]"
-                            title={`Switch to ${switchLabel}`}
-                        >
-                            {isAdmin ? <Radio className="w-3.5 h-3.5 text-orange-400" /> : <Shield className="w-3.5 h-3.5 text-orange-400" />}
-                            <span className="font-semibold">{switchLabel}</span>
-                            <ChevronRight className="w-3 h-3 text-orange-400/70" />
-                        </Link>
-
-                        {/* Mobile Menu Button */}
-                        <button
-                            onClick={() => setMobileOpen(!mobileOpen)}
-                            className="md:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-orange-400 hover:border-orange-500/40 transition-colors"
-                            aria-label="Toggle navigation menu"
-                        >
-                            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                        </button>
                     </div>
 
-                </div>
+                    {/* ── Separator ── */}
+                    <div className="w-px h-5 bg-border/60 mx-1 shrink-0 hidden md:block" />
 
-                {/* Mobile Dropdown Menu */}
-                {mobileOpen && (
-                    <div className="md:hidden border-t border-slate-800 bg-[#050814]/95 backdrop-blur-2xl px-4 py-4 space-y-1">
+                    {/* ── Portal Switcher (desktop) ── */}
+                    <Link
+                        to={switchPath}
+                        className={clsx(
+                            'hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full shrink-0',
+                            'text-[11px] font-medium font-sans whitespace-nowrap',
+                            'border border-border/70 text-muted-foreground',
+                            'hover:text-foreground hover:bg-[rgba(255,255,255,0.06)] hover:border-border',
+                            'transition-all duration-200 group'
+                        )}
+                        title={`Switch to ${switchLabel}`}
+                    >
+                        {isAdmin
+                            ? <Radio className="w-3.5 h-3.5 text-signal/70 group-hover:text-signal transition-colors" />
+                            : <Shield className="w-3.5 h-3.5 text-signal/70 group-hover:text-signal transition-colors" />
+                        }
+                        <span className="hidden lg:inline">{switchLabel}</span>
+                        <ArrowUpRight className="w-3 h-3 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                    </Link>
+
+                    {/* ── Mobile Hamburger ── */}
+                    <button
+                        onClick={() => setMobileOpen(prev => !prev)}
+                        className={clsx(
+                            'md:hidden flex items-center justify-center w-8 h-8 rounded-full shrink-0 ml-auto',
+                            'border border-border/70 text-muted-foreground',
+                            'hover:text-foreground hover:bg-[rgba(255,255,255,0.06)] hover:border-border',
+                            'transition-all duration-200'
+                        )}
+                        aria-label="Toggle navigation menu"
+                        aria-expanded={mobileOpen}
+                    >
+                        {mobileOpen
+                            ? <X className="w-4 h-4" />
+                            : <Menu className="w-4 h-4" />
+                        }
+                    </button>
+                </nav>
+
+                {/* ══════════ MOBILE DROPDOWN ══════════ */}
+                <div
+                    className={clsx(
+                        'md:hidden mt-2 overflow-hidden',
+                        'rounded-2xl border',
+                        'bg-[#161513]/94 backdrop-blur-3xl',
+                        'border-[rgba(255,153,51,0.20)] shadow-[0_12px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.05)]',
+                        'transition-all duration-300 ease-out',
+                        mobileOpen
+                            ? 'max-h-[480px] opacity-100 translate-y-0'
+                            : 'max-h-0 opacity-0 -translate-y-2 pointer-events-none'
+                    )}
+                    aria-hidden={!mobileOpen}
+                >
+                    <div className="p-3 space-y-1">
+                        {/* Portal badge */}
+                        <div className="flex items-center gap-2 px-3 pb-2 mb-1 border-b border-border/50">
+                            <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse" />
+                            <span className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase">
+                                {isAdmin ? 'ISTRAC-SEC · AIR-GAP SAFE' : 'MOC-BLR · PASS NOMINAL'}
+                            </span>
+                        </div>
+
                         {navItems.map((item) => {
-                            const isActive = location.pathname === item.path || 
-                                (item.path !== '/admin/dashboard' && item.path !== '/client/dashboard' && location.pathname.startsWith(item.path));
-                            const IconComponent = item.icon;
+                            const active = isActive(item);
+                            const Icon = item.icon;
                             return (
                                 <Link
                                     key={item.path}
                                     to={item.path}
                                     onClick={() => setMobileOpen(false)}
                                     className={clsx(
-                                        "flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-xs font-mono",
-                                        isActive
-                                            ? "bg-orange-500/15 text-orange-300 border border-orange-500/40 font-bold"
-                                            : "text-slate-300 hover:bg-slate-800/60 hover:text-orange-300"
+                                        'relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl',
+                                        'text-xs font-medium font-sans',
+                                        'transition-all duration-200',
+                                        active
+                                            ? 'bg-[rgba(255,153,51,0.14)] border border-[rgba(255,153,51,0.40)] text-signal'
+                                            : 'border border-transparent text-muted-foreground hover:text-foreground hover:bg-[rgba(255,255,255,0.04)]'
                                     )}
                                 >
-                                    <IconComponent className="w-4 h-4 text-orange-400" />
+                                    <Icon className={clsx('w-4 h-4 shrink-0', active ? 'text-signal' : 'text-muted-foreground')} />
                                     <span>{item.label}</span>
+                                    {item.badge !== undefined && item.badge > 0 && (
+                                        <span className="ml-auto px-1.5 py-0.5 rounded-full bg-destructive/20 border border-destructive/40 text-destructive text-[10px] font-mono font-bold">
+                                            {item.badge}
+                                        </span>
+                                    )}
                                 </Link>
                             );
                         })}
 
-                        <div className="pt-3 mt-2 border-t border-slate-800 flex items-center justify-between">
+                        {/* Mobile portal switcher */}
+                        <div className="pt-2 mt-1 border-t border-border/50">
                             <Link
                                 to={switchPath}
                                 onClick={() => setMobileOpen(false)}
-                                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-mono text-orange-300 bg-orange-500/15 border border-orange-500/30"
+                                className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-border/70 text-muted-foreground hover:text-foreground hover:bg-[rgba(255,255,255,0.04)] text-xs font-medium transition-all duration-200"
                             >
+                                {isAdmin
+                                    ? <Radio className="w-4 h-4 text-signal/70" />
+                                    : <Shield className="w-4 h-4 text-signal/70" />
+                                }
                                 <span>Switch to {switchLabel}</span>
-                                <ChevronRight className="w-3.5 h-3.5" />
+                                <ArrowUpRight className="w-3.5 h-3.5 ml-auto opacity-60" />
                             </Link>
                         </div>
                     </div>
-                )}
+                </div>
             </div>
-        </header>
+        </>
     );
 };
 

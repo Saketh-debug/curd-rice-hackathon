@@ -255,12 +255,13 @@ def get_telemetry_confusion_samples(cell: Optional[str] = Query(None, descriptio
 
 @router.get("/flow/samples")
 def get_flow_confusion_samples(
-    actual: int = Query(..., ge=0, le=6, description="Row index (0-6) of ground truth class"),
-    predicted: int = Query(..., ge=0, le=6, description="Column index (0-6) of predicted class")
+    actual: str = Query(..., description="Row index (0-6) or name of ground truth class"),
+    predicted: str = Query(..., description="Column index (0-6) or name of predicted class")
 ):
     """
     Returns explainable AI diagnosis and representative network flow features
-    for any cell in the 7x7 Ground Flow Confusion Matrix.
+    for any cell in the 7x7 Ground Flow Confusion Matrix. Accepts both integer indices (0-6)
+    and class names (e.g. 'DDoS', 'DoS', 'Port Scan').
     """
     FLOW_CLASSES = [
         {"name": "DDoS Saturation", "alias": "TT&C Uplink Saturation", "port": 2098, "protocol": "TCP"},
@@ -272,22 +273,35 @@ def get_flow_confusion_samples(
         {"name": "Housekeeping", "alias": "Nominal Housekeeping Telemetry", "port": 8080, "protocol": "TCP"}
     ]
 
-    act = FLOW_CLASSES[actual]
-    pred = FLOW_CLASSES[predicted]
-    is_correct = (actual == predicted)
+    def parse_class_index(val: str) -> int:
+        val_str = str(val).strip()
+        if val_str.isdigit():
+            return max(0, min(int(val_str), len(FLOW_CLASSES) - 1))
+        v_low = val_str.lower()
+        for i, c in enumerate(FLOW_CLASSES):
+            if v_low in c["name"].lower() or v_low in c["alias"].lower():
+                return i
+        return 0
+
+    actual_idx = parse_class_index(actual)
+    predicted_idx = parse_class_index(predicted)
+
+    act = FLOW_CLASSES[actual_idx]
+    pred = FLOW_CLASSES[predicted_idx]
+    is_correct = (actual_idx == predicted_idx)
 
     if is_correct:
         rationale = f"Clean classification. Distinct behavioral signatures of '{act['alias']}' matched ground station defense models with >97% discriminatory confidence."
-        laya_action = "MONITOR" if actual == 6 else "AUTO_BLOCK"
-        mitigation = "Standard nominal telemetry clear" if actual == 6 else f"Engage automated perimeter drop on {act['port']}."
+        laya_action = "MONITOR" if actual_idx == 6 else "AUTO_BLOCK"
+        mitigation = "Standard nominal telemetry clear" if actual_idx == 6 else f"Engage automated perimeter drop on {act['port']}."
     else:
         rationale = f"Misclassification boundary: '{act['alias']}' was predicted as '{pred['alias']}'. Both vectors exhibit overlapping feature density in packet arrival delta and flag counts."
         laya_action = "ESCALATE_TO_ANALYST"
         mitigation = f"Cross-verify packet payload flags; initiate secondary heuristic inspect on port {act['port']}."
 
     return {
-        "actual_index": actual,
-        "predicted_index": predicted,
+        "actual_index": actual_idx,
+        "predicted_index": predicted_idx,
         "actual_class": act["name"],
         "actual_alias": act["alias"],
         "predicted_class": pred["name"],

@@ -7,7 +7,7 @@ export const AutomationStatus = () => {
     const { traffic } = useLiveTraffic();
 
     return (
-        <div className="max-w-7xl mx-auto p-6 md:p-8 space-y-6 bg-background text-foreground font-sans min-h-screen">
+        <div className="max-w-7xl mx-auto px-6 pb-6 md:px-8 md:pb-8 space-y-6 bg-background text-foreground font-sans min-h-screen">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-3">
                 <div>

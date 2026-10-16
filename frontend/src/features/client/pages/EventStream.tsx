@@ -19,7 +19,7 @@ export const EventStream = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div className="flex-1 flex flex-col min-w-0 bg-background relative font-mono h-[calc(100vh-65px)] text-foreground">
+        <div className="flex-1 flex flex-col min-w-0 bg-background relative font-mono text-foreground">
             {/* Toolbar */}
             <div className="h-14 border-b border-border bg-card flex items-center justify-between px-6 flex-shrink-0 z-10">
                 <div className="flex items-center gap-3">
