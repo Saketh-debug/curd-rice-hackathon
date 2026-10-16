@@ -287,22 +287,20 @@ export const ThreatMap = () => {
                     <div className="flex items-center bg-background/80 p-1 rounded-lg border border-border shadow-inner">
                         <button
                             onClick={() => setViewMode('3d')}
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer ${
-                                viewMode === '3d'
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer ${viewMode === '3d'
                                     ? 'bg-muted border border-border text-foreground font-semibold shadow-xs'
                                     : 'text-muted-foreground hover:text-foreground'
-                            }`}
+                                }`}
                         >
                             <Globe className="w-3.5 h-3.5 text-signal" />
                             <span>3D Globe</span>
                         </button>
                         <button
                             onClick={() => setViewMode('2d')}
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer ${
-                                viewMode === '2d'
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer ${viewMode === '2d'
                                     ? 'bg-muted border border-border text-foreground font-semibold shadow-xs'
                                     : 'text-muted-foreground hover:text-foreground'
-                            }`}
+                                }`}
                         >
                             <MapIcon className="w-3.5 h-3.5 text-signal" />
                             <span>2D Map</span>
@@ -311,7 +309,7 @@ export const ThreatMap = () => {
                 </div>
 
                 {/* Right Metrics HUD */}
-                <div className="hidden lg:flex gap-3 pointer-events-auto">
+                {/* <div className="hidden lg:flex gap-3 pointer-events-auto">
                     <div className="bg-card/90 backdrop-blur-md border border-border px-4 py-2.5 rounded-xl flex flex-col items-center min-w-[130px] shadow-lg">
                         <span className="caps-label text-muted-foreground flex items-center gap-1">
                             <Activity className="w-3 h-3 text-signal" />
@@ -341,7 +339,7 @@ export const ThreatMap = () => {
                             {health?.link_integrity_score ? `${health.link_integrity_score}%` : '99.8%'}
                         </span>
                     </div>
-                </div>
+                </div> */}
             </div>
 
             {/* ================= ATTACK VECTOR FILTER SIDEBAR ================= */}
@@ -361,11 +359,10 @@ export const ThreatMap = () => {
                         <button
                             key={f.id}
                             onClick={() => setSelectedFilter(f.id)}
-                            className={`w-full flex items-center justify-between p-2 rounded-lg transition-all duration-200 border text-[11px] cursor-pointer ${
-                                selectedFilter === f.id
+                            className={`w-full flex items-center justify-between p-2 rounded-lg transition-all duration-200 border text-[11px] cursor-pointer ${selectedFilter === f.id
                                     ? "bg-muted border-border text-foreground font-medium"
                                     : "bg-transparent border-transparent text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                            }`}
+                                }`}
                         >
                             <div className="flex items-center gap-2 truncate">
                                 <span

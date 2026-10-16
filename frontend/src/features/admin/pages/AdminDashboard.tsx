@@ -23,7 +23,7 @@ export const AdminDashboard = () => {
     const { health } = useSystemHealth();
 
     return (
-        <div className="max-w-7xl mx-auto px-6 pb-6 md:px-8 md:pb-8 grid grid-cols-12 gap-6 relative min-h-screen bg-background text-foreground font-sans">
+        <div className="grid grid-cols-12 gap-6 relative">
             {/* Left Column: Pending Reviews */}
             <div className="col-span-12 lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
 

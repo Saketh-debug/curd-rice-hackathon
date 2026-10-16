@@ -30,7 +30,7 @@ export const ComplianceReports = () => {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-6 pb-6 md:px-8 md:pb-8 space-y-6 bg-background text-foreground font-sans min-h-screen">
+        <div className="space-y-6">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-3">
                 <div>

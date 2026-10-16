@@ -53,7 +53,7 @@ export const PolicyConfig = () => {
     };
 
     return (
-        <div className="px-6 pb-6 md:px-8 md:pb-8 max-w-5xl mx-auto space-y-6 bg-background text-foreground font-sans min-h-screen">
+        <div className="space-y-6">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-3">
                 <div>
@@ -76,7 +76,7 @@ export const PolicyConfig = () => {
             </div>
 
             {/* Pass Window Mode Selector Banner */}
-            <div className="p-5 rounded-xl bg-card border border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            {/* <div className="p-5 rounded-xl bg-card border border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div className="space-y-1">
                     <div className="flex items-center gap-2">
                         <Zap className="w-4 h-4 text-signal" />
@@ -99,7 +99,7 @@ export const PolicyConfig = () => {
                 >
                     Switch to {passWindowMode ? 'Standby Mode' : 'Pass Window Mode'}
                 </StarBorder>
-            </div>
+            </div> */}
 
             {/* Class Decision Boundaries Card */}
             <div className="bg-card rounded-xl border border-border p-6">

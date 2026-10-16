@@ -204,8 +204,7 @@ export const IncidentReview = () => {
     const reasons = getSimpleReasons(incident.type);
 
     return (
-        <div className="min-h-screen bg-background text-foreground font-sans p-6 md:p-8">
-            <div className="max-w-5xl mx-auto space-y-6">
+        <div className="max-w-5xl mx-auto space-y-6">
 
                 {/* Top Navigation & Status */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
@@ -427,7 +426,6 @@ export const IncidentReview = () => {
                 </div>
 
             </div>
-        </div>
     );
 };
 
