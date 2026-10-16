@@ -53,7 +53,7 @@ export const PolicyConfig = () => {
     };
 
     return (
-        <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 bg-background text-foreground font-sans min-h-screen">
+        <div className="px-6 pb-6 md:px-8 md:pb-8 max-w-7xl mx-auto space-y-6 bg-background text-foreground font-sans min-h-screen">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-3">
                 <div>

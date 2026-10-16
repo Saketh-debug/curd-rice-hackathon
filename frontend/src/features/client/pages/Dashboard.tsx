@@ -30,7 +30,7 @@ const Dashboard = () => {
 
     return (
         <div className="relative min-h-screen bg-background text-foreground font-sans">
-            <div className="max-w-7xl mx-auto px-6 py-8 space-y-8 relative z-10">
+            <div className="max-w-7xl mx-auto px-6 pb-8 space-y-8 relative z-10">
 
                 {/* ================= HERO ================= */}
                 <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 pb-6 border-b border-border">

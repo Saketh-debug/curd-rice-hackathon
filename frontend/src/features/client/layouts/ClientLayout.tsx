@@ -8,9 +8,10 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
 
     if (isMapPage) {
         return (
-            <div className="w-screen h-screen overflow-hidden bg-background text-foreground font-sans selection:bg-signal selection:text-signal-foreground relative flex flex-col">
+            <div className="w-screen h-screen overflow-hidden bg-background text-foreground font-sans selection:bg-signal selection:text-signal-foreground relative">
+                {/* Navbar floats above the map canvas at z-[1500] */}
                 <ClientTopNav />
-                <main className="w-full flex-1 overflow-hidden relative">
+                <main className="w-full h-full overflow-hidden relative">
                     {children}
                 </main>
             </div>
@@ -23,7 +24,7 @@ export const ClientLayout = ({ children }: { children: React.ReactNode }) => {
             <ClientTopNav />
 
             {/* Centered Responsive Content Area */}
-            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative flex flex-col min-h-[calc(100vh-65px)]">
+            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8 relative flex flex-col min-h-screen">
                 {children}
             </main>
 

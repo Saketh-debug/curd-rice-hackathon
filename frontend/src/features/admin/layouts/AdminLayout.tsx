@@ -9,7 +9,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <AdminTopNav />
 
             {/* Main Content Area - Centered with balanced whitespace */}
-            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative flex flex-col min-h-[calc(100vh-65px)]">
+            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8 relative flex flex-col min-h-screen">
                 {children}
             </main>
 
